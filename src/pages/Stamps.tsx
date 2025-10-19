@@ -67,8 +67,20 @@ export default function Stamps() {
       }
 
       if (data === true) {
-        toast.success(`✅ ${selectedBooth.name} 스탬프 획득! (${stamps.size + 1}/20) 🎉`);
+        const newStampCount = stamps.size + 1;
+        toast.success(`✅ ${selectedBooth.name} 스탬프 획득! (${newStampCount}/20) 🎉`);
         await loadData(user.id);
+        
+        // Check if user completed all 20 stamps
+        if (newStampCount === 20) {
+          try {
+            await supabase.rpc("register_lucky_draw", { p_user_id: user.id });
+            toast.success("🎉 모든 부스를 완주했습니다! 행운권 추첨 대상에 등록되었습니다.");
+          } catch (error) {
+            console.error("Lucky draw registration failed:", error);
+          }
+        }
+        
         setSelectedBooth(null);
         setInputCode("");
       } else {
@@ -195,11 +207,11 @@ export default function Stamps() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="code">부스 코드 입력</Label>
+              <Label htmlFor="code">PIN 번호 입력</Label>
               <Input
                 id="code"
                 type="text"
-                placeholder="QR 코드, PIN 번호, 또는 퀴즈 정답"
+                placeholder="스태프에게 받은 PIN 번호를 입력하세요"
                 value={inputCode}
                 onChange={(e) => setInputCode(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleVerify()}
@@ -207,7 +219,7 @@ export default function Stamps() {
                 autoFocus
               />
               <p className="text-xs text-muted-foreground">
-                부스에서 제공하는 QR 코드를 스캔하거나, 스태프에게 PIN 번호를 받거나, 퀴즈 정답을 입력하세요
+                부스 스태프에게 PIN 번호를 받아 입력하세요
               </p>
             </div>
 

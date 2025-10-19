@@ -21,8 +21,6 @@ export type Database = {
           description: string | null
           location: string | null
           name: string
-          qr_code_value: string
-          quiz_answer: string | null
           staff_pin: string
           teacher: string | null
         }
@@ -32,8 +30,6 @@ export type Database = {
           description?: string | null
           location?: string | null
           name: string
-          qr_code_value: string
-          quiz_answer?: string | null
           staff_pin: string
           teacher?: string | null
         }
@@ -43,8 +39,6 @@ export type Database = {
           description?: string | null
           location?: string | null
           name?: string
-          qr_code_value?: string
-          quiz_answer?: string | null
           staff_pin?: string
           teacher?: string | null
         }
@@ -74,6 +68,30 @@ export type Database = {
           exhibition_id?: number
           title?: string
           type?: string
+        }
+        Relationships: []
+      }
+      lucky_draw_entries: {
+        Row: {
+          completed_at: string | null
+          id: string
+          name: string
+          student_id: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          id?: string
+          name: string
+          student_id: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          id?: string
+          name?: string
+          student_id?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -223,19 +241,17 @@ export type Database = {
         }
         Returns: boolean
       }
-      rotate_booth_pin: {
-        Args: { p_booth_id: number }
+      pick_random_winners: {
+        Args: { n: number }
         Returns: {
-          booth_id: number
-          staff_pin: string
+          completed_at: string
+          name: string
+          student_id: string
         }[]
       }
-      rotate_booth_qrcode: {
-        Args: { p_booth_id: number }
-        Returns: {
-          booth_id: number
-          qr_code_value: string
-        }[]
+      register_lucky_draw: {
+        Args: { p_user_id: string }
+        Returns: undefined
       }
       verify_stamp: {
         Args: { p_booth_id: number; p_entered: string; p_user_id: string }

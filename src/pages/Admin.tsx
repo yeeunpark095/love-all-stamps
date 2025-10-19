@@ -1,23 +1,24 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import AdminGuard from "@/components/AdminGuard";
-import Navigation from "@/components/Navigation";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { toast } from "sonner";
-import { RefreshCw, Trophy, Shuffle } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { Loader2 } from "lucide-react";
 
 interface Booth {
   booth_id: number;
   name: string;
-  description?: string | null;
-  location?: string | null;
-  teacher?: string | null;
-  staff_pin?: string;
+  description: string | null;
+  location: string | null;
+  teacher: string | null;
+  staff_pin: string;
 }
 
-interface LuckyDrawEntry {
+interface Entry {
+  id: string;
+  user_id: string;
   name: string;
   student_id: string;
   completed_at: string;
@@ -25,189 +26,410 @@ interface LuckyDrawEntry {
 
 export default function Admin() {
   const [booths, setBooths] = useState<Booth[]>([]);
+  const [eligible, setEligible] = useState<Entry[]>([]);
+  const [winners, setWinners] = useState<Entry[]>([]);
+  const [sample, setSample] = useState<Entry[]>([]);
+  const [count, setCount] = useState(5);
   const [loading, setLoading] = useState(false);
-  const [winners, setWinners] = useState<LuckyDrawEntry[]>([]);
-  const [winnerCount, setWinnerCount] = useState("3");
-  const [totalEntries, setTotalEntries] = useState(0);
+  const [rotatingPin, setRotatingPin] = useState<number | null>(null);
+  const { toast } = useToast();
 
   const loadBooths = async () => {
-    setLoading(true);
     const { data, error } = await supabase
       .from("booths")
       .select("booth_id, name, description, location, teacher, staff_pin")
       .order("booth_id", { ascending: true });
-    
-    setLoading(false);
-    
+
     if (error) {
-      toast.error("부스 목록을 불러오지 못했습니다.");
-      console.error(error);
+      console.error("Error loading booths:", error);
+      toast({
+        variant: "destructive",
+        title: "오류",
+        description: "부스 정보를 불러오는데 실패했습니다.",
+      });
       return;
     }
-    
-    setBooths(data as Booth[]);
+
+    setBooths(data || []);
   };
 
-  const loadLuckyDrawStats = async () => {
-    const { count, error } = await supabase
-      .from("lucky_draw_entries")
-      .select("*", { count: "exact", head: true });
-    
-    if (!error && count !== null) {
-      setTotalEntries(count);
-    }
+  const loadLuckyDraw = async () => {
+    setLoading(true);
+    const [{ data: elig }, { data: win }] = await Promise.all([
+      supabase.rpc("ld_list_eligible"),
+      supabase.rpc("ld_list_winners"),
+    ]);
+    setEligible(elig || []);
+    setWinners(win || []);
+    setSample([]);
+    setLoading(false);
   };
 
   useEffect(() => {
-    loadBooths();
-    loadLuckyDrawStats();
+    const loadData = async () => {
+      await Promise.all([loadBooths(), loadLuckyDraw()]);
+    };
+
+    loadData();
   }, []);
 
-  const drawWinners = async () => {
-    const count = parseInt(winnerCount);
-    if (isNaN(count) || count < 1) {
-      toast.error("유효한 당첨자 수를 입력하세요.");
-      return;
-    }
-
-    if (count > totalEntries) {
-      toast.error(`당첨자 수가 전체 참가자 수(${totalEntries}명)보다 많습니다.`);
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const { data, error } = await supabase.rpc("pick_random_winners", { n: count });
-      
-      if (error) {
-        toast.error("추첨에 실패했습니다.");
-        console.error(error);
-        return;
-      }
-      
-      setWinners(data as LuckyDrawEntry[]);
-      toast.success(`${count}명의 당첨자를 추첨했습니다! 🎉`);
-    } catch (error) {
-      toast.error("오류가 발생했습니다.");
+  const pickRandom = async () => {
+    const { data, error } = await supabase.rpc("ld_pick_random", { n: count });
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "오류",
+        description: "무작위 선택 실패",
+      });
       console.error(error);
+      return;
+    }
+    setSample(data || []);
+    toast({
+      title: "임시 선택 완료",
+      description: `${data?.length || 0}명이 선택되었습니다. '당첨 확정'을 눌러주세요.`,
+    });
+  };
+
+  const confirmWinners = async () => {
+    if (sample.length === 0) {
+      toast({
+        variant: "destructive",
+        title: "오류",
+        description: "먼저 무작위 후보를 선택하세요.",
+      });
+      return;
+    }
+    const ids = sample.map((s) => s.id);
+    const { error } = await supabase.rpc("ld_confirm_winners", { p_ids: ids });
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "오류",
+        description: "당첨 확정에 실패했습니다.",
+      });
+      console.error(error);
+      return;
+    }
+    await loadLuckyDraw();
+    toast({
+      title: "🎉 당첨 확정 완료!",
+      description: `${ids.length}명의 당첨자가 확정되었습니다.`,
+    });
+  };
+
+  const unsetWinner = async (id: string) => {
+    const { error } = await supabase.rpc("ld_unset_winner", { p_id: id });
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "오류",
+        description: "취소 실패",
+      });
+      console.error(error);
+      return;
+    }
+    await loadLuckyDraw();
+    toast({
+      title: "당첨 취소",
+      description: "당첨이 취소되었습니다.",
+    });
+  };
+
+  const exportCSV = (rows: Entry[], filename: string) => {
+    const header = ["name", "student_id", "completed_at"];
+    const csv =
+      header.join(",") +
+      "\n" +
+      rows
+        .map((r) =>
+          [r.name, r.student_id, new Date(r.completed_at).toISOString()].join(",")
+        )
+        .join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast({
+      title: "CSV 내보내기 완료",
+      description: `${filename} 파일이 다운로드되었습니다.`,
+    });
+  };
+
+  const rotatePin = async (boothId: number) => {
+    try {
+      setRotatingPin(boothId);
+      
+      const newPin = Math.floor(100000 + Math.random() * 900000).toString();
+      
+      const { error } = await supabase
+        .from("booths")
+        .update({ staff_pin: newPin })
+        .eq("booth_id", boothId);
+
+      if (error) throw error;
+
+      toast({
+        title: "PIN 재발급 완료",
+        description: `새 PIN: ${newPin}`,
+      });
+
+      await loadBooths();
+    } catch (error) {
+      console.error("Error rotating PIN:", error);
+      toast({
+        variant: "destructive",
+        title: "오류",
+        description: "PIN 재발급 중 오류가 발생했습니다.",
+      });
     } finally {
-      setLoading(false);
+      setRotatingPin(null);
     }
   };
 
+  const eligibleCount = eligible.length;
+  const winnerCount = winners.length;
+
   return (
     <AdminGuard>
-      <div className="min-h-screen bg-gradient-to-br from-background via-secondary/5 to-accent/5 pb-24">
-        <div className="bg-gradient-to-r from-primary via-secondary to-accent p-6 text-center shadow-lg">
-          <h1 className="text-3xl font-bold text-white mb-2">관리자 대시보드</h1>
-          <p className="text-white/90 text-sm">부스 PIN 관리 및 행운권 추첨</p>
-        </div>
-
-        <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
-          {/* Lucky Draw Section */}
-          <Card className="p-6 bg-gradient-to-br from-primary/5 to-secondary/5 border-2 border-primary/20">
-            <div className="flex items-center gap-3 mb-4">
-              <Trophy className="w-8 h-8 text-primary" />
-              <div>
-                <h2 className="text-2xl font-bold">행운권 추첨</h2>
-                <p className="text-sm text-muted-foreground">
-                  20개 부스 완주자: <span className="font-bold text-primary">{totalEntries}명</span>
-                </p>
-              </div>
-            </div>
-
-            <div className="flex gap-3 mb-4">
-              <Input
-                type="number"
-                min="1"
-                value={winnerCount}
-                onChange={(e) => setWinnerCount(e.target.value)}
-                placeholder="당첨자 수"
-                className="w-32"
-              />
-              <Button
-                onClick={drawWinners}
-                disabled={loading || totalEntries === 0}
-                className="gap-2 bg-gradient-to-r from-primary to-secondary"
-              >
-                <Shuffle className="w-4 h-4" />
-                추첨하기
-              </Button>
-              <Button
-                onClick={() => { setWinners([]); loadLuckyDrawStats(); }}
-                variant="outline"
-                className="gap-2"
-              >
-                <RefreshCw className="w-4 h-4" />
-                새로고침
-              </Button>
-            </div>
-
-            {winners.length > 0 && (
-              <div className="bg-card rounded-lg p-4 space-y-2">
-                <h3 className="font-bold text-lg mb-3 flex items-center gap-2">
-                  🎉 당첨자 명단
-                </h3>
-                {winners.map((winner, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between p-3 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg"
+      <div className="min-h-screen bg-background p-6">
+        <div className="max-w-7xl mx-auto">
+          <h1 className="text-3xl font-bold mb-6">🎉 성덕제 관리자 대시보드</h1>
+          
+          <div className="space-y-6">
+            {/* Lucky Draw Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardDescription>완주자 (eligible)</CardDescription>
+                  <CardTitle className="text-3xl">{eligibleCount}명</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => exportCSV(eligible, "eligible.csv")}
+                    disabled={eligibleCount === 0}
                   >
-                    <div>
-                      <span className="font-bold text-lg">{winner.name}</span>
-                      <span className="text-muted-foreground ml-3">({winner.student_id})</span>
-                    </div>
-                    <span className="text-xs text-muted-foreground">
-                      {new Date(winner.completed_at).toLocaleString("ko-KR")}
-                    </span>
+                    CSV 내보내기
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardDescription>당첨자 (winners)</CardDescription>
+                  <CardTitle className="text-3xl">{winnerCount}명</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => exportCSV(winners, "winners.csv")}
+                    disabled={winnerCount === 0}
+                  >
+                    CSV 내보내기
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardDescription>추첨 인원 설정</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="number"
+                      min={1}
+                      max={Math.max(1, eligibleCount)}
+                      value={count}
+                      onChange={(e) => setCount(parseInt(e.target.value || "1", 10))}
+                      className="w-20"
+                    />
+                    <span className="text-sm text-muted-foreground">명</span>
                   </div>
-                ))}
-              </div>
-            )}
-          </Card>
-
-          {/* Booth Management */}
-          <Card className="p-6 bg-card/80 backdrop-blur">
-            <h2 className="text-xl font-bold mb-4">부스 PIN 관리</h2>
-            <p className="text-sm text-muted-foreground mb-4">
-              💡 PIN 번호는 관리자만 열람 가능합니다. 학생에게는 비노출됩니다.
-            </p>
-
-            <div className="overflow-x-auto">
-              <table className="min-w-full bg-card rounded-xl shadow-lg overflow-hidden">
-                <thead className="bg-gradient-to-r from-primary/10 to-secondary/10">
-                  <tr>
-                    <th className="p-4 text-left font-bold">ID</th>
-                    <th className="p-4 text-left font-bold">부스명</th>
-                    <th className="p-4 text-left font-bold">위치</th>
-                    <th className="p-4 text-left font-bold">담당교사</th>
-                    <th className="p-4 text-left font-bold">PIN</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {booths.map((booth) => (
-                    <tr key={booth.booth_id} className="border-t border-border hover:bg-muted/50 transition-colors">
-                      <td className="p-4 font-mono text-primary font-bold">{booth.booth_id}</td>
-                      <td className="p-4 font-semibold">{booth.name}</td>
-                      <td className="p-4 text-sm">{booth.location}</td>
-                      <td className="p-4 text-sm">{booth.teacher}</td>
-                      <td className="p-4 font-mono text-lg font-bold text-primary">{booth.staff_pin || "-"}</td>
-                    </tr>
-                  ))}
-                  {booths.length === 0 && (
-                    <tr>
-                      <td colSpan={5} className="p-8 text-center text-muted-foreground">
-                        {loading ? "불러오는 중..." : "부스 데이터가 없습니다."}
-                      </td>
-                    </tr>
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={pickRandom}
+                      disabled={eligibleCount === 0 || loading}
+                      size="sm"
+                    >
+                      🎲 무작위 선택
+                    </Button>
+                    <Button
+                      onClick={confirmWinners}
+                      variant="secondary"
+                      disabled={sample.length === 0 || loading}
+                      size="sm"
+                    >
+                      ✅ 당첨 확정
+                    </Button>
+                  </div>
+                  {sample.length > 0 && (
+                    <p className="text-xs text-muted-foreground">
+                      임시 선택 {sample.length}명 — 확정 전까지 저장되지 않습니다.
+                    </p>
                   )}
-                </tbody>
-              </table>
+                </CardContent>
+              </Card>
             </div>
-          </Card>
-        </div>
 
-        <Navigation />
+            {/* Temporary Sample */}
+            {sample.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>임시 선택 (확정 전)</CardTitle>
+                  <CardDescription>
+                    '당첨 확정'을 눌러야 DB에 저장됩니다
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="border rounded-lg overflow-hidden">
+                    <table className="w-full">
+                      <thead className="bg-muted">
+                        <tr>
+                          <th className="px-4 py-2 text-left">이름</th>
+                          <th className="px-4 py-2 text-left">학번</th>
+                          <th className="px-4 py-2 text-left">완주시간</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {sample.map((s) => (
+                          <tr key={s.id} className="border-t">
+                            <td className="px-4 py-2">{s.name}</td>
+                            <td className="px-4 py-2 font-mono">{s.student_id}</td>
+                            <td className="px-4 py-2">{new Date(s.completed_at).toLocaleString()}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Winners List */}
+            <Card>
+              <CardHeader>
+                <CardTitle>당첨자 목록</CardTitle>
+                <CardDescription>
+                  확정된 당첨자들입니다
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="mb-4">
+                  <Button
+                    onClick={() => window.open("/admin/lucky-draw/present", "_blank")}
+                    disabled={winners.length === 0}
+                  >
+                    🎤 발표 화면 열기
+                  </Button>
+                </div>
+                <div className="border rounded-lg overflow-hidden">
+                  <table className="w-full">
+                    <thead className="bg-muted">
+                      <tr>
+                        <th className="px-4 py-2 text-left">이름</th>
+                        <th className="px-4 py-2 text-left">학번</th>
+                        <th className="px-4 py-2 text-left">완주시간</th>
+                        <th className="px-4 py-2 text-left">액션</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {winners.map((w) => (
+                        <tr key={w.id} className="border-t">
+                          <td className="px-4 py-2">{w.name}</td>
+                          <td className="px-4 py-2 font-mono">{w.student_id}</td>
+                          <td className="px-4 py-2">{new Date(w.completed_at).toLocaleString()}</td>
+                          <td className="px-4 py-2">
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => {
+                                if (confirm("정말 당첨을 취소할까요?")) {
+                                  unsetWinner(w.id);
+                                }
+                              }}
+                            >
+                              당첨 취소
+                            </Button>
+                          </td>
+                        </tr>
+                      ))}
+                      {winners.length === 0 && (
+                        <tr>
+                          <td colSpan={4} className="px-4 py-6 text-center text-muted-foreground">
+                            아직 당첨자가 없습니다.
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Booth Management */}
+            <Card>
+              <CardHeader>
+                <CardTitle>부스 PIN 관리</CardTitle>
+                <CardDescription>
+                  각 부스의 PIN을 관리합니다
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="border rounded-lg overflow-hidden">
+                  <table className="w-full">
+                    <thead className="bg-muted">
+                      <tr>
+                        <th className="px-4 py-2 text-left">부스 ID</th>
+                        <th className="px-4 py-2 text-left">부스명</th>
+                        <th className="px-4 py-2 text-left">위치</th>
+                        <th className="px-4 py-2 text-left">담당 교사</th>
+                        <th className="px-4 py-2 text-left">PIN</th>
+                        <th className="px-4 py-2 text-left">액션</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {booths.map((booth) => (
+                        <tr key={booth.booth_id} className="border-t">
+                          <td className="px-4 py-2">{booth.booth_id}</td>
+                          <td className="px-4 py-2">{booth.name}</td>
+                          <td className="px-4 py-2">{booth.location || "-"}</td>
+                          <td className="px-4 py-2">{booth.teacher || "-"}</td>
+                          <td className="px-4 py-2 font-mono font-bold text-lg">
+                            {booth.staff_pin}
+                          </td>
+                          <td className="px-4 py-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => rotatePin(booth.booth_id)}
+                              disabled={rotatingPin === booth.booth_id}
+                            >
+                              {rotatingPin === booth.booth_id ? (
+                                <>
+                                  <Loader2 className="mr-2 h-3 w-3 animate-spin" />
+                                  재발급 중...
+                                </>
+                              ) : (
+                                "PIN 재발급"
+                              )}
+                            </Button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
       </div>
     </AdminGuard>
   );

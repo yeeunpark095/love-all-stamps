@@ -75,6 +75,7 @@ export type Database = {
         Row: {
           completed_at: string | null
           id: string
+          is_winner: boolean | null
           name: string
           student_id: string
           user_id: string
@@ -82,6 +83,7 @@ export type Database = {
         Insert: {
           completed_at?: string | null
           id?: string
+          is_winner?: boolean | null
           name: string
           student_id: string
           user_id: string
@@ -89,6 +91,7 @@ export type Database = {
         Update: {
           completed_at?: string | null
           id?: string
+          is_winner?: boolean | null
           name?: string
           student_id?: string
           user_id?: string
@@ -240,6 +243,44 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      ld_confirm_winners: {
+        Args: { p_ids: string[] }
+        Returns: undefined
+      }
+      ld_list_eligible: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          completed_at: string
+          id: string
+          name: string
+          student_id: string
+          user_id: string
+        }[]
+      }
+      ld_list_winners: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          completed_at: string
+          id: string
+          name: string
+          student_id: string
+          user_id: string
+        }[]
+      }
+      ld_pick_random: {
+        Args: { n: number }
+        Returns: {
+          completed_at: string
+          id: string
+          name: string
+          student_id: string
+          user_id: string
+        }[]
+      }
+      ld_unset_winner: {
+        Args: { p_id: string }
+        Returns: undefined
       }
       pick_random_winners: {
         Args: { n: number }

@@ -11,6 +11,7 @@ import Exhibitions from "./pages/Exhibitions";
 import Performances from "./pages/Performances";
 import MyStamps from "./pages/MyStamps";
 import Admin from "./pages/Admin";
+import LuckyDrawPresent from "./pages/LuckyDrawPresent";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
           <Route path="/performances" element={<Performances />} />
           <Route path="/my-stamps" element={<MyStamps />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/admin/lucky-draw/present" element={<LuckyDrawPresent />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

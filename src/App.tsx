@@ -12,6 +12,7 @@ import Performances from "./pages/Performances";
 import MyStamps from "./pages/MyStamps";
 import Admin from "./pages/Admin";
 import LuckyDrawPresent from "./pages/LuckyDrawPresent";
+import Festival from "./pages/Festival";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,6 +26,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/festival" element={<Festival />} />
           <Route path="/map" element={<Map />} />
           <Route path="/stamps" element={<Stamps />} />
           <Route path="/exhibitions" element={<Exhibitions />} />

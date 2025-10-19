@@ -34,9 +34,10 @@ export default function Stamps() {
   }, [navigate]);
 
   const loadData = async (userId: string) => {
+    // ✅ 공개 필드만 조회 (비밀 코드 제외)
     const { data: boothsData } = await supabase
       .from("booths")
-      .select("*")
+      .select("booth_id, name, description, location, teacher")
       .order("booth_id");
     setBooths(boothsData || []);
 

@@ -190,6 +190,20 @@ export type Database = {
         }
         Returns: boolean
       }
+      rotate_booth_pin: {
+        Args: { p_booth_id: number }
+        Returns: {
+          booth_id: number
+          staff_pin: string
+        }[]
+      }
+      rotate_booth_qrcode: {
+        Args: { p_booth_id: number }
+        Returns: {
+          booth_id: number
+          qr_code_value: string
+        }[]
+      }
       verify_stamp: {
         Args: { p_booth_id: number; p_entered: string; p_user_id: string }
         Returns: boolean

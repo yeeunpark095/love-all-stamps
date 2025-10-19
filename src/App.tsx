@@ -10,6 +10,7 @@ import Stamps from "./pages/Stamps";
 import Exhibitions from "./pages/Exhibitions";
 import Performances from "./pages/Performances";
 import MyStamps from "./pages/MyStamps";
+import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
           <Route path="/exhibitions" element={<Exhibitions />} />
           <Route path="/performances" element={<Performances />} />
           <Route path="/my-stamps" element={<MyStamps />} />
+          <Route path="/admin" element={<Admin />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

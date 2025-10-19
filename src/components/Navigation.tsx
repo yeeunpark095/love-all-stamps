@@ -17,7 +17,7 @@ export default function Navigation() {
           .select("role")
           .eq("user_id", user.id)
           .eq("role", "admin")
-          .single();
+          .maybeSingle();
         setIsAdmin(!!data);
       }
     };

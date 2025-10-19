@@ -28,7 +28,7 @@ export default function MyStamps() {
       setProfile(profileData);
 
       const { data: boothsData } = await supabase
-        .from("booths")
+        .from("booths_public")
         .select("*")
         .order("booth_id");
       setBooths(boothsData || []);

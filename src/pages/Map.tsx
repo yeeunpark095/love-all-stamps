@@ -21,7 +21,7 @@ export default function Map() {
       }
 
       const { data } = await supabase
-        .from("booths")
+        .from("booths_public")
         .select("*")
         .order("booth_id");
       setBooths(data || []);

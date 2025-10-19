@@ -49,7 +49,7 @@ export default function LuckyDrawPresent() {
       }}
     >
       <div className="absolute top-5 left-5 text-lg text-pink-800 font-semibold">
-        🎉 성덕제 LOVE IS ALL
+        🎉 성덕제 Love wins all
       </div>
 
       <div className="text-6xl md:text-8xl font-extrabold text-pink-800 drop-shadow-lg animate-bounce mb-6">

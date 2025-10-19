@@ -90,7 +90,7 @@ export default function Home() {
             2025 성덕제
           </h1>
           <p className="text-2xl text-white/95 font-semibold mb-6 drop-shadow-md">
-            LOVE IS ALL
+            Love wins all
           </p>
           
           {profile && (

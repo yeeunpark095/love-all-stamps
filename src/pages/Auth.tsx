@@ -108,7 +108,7 @@ export default function Auth() {
           <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
             2025 성덕제
           </h1>
-          <p className="text-xl text-muted-foreground mt-2 font-medium">LOVE IS ALL</p>
+          <p className="text-xl text-muted-foreground mt-2 font-medium">Love wins all</p>
         </div>
 
         <Card className="p-8 backdrop-blur-sm bg-card/80 shadow-xl border-2 border-primary/10">

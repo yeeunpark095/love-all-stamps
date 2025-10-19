@@ -158,6 +158,13 @@ export type Database = {
             referencedRelation: "booths"
             referencedColumns: ["booth_id"]
           },
+          {
+            foreignKeyName: "stamp_logs_booth_id_fkey"
+            columns: ["booth_id"]
+            isOneToOne: false
+            referencedRelation: "booths_public"
+            referencedColumns: ["booth_id"]
+          },
         ]
       }
       user_roles: {
@@ -180,7 +187,33 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      booths_public: {
+        Row: {
+          booth_id: number | null
+          created_at: string | null
+          description: string | null
+          location: string | null
+          name: string | null
+          teacher: string | null
+        }
+        Insert: {
+          booth_id?: number | null
+          created_at?: string | null
+          description?: string | null
+          location?: string | null
+          name?: string | null
+          teacher?: string | null
+        }
+        Update: {
+          booth_id?: number | null
+          created_at?: string | null
+          description?: string | null
+          location?: string | null
+          name?: string | null
+          teacher?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       has_role: {

@@ -37,6 +37,18 @@ export default function Map() {
     booth.location?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // 부스 이름으로 아이콘 매핑
+  const getBoothIcon = (name: string) => {
+    const lowerName = name?.toLowerCase() || '';
+    if (lowerName.includes('물리')) return '⚛️';
+    if (lowerName.includes('디자인공예')) return '🎨';
+    if (lowerName.includes('steam') || lowerName.includes('융합과학steam')) return '🔬';
+    if (lowerName.includes('수달') || lowerName.includes('수학')) return '📐';
+    if (lowerName.includes('ai') || lowerName.includes('코딩')) return '💻';
+    if (lowerName.includes('buku') || lowerName.includes('독서')) return '📚';
+    return '🏕️';
+  };
+
   // 구역별로 부스 분류
   const getBoothsByZone = () => {
     return {
@@ -44,7 +56,7 @@ export default function Map() {
       second: filteredBooths.filter(b => b.booth_id === 7),
       third: filteredBooths.filter(b => b.booth_id >= 8 && b.booth_id <= 12),
       side: filteredBooths.filter(b => b.booth_id >= 13 && b.booth_id <= 15),
-      other: filteredBooths.filter(b => b.booth_id >= 16 && b.booth_id <= 22),
+      seogwan: filteredBooths.filter(b => b.booth_id >= 16 && b.booth_id <= 22),
     };
   };
 
@@ -54,7 +66,7 @@ export default function Map() {
     second: "두번째 줄 (7)",
     third: "세번째 줄 (8-12)",
     side: "오른쪽 사이드 (13-15)",
-    other: "기타 (16-22)"
+    seogwan: "서관 코너 (16-22)"
   };
 
   return (
@@ -102,19 +114,21 @@ export default function Map() {
             <div className="flex justify-center gap-4 mb-12 relative">
               {zones.third.map((booth) => {
                 const cleanName = booth.name?.replace(/^\d+\.\s*/, '') || booth.name;
+                const icon = getBoothIcon(booth.name);
                 return (
                   <div
                     key={booth.booth_id}
                     className="cursor-pointer hover:scale-110 transition-all group"
                     onClick={() => setSelectedBooth(booth)}
                   >
-                    <div className="w-24 h-28 relative">
-                      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[48px] border-l-transparent border-r-[48px] border-r-transparent border-t-[24px] border-t-accent"></div>
-                      <div className="absolute top-6 w-full h-20 bg-gradient-to-br from-accent/80 to-primary/80 rounded-lg shadow-lg flex flex-col items-center justify-center p-2 group-hover:shadow-xl">
+                    <div className="w-24 h-32 relative">
+                      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[48px] border-l-transparent border-r-[48px] border-r-transparent border-t-[28px] border-t-accent"></div>
+                      <div className="absolute top-7 w-full h-24 bg-gradient-to-br from-accent/80 to-primary/80 rounded-lg shadow-lg flex flex-col items-center justify-center p-2 group-hover:shadow-xl">
+                        <div className="text-xl mb-1">{icon}</div>
                         <div className="w-6 h-6 rounded-full bg-white text-accent text-xs font-bold flex items-center justify-center mb-1">
                           {booth.booth_id}
                         </div>
-                        <p className="text-[10px] text-white font-bold text-center leading-tight line-clamp-2">
+                        <p className="text-[9px] text-white font-bold text-center leading-tight line-clamp-2">
                           {cleanName}
                         </p>
                       </div>
@@ -127,19 +141,21 @@ export default function Map() {
               <div className="absolute right-8 top-0 flex flex-col gap-4">
                 {zones.side.slice().reverse().map((booth) => {
                   const cleanName = booth.name?.replace(/^\d+\.\s*/, '') || booth.name;
+                  const icon = getBoothIcon(booth.name);
                   return (
                     <div
                       key={booth.booth_id}
                       className="cursor-pointer hover:scale-110 transition-all group"
                       onClick={() => setSelectedBooth(booth)}
                     >
-                      <div className="w-20 h-24 relative">
-                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[40px] border-l-transparent border-r-[40px] border-r-transparent border-t-[20px] border-t-primary"></div>
-                        <div className="absolute top-5 w-full h-16 bg-gradient-to-br from-primary/80 to-secondary/80 rounded-lg shadow-lg flex flex-col items-center justify-center p-2 group-hover:shadow-xl">
-                          <div className="w-5 h-5 rounded-full bg-white text-primary text-xs font-bold flex items-center justify-center mb-1">
+                      <div className="w-20 h-28 relative">
+                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[40px] border-l-transparent border-r-[40px] border-r-transparent border-t-[24px] border-t-primary"></div>
+                        <div className="absolute top-6 w-full h-20 bg-gradient-to-br from-primary/80 to-secondary/80 rounded-lg shadow-lg flex flex-col items-center justify-center p-1.5 group-hover:shadow-xl">
+                          <div className="text-base mb-0.5">{icon}</div>
+                          <div className="w-5 h-5 rounded-full bg-white text-primary text-xs font-bold flex items-center justify-center mb-0.5">
                             {booth.booth_id}
                           </div>
-                          <p className="text-[9px] text-white font-bold text-center leading-tight line-clamp-2">
+                          <p className="text-[8px] text-white font-bold text-center leading-tight line-clamp-2">
                             {cleanName}
                           </p>
                         </div>
@@ -184,19 +200,21 @@ export default function Map() {
             <div className="flex justify-center gap-4 mb-8">
               {zones.front.map((booth) => {
                 const cleanName = booth.name?.replace(/^\d+\.\s*/, '') || booth.name;
+                const icon = getBoothIcon(booth.name);
                 return (
                   <div
                     key={booth.booth_id}
                     className="cursor-pointer hover:scale-110 transition-all group"
                     onClick={() => setSelectedBooth(booth)}
                   >
-                    <div className="w-24 h-28 relative">
-                      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[48px] border-l-transparent border-r-[48px] border-r-transparent border-t-[24px] border-t-primary"></div>
-                      <div className="absolute top-6 w-full h-20 bg-gradient-to-br from-primary/80 to-secondary/80 rounded-lg shadow-lg flex flex-col items-center justify-center p-2 group-hover:shadow-xl">
+                    <div className="w-24 h-32 relative">
+                      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[48px] border-l-transparent border-r-[48px] border-r-transparent border-t-[28px] border-t-primary"></div>
+                      <div className="absolute top-7 w-full h-24 bg-gradient-to-br from-primary/80 to-secondary/80 rounded-lg shadow-lg flex flex-col items-center justify-center p-2 group-hover:shadow-xl">
+                        <div className="text-xl mb-1">{icon}</div>
                         <div className="w-6 h-6 rounded-full bg-white text-primary text-xs font-bold flex items-center justify-center mb-1">
                           {booth.booth_id}
                         </div>
-                        <p className="text-[10px] text-white font-bold text-center leading-tight line-clamp-2">
+                        <p className="text-[9px] text-white font-bold text-center leading-tight line-clamp-2">
                           {cleanName}
                         </p>
                       </div>
@@ -206,23 +224,28 @@ export default function Map() {
               })}
             </div>
 
-            {/* 기타 부스 (16-22) - 왼쪽 아래 */}
+            {/* 서관 코너 (16-22) - 왼쪽 아래 */}
             <div className="absolute left-8 bottom-8 flex flex-wrap gap-3 max-w-xs">
-              {zones.other.map((booth) => {
+              <div className="w-full text-center mb-2">
+                <h3 className="text-lg font-bold text-primary">서관 코너</h3>
+              </div>
+              {zones.seogwan.map((booth) => {
                 const cleanName = booth.name?.replace(/^\d+\.\s*/, '') || booth.name;
+                const icon = getBoothIcon(booth.name);
                 return (
                   <div
                     key={booth.booth_id}
                     className="cursor-pointer hover:scale-110 transition-all group"
                     onClick={() => setSelectedBooth(booth)}
                   >
-                    <div className="w-20 h-24 relative">
-                      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[40px] border-l-transparent border-r-[40px] border-r-transparent border-t-[20px] border-t-secondary"></div>
-                      <div className="absolute top-5 w-full h-16 bg-gradient-to-br from-secondary/80 to-accent/80 rounded-lg shadow-lg flex flex-col items-center justify-center p-2 group-hover:shadow-xl">
-                        <div className="w-5 h-5 rounded-full bg-white text-secondary text-xs font-bold flex items-center justify-center mb-1">
+                    <div className="w-20 h-28 relative">
+                      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[40px] border-l-transparent border-r-[40px] border-r-transparent border-t-[24px] border-t-secondary"></div>
+                      <div className="absolute top-6 w-full h-20 bg-gradient-to-br from-secondary/80 to-accent/80 rounded-lg shadow-lg flex flex-col items-center justify-center p-1.5 group-hover:shadow-xl">
+                        <div className="text-base mb-0.5">{icon}</div>
+                        <div className="w-5 h-5 rounded-full bg-white text-secondary text-xs font-bold flex items-center justify-center mb-0.5">
                           {booth.booth_id}
                         </div>
-                        <p className="text-[9px] text-white font-bold text-center leading-tight line-clamp-2">
+                        <p className="text-[8px] text-white font-bold text-center leading-tight line-clamp-2">
                           {cleanName}
                         </p>
                       </div>

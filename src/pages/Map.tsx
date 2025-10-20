@@ -5,9 +5,7 @@ import Navigation from "@/components/Navigation";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { MapPin, Search, ZoomIn, ZoomOut, Maximize2 } from "lucide-react";
-import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
-import { Button } from "@/components/ui/button";
+import { MapPin, Search } from "lucide-react";
 import boothMapImage from "@/assets/booth-map.jpg";
 
 export default function Map() {
@@ -49,41 +47,6 @@ export default function Map() {
   const floor1 = seogwanBooths.filter(b => b.booth_id >= 16 && b.booth_id <= 18);
   const floor2 = seogwanBooths.filter(b => b.booth_id >= 19 && b.booth_id <= 21);
   const floor3 = seogwanBooths.filter(b => b.booth_id === 22);
-
-  // 부스 위치 좌표 (이미지 기준 %)
-  const boothPositions: Record<number, { x: number; y: number }> = {
-    // 앞줄 (1-6) - 가로 일렬, 같은 Y좌표
-    1: { x: 15, y: 70 },
-    2: { x: 27, y: 70 },
-    3: { x: 39, y: 70 },
-    4: { x: 51, y: 70 },
-    5: { x: 63, y: 70 },
-    6: { x: 75, y: 70 },
-    
-    // 구령대 (7) - 중앙
-    7: { x: 50, y: 50 },
-    
-    // 윗줄 (8-12) - 가로 일렬, 같은 Y좌표
-    8: { x: 20, y: 30 },
-    9: { x: 32, y: 30 },
-    10: { x: 44, y: 30 },
-    11: { x: 56, y: 30 },
-    12: { x: 68, y: 30 },
-    
-    // 사이드 (13-15) - 세로 일렬, 같은 X좌표
-    13: { x: 88, y: 55 },
-    14: { x: 88, y: 45 },
-    15: { x: 88, y: 35 },
-
-    // 서관 (16-22) - 별도 영역
-    16: { x: 12, y: 15 },
-    17: { x: 22, y: 15 },
-    18: { x: 32, y: 15 },
-    19: { x: 12, y: 8 },
-    20: { x: 22, y: 8 },
-    21: { x: 32, y: 8 },
-    22: { x: 42, y: 8 },
-  };
 
   const BoothCard = ({ booth }: { booth: any }) => {
     const cleanName = booth.name?.replace(/^\d+\.\s*/, '') || booth.name;
@@ -127,108 +90,14 @@ export default function Map() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
-        {/* Interactive Map Viewer with Clickable Booths */}
+        {/* Original Map Image */}
         <Card className="overflow-hidden shadow-xl border-4 border-foreground bg-card">
-          <div className="bg-festival-pink/20 p-3 border-b-2 border-foreground">
-            <p className="text-sm font-bold text-center text-foreground">
-              💡 이미지를 확대하고 부스를 클릭해보세요!
-            </p>
-          </div>
-          <div className="relative bg-white">
-            <TransformWrapper
-              initialScale={1}
-              minScale={0.5}
-              maxScale={3}
-              centerOnInit={true}
-            >
-              {({ zoomIn, zoomOut, resetTransform }) => (
-                <>
-                  {/* Zoom Controls */}
-                  <div className="absolute top-4 right-4 z-10 flex flex-col gap-2">
-                    <Button
-                      onClick={() => zoomIn()}
-                      size="icon"
-                      className="bg-white border-2 border-foreground shadow-[2px_2px_0_0_rgba(0,0,0,1)] hover:shadow-[1px_1px_0_0_rgba(0,0,0,1)]"
-                    >
-                      <ZoomIn className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      onClick={() => zoomOut()}
-                      size="icon"
-                      className="bg-white border-2 border-foreground shadow-[2px_2px_0_0_rgba(0,0,0,1)] hover:shadow-[1px_1px_0_0_rgba(0,0,0,1)]"
-                    >
-                      <ZoomOut className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      onClick={() => resetTransform()}
-                      size="icon"
-                      className="bg-white border-2 border-foreground shadow-[2px_2px_0_0_rgba(0,0,0,1)] hover:shadow-[1px_1px_0_0_rgba(0,0,0,1)]"
-                    >
-                      <Maximize2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-
-                  <TransformComponent
-                    wrapperStyle={{
-                      width: "100%",
-                      height: "600px",
-                    }}
-                  >
-                    <div className="relative w-full h-[600px]">
-                      {/* Background Image */}
-                      <img
-                        src={boothMapImage}
-                        alt="부스 배치도"
-                        className="w-full h-full object-contain"
-                      />
-
-                      {/* Clickable Booth Markers (모든 부스) */}
-                      {booths.map((booth) => {
-                        const position = boothPositions[booth.booth_id];
-                        if (!position) return null;
-
-                        const cleanName = booth.name?.replace(/^\d+\.\s*/, '') || booth.name;
-                        const isSeogwan = booth.booth_id >= 16;
-
-                        return (
-                          <div
-                            key={booth.booth_id}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSelectedBooth(booth);
-                            }}
-                            className="absolute cursor-pointer group"
-                            style={{
-                              left: `${position.x}%`,
-                              top: `${position.y}%`,
-                              transform: 'translate(-50%, -50%)',
-                            }}
-                          >
-                            {/* Pulsing marker */}
-                            <div className="relative">
-                              <div className={`absolute inset-0 ${isSeogwan ? 'bg-secondary' : 'bg-primary'} rounded-full animate-ping opacity-75`} />
-                              <div className={`relative w-10 h-10 ${isSeogwan ? 'bg-secondary' : 'bg-primary'} rounded-full border-3 border-white shadow-lg flex items-center justify-center group-hover:scale-125 transition-transform`}>
-                                <span className="text-white font-bold text-sm">
-                                  {booth.booth_id}
-                                </span>
-                              </div>
-                            </div>
-
-                            {/* Tooltip on hover */}
-                            <div className="absolute top-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
-                              <div className="bg-foreground text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-lg border-2 border-white max-w-[200px]">
-                                {cleanName}
-                                {isSeogwan && <span className="block text-[10px] text-white/80 mt-0.5">📍 서관</span>}
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </TransformComponent>
-                </>
-              )}
-            </TransformWrapper>
+          <div className="relative bg-white p-4">
+            <img
+              src={boothMapImage}
+              alt="부스 배치도"
+              className="w-full h-auto rounded-lg border-2 border-foreground"
+            />
           </div>
         </Card>
 

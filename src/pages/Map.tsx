@@ -223,37 +223,6 @@ export default function Map() {
                 );
               })}
             </div>
-
-            {/* 서관 코너 (16-22) - 왼쪽 아래 */}
-            <div className="absolute left-8 bottom-8 flex flex-wrap gap-3 max-w-xs">
-              <div className="w-full text-center mb-2">
-                <h3 className="text-lg font-bold text-primary">서관 코너</h3>
-              </div>
-              {zones.seogwan.map((booth) => {
-                const cleanName = booth.name?.replace(/^\d+\.\s*/, '') || booth.name;
-                const icon = getBoothIcon(booth.name);
-                return (
-                  <div
-                    key={booth.booth_id}
-                    className="cursor-pointer hover:scale-110 transition-all group"
-                    onClick={() => setSelectedBooth(booth)}
-                  >
-                    <div className="w-20 h-28 relative">
-                      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[40px] border-l-transparent border-r-[40px] border-r-transparent border-t-[24px] border-t-secondary"></div>
-                      <div className="absolute top-6 w-full h-20 bg-gradient-to-br from-secondary/80 to-accent/80 rounded-lg shadow-lg flex flex-col items-center justify-center p-1.5 group-hover:shadow-xl">
-                        <div className="text-base mb-0.5">{icon}</div>
-                        <div className="w-5 h-5 rounded-full bg-white text-secondary text-xs font-bold flex items-center justify-center mb-0.5">
-                          {booth.booth_id}
-                        </div>
-                        <p className="text-[8px] text-white font-bold text-center leading-tight line-clamp-2">
-                          {cleanName}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
           </div>
           
           {filteredBooths.length === 0 && (
@@ -261,6 +230,41 @@ export default function Map() {
               검색 결과가 없습니다
             </p>
           )}
+        </Card>
+
+        {/* 서관 코너 - 별도 섹션 */}
+        <Card className="p-8 shadow-lg bg-gradient-to-br from-card to-card/80">
+          <h2 className="text-2xl font-bold mb-6 text-center flex items-center justify-center gap-2">
+            <MapPin className="w-7 h-7 text-secondary" />
+            서관 코너
+          </h2>
+          
+          <div className="flex flex-wrap justify-center gap-4 p-4 bg-muted/20 rounded-lg">
+            {zones.seogwan.map((booth) => {
+              const cleanName = booth.name?.replace(/^\d+\.\s*/, '') || booth.name;
+              const icon = getBoothIcon(booth.name);
+              return (
+                <div
+                  key={booth.booth_id}
+                  className="cursor-pointer hover:scale-110 transition-all group"
+                  onClick={() => setSelectedBooth(booth)}
+                >
+                  <div className="w-24 h-32 relative">
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[48px] border-l-transparent border-r-[48px] border-r-transparent border-t-[28px] border-t-secondary"></div>
+                    <div className="absolute top-7 w-full h-24 bg-gradient-to-br from-secondary/80 to-accent/80 rounded-lg shadow-lg flex flex-col items-center justify-center p-2 group-hover:shadow-xl">
+                      <div className="text-xl mb-1">{icon}</div>
+                      <div className="w-6 h-6 rounded-full bg-white text-secondary text-xs font-bold flex items-center justify-center mb-1">
+                        {booth.booth_id}
+                      </div>
+                      <p className="text-[9px] text-white font-bold text-center leading-tight line-clamp-2">
+                        {cleanName}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </Card>
       </div>
 

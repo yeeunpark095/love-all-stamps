@@ -31,13 +31,6 @@ export default function Map() {
     checkAuth();
   }, [navigate]);
 
-  const getBoothCategory = (description: string) => {
-    if (description?.includes('체험') || description?.includes('만들기')) return { icon: '🎨', label: '체험형', color: 'bg-accent/20 text-accent-foreground' };
-    if (description?.includes('간식') || description?.includes('먹을')) return { icon: '🍭', label: '간식형', color: 'bg-primary/20 text-primary' };
-    if (description?.includes('게임') || description?.includes('놀이')) return { icon: '🎮', label: '게임형', color: 'bg-secondary/20 text-secondary-foreground' };
-    return { icon: '📚', label: '전시형', color: 'bg-muted text-muted-foreground' };
-  };
-
   const filteredBooths = booths.filter(booth => 
     booth.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     booth.location?.toLowerCase().includes(searchQuery.toLowerCase())
@@ -97,7 +90,6 @@ export default function Map() {
           </h2>
           <div className="grid gap-4">
             {filteredBooths.map((booth) => {
-              const category = getBoothCategory(booth.description);
               return (
                 <Card
                   key={booth.booth_id}
@@ -113,9 +105,6 @@ export default function Map() {
                       </div>
                       <p className="text-sm text-muted-foreground mb-3 leading-relaxed">{booth.description}</p>
                       <div className="flex flex-wrap gap-2 text-xs">
-                        <span className={`px-3 py-1 rounded-full font-medium ${category.color}`}>
-                          {category.icon} {category.label}
-                        </span>
                         <span className="px-3 py-1 bg-secondary/20 rounded-full">
                           📍 {booth.location}
                         </span>

@@ -50,6 +50,11 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        ivory: "hsl(var(--ivory))",
+        "festival-pink": "hsl(var(--festival-pink))",
+        "festival-mint": "hsl(var(--festival-mint))",
+        "festival-sky": "hsl(var(--festival-sky))",
+        "festival-purple": "hsl(var(--festival-purple))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",

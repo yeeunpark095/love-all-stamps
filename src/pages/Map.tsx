@@ -37,40 +37,72 @@ export default function Map() {
     booth.location?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // 구역별로 부스 분류
-  const getBoothsByZone = () => {
-    return {
-      front: filteredBooths.filter(b => b.booth_id >= 1 && b.booth_id <= 6),
-      second: filteredBooths.filter(b => b.booth_id === 7),
-      third: filteredBooths.filter(b => b.booth_id >= 8 && b.booth_id <= 12),
-      side: filteredBooths.filter(b => b.booth_id >= 13 && b.booth_id <= 15),
-      seogwan: filteredBooths.filter(b => b.booth_id >= 16 && b.booth_id <= 22),
-    };
+  // 본관 부스 (1-15)
+  const mainBooths = filteredBooths.filter(b => b.booth_id >= 1 && b.booth_id <= 15);
+  const topRow = mainBooths.filter(b => b.booth_id >= 8 && b.booth_id <= 15);
+  const bottomRow = mainBooths.filter(b => b.booth_id >= 1 && b.booth_id <= 7);
+
+  // 서관 부스 (16-22)
+  const seogwanBooths = filteredBooths.filter(b => b.booth_id >= 16 && b.booth_id <= 22);
+  const floor1 = seogwanBooths.filter(b => b.booth_id >= 16 && b.booth_id <= 18);
+  const floor2 = seogwanBooths.filter(b => b.booth_id >= 19 && b.booth_id <= 21);
+  const floor3 = seogwanBooths.filter(b => b.booth_id === 22);
+
+  const BoothCard = ({ booth }: { booth: any }) => {
+    const cleanName = booth.name?.replace(/^\d+\.\s*/, '') || booth.name;
+    return (
+      <div
+        onClick={() => setSelectedBooth(booth)}
+        className="bg-white rounded-xl border-2 border-foreground shadow-[3px_3px_0_0_rgba(0,0,0,1)] px-3 py-2 cursor-pointer hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0_0_rgba(0,0,0,1)] transition-all"
+      >
+        <div className="text-xs font-bold text-center leading-tight text-foreground">
+          {cleanName}
+        </div>
+      </div>
+    );
   };
 
-  const zones = getBoothsByZone();
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-secondary/5 to-accent/5 pb-24">
-      <div className="bg-gradient-to-r from-primary via-secondary to-accent p-6 text-center shadow-lg">
-        <h1 className="text-3xl font-bold text-white mb-2">체험부스 배치도</h1>
-        <p className="text-white/90 text-sm">배치도를 확인하고 부스를 찾아보세요</p>
+    <div className="min-h-screen bg-ivory pb-24">
+      {/* Header Banner */}
+      <div className="relative bg-festival-pink border-b-4 border-foreground p-8 text-center shadow-lg">
+        <div className="max-w-6xl mx-auto">
+          {/* Character illustrations */}
+          <div className="absolute left-4 top-4 text-4xl">
+            🐰
+            <div className="mt-1 bg-white rounded-full px-3 py-1 border-2 border-foreground text-xs font-bold shadow-[2px_2px_0_0_rgba(0,0,0,1)]">
+              똑똑~!
+            </div>
+          </div>
+          <div className="absolute right-4 top-4 text-4xl">
+            🐻
+            <div className="mt-1 bg-white rounded-full px-3 py-1 border-2 border-foreground text-xs font-bold shadow-[2px_2px_0_0_rgba(0,0,0,1)]">
+              체험부스 참여!
+            </div>
+          </div>
+          
+          {/* Title */}
+          <h1 className="text-4xl font-extrabold text-foreground mb-2" style={{ fontFamily: 'Pretendard, sans-serif' }}>
+            🏫 성덕고등학교 부스배치도
+          </h1>
+          <p className="text-sm font-bold text-foreground/80">축제 체험부스 위치 안내</p>
+        </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 py-6 space-y-6">
-        {/* Map Viewer */}
-        <Card className="overflow-hidden shadow-xl border-2 border-primary/20 bg-card">
+      <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
+        {/* Original Map Image */}
+        <Card className="overflow-hidden shadow-xl border-4 border-foreground bg-card">
           <div className="relative bg-white p-4">
             <img
               src={boothMapImage}
               alt="부스 배치도"
-              className="w-full h-auto rounded-lg"
+              className="w-full h-auto rounded-lg border-2 border-foreground"
             />
           </div>
         </Card>
 
         {/* Search Bar */}
-        <Card className="p-4 shadow-lg">
+        <Card className="p-4 shadow-[4px_4px_0_0_rgba(0,0,0,1)] border-2 border-foreground">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
             <Input
@@ -78,168 +110,147 @@ export default function Map() {
               placeholder="부스명으로 찾아보기..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 h-12 text-base"
+              className="pl-10 h-12 text-base border-2 border-foreground"
             />
           </div>
         </Card>
 
-        {/* Visual Booth Layout */}
-        <Card className="p-8 shadow-lg bg-gradient-to-br from-card to-card/80">
-          <h2 className="text-2xl font-bold mb-6 text-center flex items-center justify-center gap-2">
-            <MapPin className="w-7 h-7 text-primary" />
-            부스 배치도
-          </h2>
-          
-          <div className="relative min-h-[700px] bg-muted/20 rounded-lg p-8">
-            {/* 세번째 줄 (8-12) - 화면 위쪽 */}
-            <div className="flex justify-center gap-3 mb-16 mt-8 relative">
-              {zones.third.map((booth) => {
-                const cleanName = booth.name?.replace(/^\d+\.\s*/, '') || booth.name;
-                return (
-                  <div
-                    key={booth.booth_id}
-                    className="cursor-pointer hover:scale-110 transition-all duration-300 group"
-                    onClick={() => setSelectedBooth(booth)}
-                  >
-                    <div className="relative w-28 h-28">
-                      <div className="w-full h-full bg-gradient-to-br from-accent/90 to-primary/90 shadow-xl flex flex-col items-center justify-center p-3 group-hover:shadow-2xl group-hover:from-accent group-hover:to-primary" style={{borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%'}}>
-                        <div className="w-7 h-7 rounded-full bg-white text-accent text-xs font-bold flex items-center justify-center mb-2 shadow-md">
-                          {booth.booth_id}
-                        </div>
-                        <p className="text-sm text-[#333] font-bold text-center leading-tight bg-white/95 px-3 py-1.5 rounded-lg shadow-sm">
-                          {cleanName}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-              
-              {/* 오른쪽 사이드 (13-15) - 위에서 아래로 15, 14, 13 */}
-              <div className="absolute right-8 top-0 flex flex-col gap-3">
-                {zones.side.slice().reverse().map((booth) => {
-                  const cleanName = booth.name?.replace(/^\d+\.\s*/, '') || booth.name;
-                  return (
-                    <div
-                      key={booth.booth_id}
-                      className="cursor-pointer hover:scale-110 transition-all duration-300 group"
-                      onClick={() => setSelectedBooth(booth)}
-                    >
-                      <div className="relative w-24 h-24">
-                        <div className="w-full h-full bg-gradient-to-br from-primary/90 to-secondary/90 shadow-xl flex flex-col items-center justify-center p-2 group-hover:shadow-2xl group-hover:from-primary group-hover:to-secondary" style={{borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%'}}>
-                          <div className="w-6 h-6 rounded-full bg-white text-primary text-xs font-bold flex items-center justify-center mb-1.5 shadow-md">
-                            {booth.booth_id}
-                          </div>
-                          <p className="text-xs text-[#333] font-bold text-center leading-tight bg-white/95 px-2 py-1 rounded-lg shadow-sm">
-                            {cleanName}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
+        {/* Main Layout: 본관 + 서관 */}
+        <div className="grid lg:grid-cols-[2fr_1fr] gap-6">
+          {/* ① 본관 구역 */}
+          <Card className="p-8 shadow-[6px_6px_0_0_rgba(0,0,0,1)] border-4 border-foreground bg-white">
+            <div className="mb-6 text-center">
+              <div className="inline-block bg-festival-mint rounded-full px-6 py-3 border-3 border-foreground shadow-[3px_3px_0_0_rgba(0,0,0,1)]">
+                <h2 className="text-2xl font-extrabold text-foreground flex items-center justify-center gap-2" style={{ fontFamily: 'Pretendard, sans-serif' }}>
+                  🏟️ 본관 구역
+                </h2>
+              </div>
+              <p className="text-sm text-muted-foreground mt-2 font-bold">성덕고등학교 본관 앞 운동장</p>
+            </div>
+
+            {/* Playground Layout */}
+            <div className="relative bg-festival-mint/30 rounded-2xl border-4 border-foreground p-6 min-h-[500px]">
+              {/* Entrance marker */}
+              <div className="absolute top-4 left-4 text-2xl">
+                🚪
+                <div className="text-xs font-bold bg-white px-2 py-1 rounded border-2 border-foreground mt-1">입구</div>
+              </div>
+
+              {/* 윗줄 (8-15) */}
+              <div className="mb-8 mt-12">
+                <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
+                  {topRow.map((booth) => (
+                    <BoothCard key={booth.booth_id} booth={booth} />
+                  ))}
+                </div>
+              </div>
+
+              {/* 아랫줄 (1-7) */}
+              <div className="mb-6">
+                <div className="grid grid-cols-4 md:grid-cols-7 gap-2">
+                  {bottomRow.map((booth) => (
+                    <BoothCard key={booth.booth_id} booth={booth} />
+                  ))}
+                </div>
+              </div>
+
+              {/* Building label */}
+              <div className="text-center mt-8">
+                <div className="inline-block bg-foreground text-white px-8 py-3 rounded-lg border-2 border-foreground font-bold text-lg shadow-[3px_3px_0_0_rgba(255,105,180,0.5)]">
+                  성덕고등학교 본관
+                </div>
               </div>
             </div>
+          </Card>
 
-            {/* 두번째 줄 (7) - 중앙 구령대 */}
-            <div className="flex justify-center mb-16">
-              {zones.second.map((booth) => {
-                const cleanName = booth.name?.replace(/^\d+\.\s*/, '') || booth.name;
-                return (
-                  <div
-                    key={booth.booth_id}
-                    className="cursor-pointer hover:scale-110 transition-all duration-300 group"
-                    onClick={() => setSelectedBooth(booth)}
-                  >
-                    <div className="relative w-28 h-28">
-                      <div className="w-full h-full bg-gradient-to-br from-secondary/90 via-accent/90 to-primary/90 shadow-xl flex flex-col items-center justify-center p-3 group-hover:shadow-2xl group-hover:from-secondary group-hover:to-primary" style={{borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%'}}>
-                        <div className="w-7 h-7 rounded-full bg-white text-secondary text-xs font-bold flex items-center justify-center mb-2 shadow-md">
-                          {booth.booth_id}
-                        </div>
-                        <p className="text-sm text-[#333] font-bold text-center leading-tight bg-white/95 px-3 py-1.5 rounded-lg shadow-sm">
-                          {cleanName}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+          {/* ② 서관존 */}
+          <Card className="p-8 shadow-[6px_6px_0_0_rgba(0,0,0,1)] border-4 border-foreground bg-white">
+            <div className="mb-6 text-center">
+              <div className="inline-block bg-festival-purple rounded-full px-6 py-3 border-3 border-foreground shadow-[3px_3px_0_0_rgba(0,0,0,1)]">
+                <h2 className="text-2xl font-extrabold text-foreground flex items-center justify-center gap-2" style={{ fontFamily: 'Pretendard, sans-serif' }}>
+                  🏢 서관 ZONE
+                </h2>
+              </div>
+              <p className="text-sm text-muted-foreground mt-2 font-bold">건물 내부 전시형 부스</p>
             </div>
 
-            {/* 앞줄 (1-6) - 화면 아래쪽 */}
-            <div className="flex justify-center gap-3 mb-8">
-              {zones.front.map((booth) => {
-                const cleanName = booth.name?.replace(/^\d+\.\s*/, '') || booth.name;
-                return (
-                  <div
-                    key={booth.booth_id}
-                    className="cursor-pointer hover:scale-110 transition-all duration-300 group"
-                    onClick={() => setSelectedBooth(booth)}
-                  >
-                    <div className="relative w-28 h-28">
-                      <div className="w-full h-full bg-gradient-to-br from-primary/90 to-secondary/90 shadow-xl flex flex-col items-center justify-center p-3 group-hover:shadow-2xl group-hover:from-primary group-hover:to-secondary" style={{borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%'}}>
-                        <div className="w-7 h-7 rounded-full bg-white text-primary text-xs font-bold flex items-center justify-center mb-2 shadow-md">
-                          {booth.booth_id}
-                        </div>
-                        <p className="text-sm text-[#333] font-bold text-center leading-tight bg-white/95 px-3 py-1.5 rounded-lg shadow-sm">
-                          {cleanName}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-          
-          {filteredBooths.length === 0 && (
-            <p className="text-center text-muted-foreground py-8">
-              검색 결과가 없습니다
-            </p>
-          )}
-        </Card>
-
-        {/* 서관 코너 - 별도 섹션 */}
-        <Card className="p-8 shadow-lg bg-gradient-to-br from-card to-card/80">
-          <div className="text-center mb-6">
-            <div className="inline-block bg-secondary/20 backdrop-blur-sm px-8 py-3 rounded-full mb-2">
-              <h2 className="text-2xl font-bold flex items-center justify-center gap-2">
-                <MapPin className="w-7 h-7 text-secondary" />
-                서관 Zone
-              </h2>
-            </div>
-            <p className="text-sm text-muted-foreground">서관 특별 체험 부스</p>
-          </div>
-          
-          <div className="flex flex-wrap justify-center gap-4 p-6 bg-muted/20 rounded-lg">
-            {zones.seogwan.map((booth) => {
-              const cleanName = booth.name?.replace(/^\d+\.\s*/, '') || booth.name;
-              return (
-                <div
-                  key={booth.booth_id}
-                  className="cursor-pointer hover:scale-110 transition-all duration-300 group"
-                  onClick={() => setSelectedBooth(booth)}
-                >
-                  <div className="relative w-28 h-28">
-                    <div className="w-full h-full bg-gradient-to-br from-secondary/90 to-accent/90 shadow-xl flex flex-col items-center justify-center p-3 group-hover:shadow-2xl group-hover:from-secondary group-hover:to-accent" style={{borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%'}}>
-                      <div className="w-7 h-7 rounded-full bg-white text-secondary text-xs font-bold flex items-center justify-center mb-2 shadow-md">
-                        {booth.booth_id}
-                      </div>
-                      <p className="text-sm text-[#333] font-bold text-center leading-tight bg-white/95 px-3 py-1.5 rounded-lg shadow-sm">
-                        {cleanName}
-                      </p>
-                    </div>
-                  </div>
+            <div className="space-y-4">
+              {/* 1층 */}
+              <div>
+                <div className="bg-festival-sky border-2 border-foreground rounded-lg px-4 py-2 mb-2 shadow-[2px_2px_0_0_rgba(0,0,0,1)]">
+                  <h3 className="text-lg font-extrabold text-foreground">1F</h3>
                 </div>
-              );
-            })}
-          </div>
-        </Card>
+                <div className="space-y-2">
+                  {floor1.map((booth) => (
+                    <div
+                      key={booth.booth_id}
+                      onClick={() => setSelectedBooth(booth)}
+                      className="bg-festival-sky/40 rounded-lg border-2 border-foreground p-3 cursor-pointer hover:bg-festival-sky/60 transition-colors shadow-[2px_2px_0_0_rgba(0,0,0,1)]"
+                    >
+                      <div className="font-bold text-sm text-foreground">{booth.location}</div>
+                      <div className="text-xs text-foreground/70 mt-1">
+                        {booth.name?.replace(/^\d+\.\s*/, '')}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* 2층 */}
+              <div>
+                <div className="bg-festival-purple border-2 border-foreground rounded-lg px-4 py-2 mb-2 shadow-[2px_2px_0_0_rgba(0,0,0,1)]">
+                  <h3 className="text-lg font-extrabold text-foreground">2F</h3>
+                </div>
+                <div className="space-y-2">
+                  {floor2.map((booth) => (
+                    <div
+                      key={booth.booth_id}
+                      onClick={() => setSelectedBooth(booth)}
+                      className="bg-festival-purple/40 rounded-lg border-2 border-foreground p-3 cursor-pointer hover:bg-festival-purple/60 transition-colors shadow-[2px_2px_0_0_rgba(0,0,0,1)]"
+                    >
+                      <div className="font-bold text-sm text-foreground">{booth.location}</div>
+                      <div className="text-xs text-foreground/70 mt-1">
+                        {booth.name?.replace(/^\d+\.\s*/, '')}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* 3층 */}
+              <div>
+                <div className="bg-festival-sky border-2 border-foreground rounded-lg px-4 py-2 mb-2 shadow-[2px_2px_0_0_rgba(0,0,0,1)]">
+                  <h3 className="text-lg font-extrabold text-foreground">3F</h3>
+                </div>
+                <div className="space-y-2">
+                  {floor3.map((booth) => (
+                    <div
+                      key={booth.booth_id}
+                      onClick={() => setSelectedBooth(booth)}
+                      className="bg-festival-sky/40 rounded-lg border-2 border-foreground p-3 cursor-pointer hover:bg-festival-sky/60 transition-colors shadow-[2px_2px_0_0_rgba(0,0,0,1)]"
+                    >
+                      <div className="font-bold text-sm text-foreground">{booth.location}</div>
+                      <div className="text-xs text-foreground/70 mt-1">
+                        {booth.name?.replace(/^\d+\.\s*/, '')}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        {filteredBooths.length === 0 && (
+          <p className="text-center text-muted-foreground py-8">
+            검색 결과가 없습니다
+          </p>
+        )}
       </div>
 
       {/* 부스 상세 정보 다이얼로그 */}
       <Dialog open={!!selectedBooth} onOpenChange={() => setSelectedBooth(null)}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md border-4 border-foreground shadow-[6px_6px_0_0_rgba(0,0,0,1)]">
           <DialogHeader>
             <DialogTitle className="text-2xl flex items-center gap-2">
               <span className="text-3xl">🏕️</span>
@@ -248,8 +259,8 @@ export default function Map() {
           </DialogHeader>
           {selectedBooth && (
             <div className="space-y-4">
-              <div className="flex items-center gap-2 p-3 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg">
-                <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary text-white text-base font-bold shadow-md">
+              <div className="flex items-center gap-2 p-3 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg border-2 border-foreground">
+                <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary text-white text-base font-bold shadow-md border-2 border-foreground">
                   {selectedBooth.booth_id}
                 </span>
                 <div>
@@ -261,14 +272,14 @@ export default function Map() {
               {selectedBooth.description && (
                 <div className="space-y-2">
                   <h4 className="font-bold text-base">체험 내용</h4>
-                  <p className="text-sm text-muted-foreground leading-relaxed bg-muted/30 p-3 rounded-lg">
+                  <p className="text-sm text-muted-foreground leading-relaxed bg-muted/30 p-3 rounded-lg border-2 border-foreground">
                     {selectedBooth.description}
                   </p>
                 </div>
               )}
 
               <div className="space-y-2">
-                <div className="flex items-center gap-2 p-3 bg-secondary/20 rounded-lg">
+                <div className="flex items-center gap-2 p-3 bg-secondary/20 rounded-lg border-2 border-foreground">
                   <MapPin className="w-5 h-5 text-primary" />
                   <div>
                     <p className="text-xs text-muted-foreground">위치</p>
@@ -277,7 +288,7 @@ export default function Map() {
                 </div>
                 
                 {selectedBooth.teacher && (
-                  <div className="flex items-center gap-2 p-3 bg-accent/20 rounded-lg">
+                  <div className="flex items-center gap-2 p-3 bg-accent/20 rounded-lg border-2 border-foreground">
                     <span className="text-xl">👨‍🏫</span>
                     <div>
                       <p className="text-xs text-muted-foreground">담당 교사</p>

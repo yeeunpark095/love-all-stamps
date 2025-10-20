@@ -3,7 +3,22 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import Navigation from "@/components/Navigation";
 import { Card } from "@/components/ui/card";
-import { Frame, Filter } from "lucide-react";
+import { 
+  Filter, 
+  Heart, 
+  Lightbulb, 
+  Leaf, 
+  Scale, 
+  Recycle, 
+  FlaskConical, 
+  Film, 
+  Map, 
+  Sparkles, 
+  FileText, 
+  Palette, 
+  Compass,
+  Frame
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function Exhibitions() {
@@ -31,6 +46,24 @@ export default function Exhibitions() {
 
   const types = ["all", ...new Set(exhibitions.map(e => e.type))];
   const filtered = filter === "all" ? exhibitions : exhibitions.filter(e => e.type === filter);
+
+  const getIconForClub = (club: string) => {
+    const iconMap: { [key: string]: any } = {
+      '간호보건동아리': Heart,
+      'Be creator': Lightbulb,
+      '플로깅': Leaf,
+      '사회정책탐구반': Scale,
+      '친환경연구동아리': Recycle,
+      '핸즈온 과학탐구반': FlaskConical,
+      '애니메이션 동아리': Film,
+      'Guide Makers': Map,
+      '뷰티동아리': Sparkles,
+      'STEAM사회참여반': FileText,
+      'ARTY 미술반': Palette,
+      '진로DREAM(드림)': Compass,
+    };
+    return iconMap[club] || Frame;
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary/5 to-accent/5 pb-24">
@@ -71,7 +104,10 @@ export default function Exhibitions() {
             >
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0 w-14 h-14 rounded-full bg-gradient-to-br from-accent to-primary flex items-center justify-center shadow-lg">
-                  <Frame className="w-7 h-7 text-white" />
+                  {(() => {
+                    const IconComponent = getIconForClub(exhibition.club);
+                    return <IconComponent className="w-7 h-7 text-white" />;
+                  })()}
                 </div>
                 <div className="flex-1">
                   <div className="flex items-start justify-between mb-2">

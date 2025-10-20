@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import Navigation from "@/components/Navigation";
 import { Card } from "@/components/ui/card";
-import { Music, Clock, Users, Sparkles } from "lucide-react";
+import { Music, Clock, Users, Sparkles, MapPin } from "lucide-react";
 
 export default function Performances() {
   const navigate = useNavigate();
@@ -87,16 +87,22 @@ export default function Performances() {
                       </span>
                     )}
                   </div>
-                  <div className="mb-2">
-                    <h3 className="font-bold text-xl mb-1">{perf.content}</h3>
-                    <div className="flex items-center gap-2 text-sm">
-                      <Users className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-muted-foreground">{perf.team}</span>
+                  <div className="mb-3">
+                    <h3 className="font-bold text-2xl mb-2">{perf.content}</h3>
+                    <div className="flex flex-wrap items-center gap-2 text-sm">
+                      <span className="flex items-center gap-1">
+                        <Users className="w-4 h-4 text-muted-foreground" />
+                        <span className="text-muted-foreground">{perf.team}</span>
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <MapPin className="w-4 h-4 text-primary" />
+                        <span className="text-foreground font-medium">📍강당</span>
+                      </span>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="px-3 py-1 bg-accent/30 rounded-full text-xs font-medium flex items-center gap-1">
-                      <Music className="w-3 h-3" />
+                    <span className="px-3 py-1 bg-accent/30 rounded-full text-sm font-medium flex items-center gap-1">
+                      <Music className="w-4 h-4" />
                       {perf.genre}
                     </span>
                   </div>

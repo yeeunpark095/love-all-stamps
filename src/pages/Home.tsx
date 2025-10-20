@@ -81,10 +81,10 @@ export default function Home() {
   if (!user) return null;
 
   const quickLinks = [
-    { icon: Map, label: "체험부스 배치도", path: "/map", color: "from-primary to-secondary" },
-    { icon: Stamp, label: "스탬프 투어", path: "/stamps", color: "from-secondary to-accent" },
+    { icon: Map, label: "배치도", path: "/map", color: "from-primary to-secondary" },
     { icon: Frame, label: "전시 안내", path: "/exhibitions", color: "from-accent to-primary" },
     { icon: Calendar, label: "공연 순서", path: "/performances", color: "from-primary to-accent" },
+    { icon: Stamp, label: "스탬프 투어", path: "/stamps", color: "from-secondary to-accent" },
   ];
 
   return (
@@ -138,6 +138,13 @@ export default function Home() {
       </div>
 
       <div className="max-w-4xl mx-auto px-4 py-8 space-y-8">
+        {/* Event Banner */}
+        <Card className="p-4 bg-gradient-to-r from-primary/90 to-secondary/90 text-white shadow-xl border-0 animate-fade-in">
+          <p className="text-center font-bold text-lg">
+            ⚡ 오늘 하루만! 13:00~16:30 진행 중 ⚡
+          </p>
+        </Card>
+
         {/* Stamp Progress */}
         <Card className="p-6 bg-gradient-to-br from-card to-card/80 shadow-lg border-2 border-primary/20 animate-fade-in">
           <div className="flex items-center justify-between mb-4">
@@ -171,11 +178,11 @@ export default function Home() {
         {/* CTA Button */}
         <Button
           onClick={() => navigate("/stamps")}
-          className="w-full h-16 text-xl font-bold bg-gradient-to-r from-primary via-secondary to-accent hover:opacity-90 transition-all duration-300 shadow-[0_10px_30px_hsl(var(--primary)/0.3)]"
+          className="w-full h-20 text-2xl font-bold bg-gradient-to-r from-primary via-secondary to-accent hover:opacity-90 transition-all duration-300 shadow-[0_10px_30px_hsl(var(--primary)/0.3)] animate-bounce-in"
           style={{ animation: "gentle-bounce 2s ease-in-out infinite" }}
         >
-          <Stamp className="w-8 h-8 mr-3" />
-          스탬프 투어 시작하기 ♥
+          <Stamp className="w-10 h-10 mr-3" />
+          지금 바로 스탬프 투어 시작! 💗
         </Button>
 
         {/* Quick Links */}
@@ -188,10 +195,10 @@ export default function Home() {
                 onClick={() => navigate(link.path)}
                 className="p-6 cursor-pointer hover:scale-105 transition-all duration-300 bg-gradient-to-br from-card to-card/80 shadow-lg border-2 border-transparent hover:border-primary/30 group"
               >
-                <div className={`inline-flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br ${link.color} mb-3 group-hover:animate-heart-pulse shadow-md`}>
-                  <Icon className="w-7 h-7 text-white" />
+                <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br ${link.color} mb-3 group-hover:animate-heart-pulse shadow-md`}>
+                  <Icon className="w-8 h-8 text-white" />
                 </div>
-                <p className="font-semibold text-center group-hover:text-primary transition-colors">
+                <p className="font-semibold text-center text-base group-hover:text-primary transition-colors">
                   {link.label}
                 </p>
               </Card>
@@ -200,9 +207,9 @@ export default function Home() {
         </div>
 
         {/* Notice */}
-        <Card className="p-6 bg-muted/50 border-l-4 border-primary">
+        <Card className="p-6 bg-muted/30 backdrop-blur-sm border-l-4 border-primary shadow-lg">
           <h3 className="font-bold text-lg mb-2 text-primary">공지사항</h3>
-          <ul className="space-y-2 text-sm text-muted-foreground">
+          <ul className="space-y-2 text-sm text-muted-foreground leading-relaxed">
             <li>• 축제 기간: 오늘 하루 (13:00 ~ 16:30)</li>
             <li>• 경품 수령: 본관 1층 안내데스크 (16:30까지)</li>
             <li>• 20개 부스 완주 시 경품 증정!</li>

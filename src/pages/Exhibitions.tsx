@@ -3,11 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import Navigation from "@/components/Navigation";
 import { Card } from "@/components/ui/card";
-import { MapPin } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { MapPin, Info } from "lucide-react";
 
 export default function Exhibitions() {
   const navigate = useNavigate();
   const [exhibitions, setExhibitions] = useState<any[]>([]);
+  const [selectedExhibition, setSelectedExhibition] = useState<any>(null);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -119,21 +121,26 @@ export default function Exhibitions() {
             return (
               <Card
                 key={exhibition.exhibition_id}
-                className="p-6 hover:shadow-xl transition-all hover:border-primary/30 animate-fade-in"
+                className="p-6 hover:shadow-xl transition-all hover:border-primary/30 animate-fade-in cursor-pointer hover:scale-[1.02]"
                 style={{ animationDelay: `${index * 0.05}s` }}
+                onClick={() => setSelectedExhibition({ ...exhibition, ...data })}
               >
                 <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <span className="text-4xl">{data.emoji}</span>
-                    <h3 className="font-bold text-xl text-primary">{exhibition.club}</h3>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <span className="text-5xl">{data.emoji}</span>
+                      <div>
+                        <h3 className="font-bold text-2xl text-primary">{exhibition.club}</h3>
+                        <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
+                          <Info className="w-3 h-3" />
+                          클릭하여 자세히 보기
+                        </p>
+                      </div>
+                    </div>
                   </div>
                   
-                  <p className="text-lg font-bold text-foreground italic font-myeongjo">
+                  <p className="text-lg font-bold text-foreground italic font-myeongjo line-clamp-2">
                     {data.title}
-                  </p>
-                  
-                  <p className="text-sm text-muted-foreground whitespace-pre-line leading-relaxed">
-                    {data.description}
                   </p>
                   
                   <div className="flex items-center gap-2 pt-2 border-t border-border/50">
@@ -154,6 +161,41 @@ export default function Exhibitions() {
           </Card>
         )}
       </div>
+
+      {/* Detail Dialog */}
+      <Dialog open={!!selectedExhibition} onOpenChange={() => setSelectedExhibition(null)}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl flex items-center gap-3">
+              <span className="text-5xl">{selectedExhibition?.emoji}</span>
+              {selectedExhibition?.club}
+            </DialogTitle>
+          </DialogHeader>
+          {selectedExhibition && (
+            <div className="space-y-4">
+              <div className="p-4 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg">
+                <p className="text-xl font-bold text-foreground italic font-myeongjo">
+                  {selectedExhibition.title}
+                </p>
+              </div>
+              
+              <div className="space-y-3">
+                <h4 className="font-bold text-lg">전시 소개</h4>
+                <p className="text-muted-foreground whitespace-pre-line leading-relaxed">
+                  {selectedExhibition.description}
+                </p>
+              </div>
+              
+              <div className="flex items-center gap-2 p-4 bg-muted/30 rounded-lg">
+                <MapPin className="w-5 h-5 text-primary" />
+                <p className="text-sm">
+                  지도교사: <span className="font-medium">{selectedExhibition.teacher} 선생님</span>
+                </p>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
 
       <Navigation />
     </div>

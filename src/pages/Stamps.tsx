@@ -7,8 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Heart, CheckCircle2, Circle, Trophy, Star, Sparkles } from "lucide-react";
+import { Heart, CheckCircle2, Circle, Trophy, Star, Sparkles, Stamp } from "lucide-react";
 import { toast } from "sonner";
+import confetti from "canvas-confetti";
 
 export default function Stamps() {
   const navigate = useNavigate();
@@ -81,9 +82,30 @@ export default function Stamps() {
         
         // Check if user completed all 20 stamps
         if (newStampCount === 20) {
+          // Confetti animation
+          confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 }
+          });
+          setTimeout(() => {
+            confetti({
+              particleCount: 50,
+              angle: 60,
+              spread: 55,
+              origin: { x: 0 }
+            });
+            confetti({
+              particleCount: 50,
+              angle: 120,
+              spread: 55,
+              origin: { x: 1 }
+            });
+          }, 250);
+          
           try {
             await supabase.rpc("register_lucky_draw", { p_user_id: user.id });
-            toast.success("🎉 모든 부스를 완주했습니다! 행운권 추첨 대상에 등록되었습니다.");
+            toast.success("🎉 완주 성공! 경품 수령처: 본관 1층 안내데스크 (16:30까지)");
           } catch (error) {
             console.error("Lucky draw registration failed:", error);
           }
@@ -106,10 +128,11 @@ export default function Stamps() {
   
   const getMilestoneMessage = (count: number) => {
     if (count >= 20) return { emoji: "🏆", message: "완주 달성!" };
-    if (count >= 15) return { emoji: "🌟", message: "거의 다 왔어요!" };
-    if (count >= 10) return { emoji: "⭐", message: "절반 완주!" };
-    if (count >= 5) return { emoji: "💪", message: "좋은 시작이에요!" };
-    return { emoji: "🎯", message: "시작해볼까요?" };
+    if (count >= 15) return { emoji: "🌟", message: `거의 다 왔어요! ${20 - count}개만 더!` };
+    if (count >= 10) return { emoji: "⭐", message: `절반 완주! ${20 - count}개 남았어요!` };
+    if (count >= 5) return { emoji: "💪", message: `좋은 시작! ${20 - count}개 남았어요!` };
+    if (count >= 1) return { emoji: "🎯", message: `현재 ${count}/20, 도전 시작!` };
+    return { emoji: "🎯", message: "현재 0/20, 도전 시작!" };
   };
   
   const milestone = getMilestoneMessage(stamps.size);
@@ -131,9 +154,11 @@ export default function Stamps() {
         />
       ))}
       
-      <div className="bg-gradient-to-r from-primary via-secondary to-accent p-6 text-center shadow-lg">
+      <div className="bg-gradient-to-r from-primary via-secondary to-accent p-6 text-center shadow-lg sticky top-0 z-10">
         <h1 className="text-3xl font-bold text-white mb-2">스탬프 투어</h1>
-        <p className="text-white/90 text-sm">20개 부스를 모두 완주하세요!</p>
+        <p className="text-white/90 text-sm font-semibold">
+          💗 현재 {stamps.size}개 획득! {stamps.size < 20 && `(${20 - stamps.size}개 남음)`}
+        </p>
       </div>
 
       <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
@@ -141,10 +166,11 @@ export default function Stamps() {
         <Card className="p-6 bg-gradient-to-br from-card to-card/80 shadow-xl border-2 border-primary/20">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
+              <Stamp className="w-6 h-6 text-primary" />
               <h2 className="text-xl font-bold">진행 상황</h2>
               <span className="text-2xl">{milestone.emoji}</span>
             </div>
-            <div className="text-2xl font-bold text-primary">{stamps.size} / 20</div>
+            <div className="text-3xl font-bold text-primary">{stamps.size} / 20</div>
           </div>
           <p className="text-sm text-muted-foreground mb-3 text-center font-semibold">
             {milestone.message}

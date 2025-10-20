@@ -5,6 +5,7 @@ import Navigation from "@/components/Navigation";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Heart, Award, MapPin, Trophy } from "lucide-react";
+import confetti from "canvas-confetti";
 
 export default function MyStamps() {
   const navigate = useNavigate();
@@ -48,6 +49,38 @@ export default function MyStamps() {
   const progress = (stamps.size / 20) * 100;
   const isComplete = stamps.size === 20;
 
+  useEffect(() => {
+    if (isComplete) {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+    }
+  }, [isComplete]);
+
+  const getRandomPastelColor = (index: number) => {
+    const colors = [
+      'from-pink-400 to-pink-500',
+      'from-purple-400 to-purple-500',
+      'from-blue-400 to-blue-500',
+      'from-teal-400 to-teal-500',
+      'from-green-400 to-green-500',
+      'from-yellow-400 to-yellow-500',
+      'from-orange-400 to-orange-500',
+      'from-red-400 to-red-500',
+    ];
+    return colors[index % colors.length];
+  };
+
+  const getMotivationalMessage = (remaining: number) => {
+    if (remaining === 0) return "🏆 완주! 최고예요!";
+    if (remaining <= 3) return `🔥 ${remaining}개만 더! 거의 다 왔어요!`;
+    if (remaining <= 7) return `💪 ${remaining}개 남았어요! 조금만 더!`;
+    if (remaining <= 12) return `⭐ ${remaining}개 남았어요! 화이팅!`;
+    return `🎯 ${remaining}개 남았어요! 시작이 반이에요!`;
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary/5 to-accent/5 pb-24">
       <div className="bg-gradient-to-r from-primary via-secondary to-accent p-6 text-center shadow-lg">
@@ -56,9 +89,14 @@ export default function MyStamps() {
         </div>
         <h1 className="text-3xl font-bold text-white mb-2">내 스탬프</h1>
         {profile && (
-          <p className="text-white/90 text-sm">
-            {profile.name} ({profile.student_id})
-          </p>
+          <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3 inline-block">
+            <p className="text-white text-base font-semibold">
+              {profile.name}
+            </p>
+            <p className="text-white/90 text-sm">
+              {profile.student_id}
+            </p>
+          </div>
         )}
       </div>
 
@@ -105,9 +143,14 @@ export default function MyStamps() {
               </div>
             </div>
           ) : (
-            <p className="text-center text-sm text-muted-foreground">
-              {20 - stamps.size}개의 스탬프가 남았습니다. 화이팅! 💪
-            </p>
+            <div className="text-center">
+              <p className="text-lg font-bold text-primary mb-1">
+                {getMotivationalMessage(20 - stamps.size)}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                조금만 더 힘내세요!
+              </p>
+            </div>
           )}
         </Card>
 
@@ -115,15 +158,16 @@ export default function MyStamps() {
         <Card className="p-6 shadow-lg">
           <h2 className="text-xl font-bold mb-4">스탬프 컬렉션</h2>
           <div className="grid grid-cols-4 gap-3">
-            {booths.map((booth) => {
+            {booths.map((booth, index) => {
               const hasStamp = stamps.has(booth.booth_id);
+              const colorClass = getRandomPastelColor(index);
               return (
                 <div
                   key={booth.booth_id}
-                  className={`aspect-square rounded-xl flex flex-col items-center justify-center gap-2 transition-all ${
+                  className={`aspect-square rounded-xl flex flex-col items-center justify-center gap-2 transition-all shadow-md ${
                     hasStamp
-                      ? "bg-gradient-to-br from-primary to-secondary shadow-lg animate-heart-pulse"
-                      : "bg-muted"
+                      ? `bg-gradient-to-br ${colorClass} animate-heart-pulse`
+                      : "bg-muted/50"
                   }`}
                 >
                   <Heart
@@ -151,20 +195,23 @@ export default function MyStamps() {
             <div className="space-y-3">
               {booths
                 .filter(booth => stamps.has(booth.booth_id))
-                .map(booth => (
-                  <div
-                    key={booth.booth_id}
-                    className="flex items-center gap-3 p-3 bg-gradient-to-r from-primary/5 to-secondary/5 rounded-lg border border-primary/20"
-                  >
-                    <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-                      <Heart className="w-5 h-5 text-white" fill="currentColor" />
+                .map((booth, index) => {
+                  const colorClass = getRandomPastelColor(index);
+                  return (
+                    <div
+                      key={booth.booth_id}
+                      className="flex items-center gap-3 p-3 bg-gradient-to-r from-primary/5 to-secondary/5 rounded-lg border border-primary/20"
+                    >
+                      <div className={`flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br ${colorClass} flex items-center justify-center shadow-md`}>
+                        <Heart className="w-5 h-5 text-white" fill="currentColor" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-semibold">{booth.name}</p>
+                        <p className="text-xs text-muted-foreground">{booth.location}</p>
+                      </div>
                     </div>
-                    <div className="flex-1">
-                      <p className="font-semibold">{booth.name}</p>
-                      <p className="text-xs text-muted-foreground">{booth.location}</p>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
             </div>
           )}
         </Card>

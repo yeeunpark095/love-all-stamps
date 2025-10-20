@@ -63,8 +63,8 @@ export default function Home() {
 
   const toggleMusic = () => {
     if (!audioRef.current) {
-      // Create audio element with a lovely background music
-      audioRef.current = new Audio("https://cdn.pixabay.com/audio/2022/05/27/audio_1808fbf07a.mp3");
+      // Create audio element with cheerful, upbeat background music
+      audioRef.current = new Audio("https://cdn.pixabay.com/audio/2022/03/10/audio_4dedf26f94.mp3");
       audioRef.current.loop = true;
       audioRef.current.volume = 0.3;
     }

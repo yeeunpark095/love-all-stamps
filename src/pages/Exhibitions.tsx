@@ -128,7 +128,7 @@ export default function Exhibitions() {
                     <h3 className="font-bold text-xl text-primary">{exhibition.club}</h3>
                   </div>
                   
-                  <p className="text-lg font-semibold text-foreground italic">
+                  <p className="text-lg font-bold text-foreground italic font-myeongjo">
                     {data.title}
                   </p>
                   

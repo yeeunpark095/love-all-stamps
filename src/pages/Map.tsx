@@ -5,7 +5,9 @@ import Navigation from "@/components/Navigation";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { MapPin, Search } from "lucide-react";
+import { MapPin, Search, ZoomIn, ZoomOut, Maximize2 } from "lucide-react";
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import { Button } from "@/components/ui/button";
 import boothMapImage from "@/assets/booth-map.jpg";
 
 export default function Map() {
@@ -47,6 +49,29 @@ export default function Map() {
   const floor1 = seogwanBooths.filter(b => b.booth_id >= 16 && b.booth_id <= 18);
   const floor2 = seogwanBooths.filter(b => b.booth_id >= 19 && b.booth_id <= 21);
   const floor3 = seogwanBooths.filter(b => b.booth_id === 22);
+
+  // 부스 위치 좌표 (이미지 기준 %, 실제 배치도에 맞게 조정 필요)
+  const boothPositions: Record<number, { x: number; y: number }> = {
+    // 앞줄 (1-6)
+    1: { x: 15, y: 65 },
+    2: { x: 25, y: 65 },
+    3: { x: 35, y: 65 },
+    4: { x: 45, y: 65 },
+    5: { x: 55, y: 65 },
+    6: { x: 65, y: 65 },
+    // 구령대 (7)
+    7: { x: 50, y: 50 },
+    // 윗줄 (8-12)
+    8: { x: 20, y: 35 },
+    9: { x: 30, y: 35 },
+    10: { x: 40, y: 35 },
+    11: { x: 50, y: 35 },
+    12: { x: 60, y: 35 },
+    // 사이드 (13-15)
+    13: { x: 80, y: 60 },
+    14: { x: 80, y: 50 },
+    15: { x: 80, y: 40 },
+  };
 
   const BoothCard = ({ booth }: { booth: any }) => {
     const cleanName = booth.name?.replace(/^\d+\.\s*/, '') || booth.name;
@@ -90,14 +115,106 @@ export default function Map() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
-        {/* Original Map Image */}
+        {/* Interactive Map Viewer with Clickable Booths */}
         <Card className="overflow-hidden shadow-xl border-4 border-foreground bg-card">
-          <div className="relative bg-white p-4">
-            <img
-              src={boothMapImage}
-              alt="부스 배치도"
-              className="w-full h-auto rounded-lg border-2 border-foreground"
-            />
+          <div className="bg-festival-pink/20 p-3 border-b-2 border-foreground">
+            <p className="text-sm font-bold text-center text-foreground">
+              💡 이미지를 확대하고 부스를 클릭해보세요!
+            </p>
+          </div>
+          <div className="relative bg-white">
+            <TransformWrapper
+              initialScale={1}
+              minScale={0.5}
+              maxScale={3}
+              centerOnInit={true}
+            >
+              {({ zoomIn, zoomOut, resetTransform }) => (
+                <>
+                  {/* Zoom Controls */}
+                  <div className="absolute top-4 right-4 z-10 flex flex-col gap-2">
+                    <Button
+                      onClick={() => zoomIn()}
+                      size="icon"
+                      className="bg-white border-2 border-foreground shadow-[2px_2px_0_0_rgba(0,0,0,1)] hover:shadow-[1px_1px_0_0_rgba(0,0,0,1)]"
+                    >
+                      <ZoomIn className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      onClick={() => zoomOut()}
+                      size="icon"
+                      className="bg-white border-2 border-foreground shadow-[2px_2px_0_0_rgba(0,0,0,1)] hover:shadow-[1px_1px_0_0_rgba(0,0,0,1)]"
+                    >
+                      <ZoomOut className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      onClick={() => resetTransform()}
+                      size="icon"
+                      className="bg-white border-2 border-foreground shadow-[2px_2px_0_0_rgba(0,0,0,1)] hover:shadow-[1px_1px_0_0_rgba(0,0,0,1)]"
+                    >
+                      <Maximize2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+
+                  <TransformComponent
+                    wrapperStyle={{
+                      width: "100%",
+                      height: "600px",
+                    }}
+                  >
+                    <div className="relative w-full h-[600px]">
+                      {/* Background Image */}
+                      <img
+                        src={boothMapImage}
+                        alt="부스 배치도"
+                        className="w-full h-full object-contain"
+                      />
+
+                      {/* Clickable Booth Markers (본관 부스만) */}
+                      {mainBooths.map((booth) => {
+                        const position = boothPositions[booth.booth_id];
+                        if (!position) return null;
+
+                        const cleanName = booth.name?.replace(/^\d+\.\s*/, '') || booth.name;
+
+                        return (
+                          <div
+                            key={booth.booth_id}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedBooth(booth);
+                            }}
+                            className="absolute cursor-pointer group"
+                            style={{
+                              left: `${position.x}%`,
+                              top: `${position.y}%`,
+                              transform: 'translate(-50%, -50%)',
+                            }}
+                          >
+                            {/* Pulsing marker */}
+                            <div className="relative">
+                              <div className="absolute inset-0 bg-primary rounded-full animate-ping opacity-75" />
+                              <div className="relative w-10 h-10 bg-primary rounded-full border-3 border-white shadow-lg flex items-center justify-center group-hover:scale-125 transition-transform">
+                                <span className="text-white font-bold text-sm">
+                                  {booth.booth_id}
+                                </span>
+                              </div>
+                            </div>
+
+                            {/* Tooltip on hover */}
+                            <div className="absolute top-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
+                              <div className="bg-foreground text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-lg border-2 border-white">
+                                {cleanName}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </TransformComponent>
+                </>
+              )}
+            </TransformWrapper>
           </div>
         </Card>
 

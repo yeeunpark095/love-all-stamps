@@ -63,7 +63,6 @@ export default function Home() {
 
   const toggleMusic = () => {
     if (!audioRef.current) {
-      // Create audio element with cheerful, upbeat background music
       audioRef.current = new Audio("https://cdn.pixabay.com/audio/2022/03/10/audio_4dedf26f94.mp3");
       audioRef.current.loop = true;
       audioRef.current.volume = 0.3;
@@ -73,7 +72,10 @@ export default function Home() {
       audioRef.current.pause();
       setIsMusicPlaying(false);
     } else {
-      audioRef.current.play();
+      audioRef.current.play().catch(err => {
+        console.error("Audio play failed:", err);
+        toast.error("음악 재생에 실패했습니다. 다시 시도해주세요.");
+      });
       setIsMusicPlaying(true);
     }
   };
@@ -138,13 +140,6 @@ export default function Home() {
       </div>
 
       <div className="max-w-4xl mx-auto px-4 py-8 space-y-8">
-        {/* Event Banner */}
-        <Card className="p-4 bg-gradient-to-r from-primary/90 to-secondary/90 text-white shadow-xl border-0 animate-fade-in">
-          <p className="text-center font-bold text-lg">
-            ⚡ 오늘 하루만! 13:00~16:30 진행 중 ⚡
-          </p>
-        </Card>
-
         {/* Stamp Progress */}
         <Card className="p-6 bg-gradient-to-br from-card to-card/80 shadow-lg border-2 border-primary/20 animate-fade-in">
           <div className="flex items-center justify-between mb-4">

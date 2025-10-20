@@ -31,13 +31,13 @@ export default function Exhibitions() {
 
   const exhibitionData: { [key: string]: { emoji: string; title: string; description: string; teacher: string } } = {
     '간호보건동아리': {
-      emoji: '💉',
+      emoji: '💊',
       title: '"사랑할 때, 내 몸은 어떻게 반응할까?"',
       description: '스트레스 상황에서의 변화와 관리법을 과학적으로 알아보는 부스!',
       teacher: '심보경'
     },
     'Be creator': {
-      emoji: '🎪',
+      emoji: '✨',
       title: '"축제를 만드는 사람들, 그들의 비밀 노트"',
       description: '성덕제의 기획 여정을 한눈에!\n기획서·아이디어·홍보 자료 등 창의력이 폭발하는 전시 💡',
       teacher: '박예은'
@@ -61,31 +61,31 @@ export default function Exhibitions() {
       teacher: '이윤주'
     },
     '핸즈온 과학탐구반': {
-      emoji: '🔬',
+      emoji: '🧪',
       title: '"손으로 만든 과학, 마음으로 담은 사랑"',
       description: '학생들이 직접 진행한 소모임 연구 결과 전시 🧪\n실험을 통해 발견한 호기심과 열정의 기록!',
       teacher: '오주현'
     },
     '애니메이션 동아리': {
-      emoji: '🎞️',
+      emoji: '🎬',
       title: '"사랑은 프레임 사이에 있다"',
       description: '애니메이션이 만들어지는 과정과 그 속의 스토리텔링 💕\n제작 과정 전시 + 애니메이션 체험 코너까지!',
       teacher: '김예원'
     },
     'Guide Makers': {
-      emoji: '🗺️',
+      emoji: '🌏',
       title: '"내가 만든 박물관, 영어로 안내해볼까?"',
       description: '직접 제작한 영문 안내서를 통해\n학생들의 언어 감각과 창의력을 엿볼 수 있는 전시 ✈️',
       teacher: '박형진'
     },
     '뷰티동아리': {
-      emoji: '💄',
+      emoji: '✨',
       title: '"나를 사랑하는 가장 예쁜 방법"',
       description: '퍼스널 컬러와 스타일링으로\n\'나\'를 빛내는 뷰티 솔루션 전시 💋',
       teacher: '민소정'
     },
     'STEAM사회참여반': {
-      emoji: '🔥',
+      emoji: '💡',
       title: '"사랑의 단맛, 연구의 깊이"',
       description: '사회 문제를 과학적 시선으로 풀어낸\n탐구 보고서 전시와 연구 결과 공개 🧩',
       teacher: '정재은, 이은영'
@@ -97,7 +97,7 @@ export default function Exhibitions() {
       teacher: '이규화'
     },
     '진로DREAM(드림)': {
-      emoji: '💼',
+      emoji: '🌟',
       title: '"사랑하는 일을 찾아서 – 나의 꿈 전시"',
       description: '다양한 직업 체험과 진로 탐색,\n그리고 \'나의 미래\'를 스스로 디자인한 작품 전시 🌟',
       teacher: '박건희'
@@ -111,9 +111,9 @@ export default function Exhibitions() {
         <p className="text-white/90 text-sm">다양한 동아리의 전시를 만나보세요</p>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 py-6 space-y-4">
-        {/* Exhibition List */}
-        <div className="grid gap-4">
+      <div className="max-w-7xl mx-auto px-4 py-6">
+        {/* Exhibition Grid - Album Style */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {exhibitions.map((exhibition, index) => {
             const data = exhibitionData[exhibition.club];
             if (!data) return null;
@@ -121,32 +121,27 @@ export default function Exhibitions() {
             return (
               <Card
                 key={exhibition.exhibition_id}
-                className="p-6 hover:shadow-xl transition-all hover:border-primary/30 animate-fade-in cursor-pointer hover:scale-[1.02]"
+                className="overflow-hidden hover:shadow-2xl transition-all duration-300 cursor-pointer hover:scale-105 animate-fade-in group"
                 style={{ animationDelay: `${index * 0.05}s` }}
                 onClick={() => setSelectedExhibition({ ...exhibition, ...data })}
               >
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <span className="text-5xl">{data.emoji}</span>
-                      <div>
-                        <h3 className="font-bold text-2xl text-primary">{exhibition.club}</h3>
-                        <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
-                          <Info className="w-3 h-3" />
-                          클릭하여 자세히 보기
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <p className="text-lg font-bold text-foreground italic font-myeongjo line-clamp-2">
+                {/* Album Cover */}
+                <div className="relative h-48 bg-gradient-to-br from-primary/20 via-secondary/20 to-accent/20 flex items-center justify-center overflow-hidden">
+                  <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1vcGFjaXR5PSIwLjA1IiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-50" />
+                  <span className="text-8xl z-10 group-hover:scale-110 transition-transform duration-300">{data.emoji}</span>
+                </div>
+                
+                {/* Album Info */}
+                <div className="p-5 space-y-3">
+                  <h3 className="font-bold text-xl text-primary line-clamp-1">{exhibition.club}</h3>
+                  <p className="text-sm font-medium text-foreground italic font-myeongjo line-clamp-2 min-h-[2.5rem]">
                     {data.title}
                   </p>
                   
                   <div className="flex items-center gap-2 pt-2 border-t border-border/50">
-                    <MapPin className="w-4 h-4 text-primary" />
-                    <p className="text-sm text-muted-foreground">
-                      지도교사: <span className="font-medium text-foreground">{data.teacher} 선생님</span>
+                    <MapPin className="w-4 h-4 text-primary flex-shrink-0" />
+                    <p className="text-xs text-muted-foreground truncate">
+                      {data.teacher} 선생님
                     </p>
                   </div>
                 </div>

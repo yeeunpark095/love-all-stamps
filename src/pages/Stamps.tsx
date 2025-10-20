@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Heart, CheckCircle2, Circle, Trophy } from "lucide-react";
+import { Heart, CheckCircle2, Circle, Trophy, Star, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
 export default function Stamps() {
@@ -18,6 +18,7 @@ export default function Stamps() {
   const [selectedBooth, setSelectedBooth] = useState<any>(null);
   const [inputCode, setInputCode] = useState("");
   const [loading, setLoading] = useState(false);
+  const [floatingHearts, setFloatingHearts] = useState<number[]>([]);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -68,6 +69,13 @@ export default function Stamps() {
 
       if (data === true) {
         const newStampCount = stamps.size + 1;
+        
+        // Floating heart animation
+        setFloatingHearts([...floatingHearts, Date.now()]);
+        setTimeout(() => {
+          setFloatingHearts(prev => prev.slice(1));
+        }, 2000);
+        
         toast.success(`✅ ${selectedBooth.name} 스탬프 획득! (${newStampCount}/20) 🎉`);
         await loadData(user.id);
         
@@ -95,9 +103,34 @@ export default function Stamps() {
 
   const progress = (stamps.size / 20) * 100;
   const isComplete = stamps.size === 20;
+  
+  const getMilestoneMessage = (count: number) => {
+    if (count >= 20) return { emoji: "🏆", message: "완주 달성!" };
+    if (count >= 15) return { emoji: "🌟", message: "거의 다 왔어요!" };
+    if (count >= 10) return { emoji: "⭐", message: "절반 완주!" };
+    if (count >= 5) return { emoji: "💪", message: "좋은 시작이에요!" };
+    return { emoji: "🎯", message: "시작해볼까요?" };
+  };
+  
+  const milestone = getMilestoneMessage(stamps.size);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-secondary/5 to-accent/5 pb-24">
+    <div className="min-h-screen bg-gradient-to-br from-background via-secondary/5 to-accent/5 pb-24 relative overflow-hidden">
+      {/* Floating Hearts Animation */}
+      {floatingHearts.map((id, index) => (
+        <Heart
+          key={id}
+          className="absolute text-pink-500 pointer-events-none"
+          fill="currentColor"
+          style={{
+            left: `${20 + index * 15}%`,
+            animation: "float-hearts 2s ease-out forwards",
+            width: "40px",
+            height: "40px"
+          }}
+        />
+      ))}
+      
       <div className="bg-gradient-to-r from-primary via-secondary to-accent p-6 text-center shadow-lg">
         <h1 className="text-3xl font-bold text-white mb-2">스탬프 투어</h1>
         <p className="text-white/90 text-sm">20개 부스를 모두 완주하세요!</p>
@@ -107,18 +140,41 @@ export default function Stamps() {
         {/* Progress */}
         <Card className="p-6 bg-gradient-to-br from-card to-card/80 shadow-xl border-2 border-primary/20">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-xl font-bold">진행 상황</h2>
+            <div className="flex items-center gap-2">
+              <h2 className="text-xl font-bold">진행 상황</h2>
+              <span className="text-2xl">{milestone.emoji}</span>
+            </div>
             <div className="text-2xl font-bold text-primary">{stamps.size} / 20</div>
           </div>
-          <div className="w-full bg-muted rounded-full h-5 overflow-hidden mb-4">
+          <p className="text-sm text-muted-foreground mb-3 text-center font-semibold">
+            {milestone.message}
+          </p>
+          <div className="w-full bg-muted rounded-full h-6 overflow-hidden mb-4 relative">
             <div
-              className="h-full bg-gradient-to-r from-primary via-secondary to-accent transition-all duration-500 flex items-center justify-end pr-2 shadow-[0_0_15px_hsl(var(--primary)/0.5)]"
+              className="h-full bg-gradient-to-r from-primary via-secondary to-accent transition-all duration-500 rounded-full shadow-[0_0_10px_hsl(var(--primary)/0.5)] flex items-center justify-end pr-2"
               style={{ width: `${progress}%` }}
             >
-              {progress > 20 && (
-                <span className="text-white text-xs font-bold">{Math.round(progress)}%</span>
+              {progress > 10 && (
+                <div className="flex items-center gap-1">
+                  <Sparkles className="w-3 h-3 text-white" />
+                  <span className="text-white text-xs font-bold">{Math.round(progress)}%</span>
+                </div>
               )}
             </div>
+          </div>
+          
+          {/* Heart collection display */}
+          <div className="grid grid-cols-10 gap-2 p-3 bg-muted/30 rounded-lg mb-4">
+            {Array.from({ length: 20 }).map((_, i) => (
+              <Heart
+                key={i}
+                className={`w-6 h-6 transition-all duration-300 ${
+                  i < stamps.size
+                    ? "text-pink-500 fill-pink-500 scale-110"
+                    : "text-muted-foreground/30"
+                }`}
+              />
+            ))}
           </div>
 
           {isComplete && (

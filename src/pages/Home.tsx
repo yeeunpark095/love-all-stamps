@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Navigation from "@/components/Navigation";
-import { Heart, Map, Stamp, Calendar, Frame, LogOut } from "lucide-react";
+import { Heart, Map, Stamp, Calendar, Frame, LogOut, Volume2, VolumeX } from "lucide-react";
 import { toast } from "sonner";
 
 export default function Home() {
@@ -12,6 +12,8 @@ export default function Home() {
   const [user, setUser] = useState<any>(null);
   const [profile, setProfile] = useState<any>(null);
   const [stampCount, setStampCount] = useState(0);
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -46,12 +48,34 @@ export default function Home() {
       }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+    };
   }, [navigate]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
     toast.success("로그아웃 되었습니다");
+  };
+
+  const toggleMusic = () => {
+    if (!audioRef.current) {
+      // Create audio element with a lovely background music
+      audioRef.current = new Audio("https://cdn.pixabay.com/audio/2022/05/27/audio_1808fbf07a.mp3");
+      audioRef.current.loop = true;
+      audioRef.current.volume = 0.3;
+    }
+    
+    if (isMusicPlaying) {
+      audioRef.current.pause();
+      setIsMusicPlaying(false);
+    } else {
+      audioRef.current.play();
+      setIsMusicPlaying(true);
+    }
   };
 
   if (!user) return null;
@@ -70,7 +94,16 @@ export default function Home() {
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1vcGFjaXR5PSIwLjEiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-20" />
         
         <div className="relative">
-          <div className="flex justify-end mb-4">
+          <div className="flex justify-between mb-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleMusic}
+              className="text-white hover:bg-white/20"
+            >
+              {isMusicPlaying ? <Volume2 className="w-4 h-4 mr-2" /> : <VolumeX className="w-4 h-4 mr-2" />}
+              {isMusicPlaying ? "음악 끄기" : "음악 켜기"}
+            </Button>
             <Button
               variant="ghost"
               size="sm"
@@ -138,9 +171,10 @@ export default function Home() {
         {/* CTA Button */}
         <Button
           onClick={() => navigate("/stamps")}
-          className="w-full h-16 text-xl font-bold bg-gradient-to-r from-primary via-secondary to-accent hover:opacity-90 transition-all duration-300 shadow-[0_10px_30px_hsl(var(--primary)/0.3)] animate-heart-pulse"
+          className="w-full h-16 text-xl font-bold bg-gradient-to-r from-primary via-secondary to-accent hover:opacity-90 transition-all duration-300 shadow-[0_10px_30px_hsl(var(--primary)/0.3)]"
+          style={{ animation: "gentle-bounce 2s ease-in-out infinite" }}
         >
-          <Stamp className="w-6 h-6 mr-3" />
+          <Stamp className="w-8 h-8 mr-3" />
           스탬프 투어 시작하기 ♥
         </Button>
 

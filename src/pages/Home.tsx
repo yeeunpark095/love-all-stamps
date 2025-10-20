@@ -63,7 +63,7 @@ export default function Home() {
 
   const toggleMusic = () => {
     if (!audioRef.current) {
-      audioRef.current = new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3");
+      audioRef.current = new Audio("https://assets.mixkit.co/music/preview/mixkit-happy-acoustic-ukulele-11.mp3");
       audioRef.current.loop = true;
       audioRef.current.volume = 0.3;
     }

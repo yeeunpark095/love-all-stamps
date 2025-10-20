@@ -7,8 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Heart, CheckCircle2, Circle, Trophy, Star, Sparkles } from "lucide-react";
+import { Heart, CheckCircle2, Circle, Trophy, Star, Sparkles, Stamp } from "lucide-react";
 import { toast } from "sonner";
+import confetti from "canvas-confetti";
 
 export default function Stamps() {
   const navigate = useNavigate();
@@ -81,11 +82,40 @@ export default function Stamps() {
         
         // Check if user completed all 20 stamps
         if (newStampCount === 20) {
+          // Confetti celebration!
+          const duration = 3 * 1000;
+          const animationEnd = Date.now() + duration;
+          const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+          function randomInRange(min: number, max: number) {
+            return Math.random() * (max - min) + min;
+          }
+
+          const interval: any = setInterval(function() {
+            const timeLeft = animationEnd - Date.now();
+
+            if (timeLeft <= 0) {
+              return clearInterval(interval);
+            }
+
+            const particleCount = 50 * (timeLeft / duration);
+            confetti({
+              ...defaults,
+              particleCount,
+              origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+            });
+            confetti({
+              ...defaults,
+              particleCount,
+              origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+            });
+          }, 250);
+
           try {
             await supabase.rpc("register_lucky_draw", { p_user_id: user.id });
             toast.success("🎉 모든 부스를 완주했습니다! 행운권 추첨 대상에 등록되었습니다.");
           } catch (error) {
-            console.error("Lucky draw registration failed:", error);
+            // Error logged but not shown to user
           }
         }
         
@@ -115,7 +145,7 @@ export default function Stamps() {
   const milestone = getMilestoneMessage(stamps.size);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-secondary/5 to-accent/5 pb-24 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/30 to-secondary/10 pb-24 relative overflow-hidden font-sans">
       {/* Floating Hearts Animation */}
       {floatingHearts.map((id, index) => (
         <Heart
@@ -131,14 +161,17 @@ export default function Stamps() {
         />
       ))}
       
-      <div className="bg-gradient-to-r from-primary via-secondary to-accent p-6 text-center shadow-lg">
-        <h1 className="text-3xl font-bold text-white mb-2">스탬프 투어</h1>
-        <p className="text-white/90 text-sm">20개 부스를 모두 완주하세요!</p>
+      <div className="bg-gradient-to-r from-primary via-accent to-secondary p-6 text-center shadow-[var(--shadow-glow)]">
+        <h1 className="text-3xl font-bold text-primary-foreground mb-2 flex items-center justify-center gap-2">
+          <Stamp className="w-8 h-8" />
+          스탬프 투어 ✨
+        </h1>
+        <p className="text-primary-foreground/90 text-sm">20개 부스를 모두 완주하세요! 💖</p>
       </div>
 
       <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
         {/* Progress */}
-        <Card className="p-6 bg-gradient-to-br from-card to-card/80 shadow-xl border-2 border-primary/20">
+        <Card className="p-6 bg-gradient-to-br from-card to-card/80 shadow-[var(--shadow-soft)] border-2 border-primary/20 rounded-3xl animate-fade-in">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <h2 className="text-xl font-bold">진행 상황</h2>
@@ -149,14 +182,14 @@ export default function Stamps() {
           <p className="text-sm text-muted-foreground mb-3 text-center font-semibold">
             {milestone.message}
           </p>
-          <div className="w-full bg-muted rounded-full h-6 overflow-hidden mb-4 relative">
+          <div className="w-full bg-muted/60 rounded-full h-5 overflow-hidden mb-4 relative border-2 border-primary/10">
             <div
-              className="h-full bg-gradient-to-r from-primary via-secondary to-accent transition-all duration-500 rounded-full shadow-[0_0_10px_hsl(var(--primary)/0.5)] flex items-center justify-end pr-2"
+              className="h-full bg-gradient-to-r from-primary via-accent to-secondary transition-all duration-500 rounded-full shadow-[var(--shadow-glow)] flex items-center justify-end pr-2"
               style={{ width: `${progress}%` }}
             >
               {progress > 10 && (
                 <div className="flex items-center gap-1">
-                  <Sparkles className="w-3 h-3 text-white" />
+                  <Sparkles className="w-3 h-3 text-white animate-pulse" />
                   <span className="text-white text-xs font-bold">{Math.round(progress)}%</span>
                 </div>
               )}
@@ -164,13 +197,13 @@ export default function Stamps() {
           </div>
           
           {/* Heart collection display */}
-          <div className="grid grid-cols-10 gap-2 p-3 bg-muted/30 rounded-lg mb-4">
+          <div className="grid grid-cols-10 gap-2 p-4 bg-muted/20 rounded-2xl mb-4 border border-primary/10">
             {Array.from({ length: 20 }).map((_, i) => (
               <Heart
                 key={i}
                 className={`w-6 h-6 transition-all duration-300 ${
                   i < stamps.size
-                    ? "text-pink-500 fill-pink-500 scale-110"
+                    ? "text-primary fill-primary scale-110 animate-bounce-in"
                     : "text-muted-foreground/30"
                 }`}
               />
@@ -178,13 +211,15 @@ export default function Stamps() {
           </div>
 
           {isComplete && (
-            <div className="bg-gradient-to-r from-primary/20 to-secondary/20 rounded-xl p-4 border-2 border-primary/30 animate-heart-pulse">
+            <div className="bg-gradient-to-r from-primary/20 via-accent/20 to-secondary/20 rounded-2xl p-5 border-2 border-primary/30 animate-bounce-in shadow-[var(--shadow-glow)]">
               <div className="flex items-center gap-3">
-                <Trophy className="w-8 h-8 text-primary" />
+                <Trophy className="w-8 h-8 text-primary animate-wiggle" />
                 <div>
-                  <p className="font-bold text-lg text-primary">🎉 완주 축하합니다!</p>
+                  <p className="font-bold text-lg text-primary flex items-center gap-2">
+                    🎉 완주 축하합니다! 🎊
+                  </p>
                   <p className="text-sm text-muted-foreground">
-                    경품 수령: 본관 1층 안내데스크 (16:30까지)
+                    경품 수령: 본관 1층 안내데스크 (16:30까지) ✨
                   </p>
                 </div>
               </div>
@@ -199,19 +234,19 @@ export default function Stamps() {
             return (
               <Card
                 key={booth.booth_id}
-                className={`p-5 transition-all cursor-pointer ${
+                className={`p-5 transition-all cursor-pointer rounded-3xl ${
                   hasStamp
-                    ? "bg-gradient-to-br from-primary/5 to-secondary/5 border-2 border-primary/30"
-                    : "hover:shadow-lg hover:border-primary/20"
+                    ? "bg-gradient-to-br from-primary/10 to-secondary/10 border-2 border-primary/40 shadow-[var(--shadow-soft)]"
+                    : "hover:shadow-[var(--shadow-soft)] hover:border-primary/30 hover:scale-105 active:scale-95"
                 }`}
                 onClick={() => !hasStamp && setSelectedBooth(booth)}
               >
                 <div className="flex items-start gap-4">
                   <div
-                    className={`flex-shrink-0 w-16 h-16 rounded-full flex items-center justify-center ${
+                    className={`flex-shrink-0 w-16 h-16 rounded-full flex items-center justify-center shadow-md ${
                       hasStamp
-                        ? "bg-gradient-to-br from-primary to-secondary animate-heart-pulse"
-                        : "bg-muted"
+                        ? "bg-gradient-to-br from-primary to-accent animate-bounce-in"
+                        : "bg-muted/50 border-2 border-muted"
                     }`}
                   >
                     {hasStamp ? (
@@ -227,11 +262,11 @@ export default function Stamps() {
                     </div>
                     <p className="text-sm text-muted-foreground mb-2">{booth.description}</p>
                     <div className="flex flex-wrap gap-2 text-xs">
-                      <span className="px-2 py-1 bg-secondary/30 rounded-full">
+                      <span className="px-3 py-1.5 bg-secondary/20 rounded-full border border-secondary/30 font-medium">
                         📍 {booth.location}
                       </span>
                       {booth.teacher && (
-                        <span className="px-2 py-1 bg-accent/30 rounded-full">
+                        <span className="px-3 py-1.5 bg-accent/20 rounded-full border border-accent/30 font-medium">
                           👨‍🏫 {booth.teacher} 선생님
                         </span>
                       )}

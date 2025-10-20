@@ -97,62 +97,9 @@ export default function Map() {
             부스 배치도
           </h2>
           
-          <div className="relative min-h-[600px] bg-muted/20 rounded-lg p-6">
-            {/* 앞줄 (1-6) */}
-            <div className="flex justify-center gap-4 mb-8">
-              {zones.front.map((booth) => {
-                const cleanName = booth.name?.replace(/^\d+\.\s*/, '') || booth.name;
-                return (
-                  <div
-                    key={booth.booth_id}
-                    className="cursor-pointer hover:scale-110 transition-all group"
-                    onClick={() => setSelectedBooth(booth)}
-                  >
-                    <div className="w-24 h-28 relative">
-                      {/* 천막 */}
-                      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[48px] border-l-transparent border-r-[48px] border-r-transparent border-t-[24px] border-t-primary"></div>
-                      <div className="absolute top-6 w-full h-20 bg-gradient-to-br from-primary/80 to-secondary/80 rounded-lg shadow-lg flex flex-col items-center justify-center p-2 group-hover:shadow-xl">
-                        <div className="w-6 h-6 rounded-full bg-white text-primary text-xs font-bold flex items-center justify-center mb-1">
-                          {booth.booth_id}
-                        </div>
-                        <p className="text-[10px] text-white font-bold text-center leading-tight line-clamp-2">
-                          {cleanName}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* 두번째 줄 (7) */}
-            <div className="flex justify-center mb-8">
-              {zones.second.map((booth) => {
-                const cleanName = booth.name?.replace(/^\d+\.\s*/, '') || booth.name;
-                return (
-                  <div
-                    key={booth.booth_id}
-                    className="cursor-pointer hover:scale-110 transition-all group"
-                    onClick={() => setSelectedBooth(booth)}
-                  >
-                    <div className="w-24 h-28 relative">
-                      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[48px] border-l-transparent border-r-[48px] border-r-transparent border-t-[24px] border-t-secondary"></div>
-                      <div className="absolute top-6 w-full h-20 bg-gradient-to-br from-secondary/80 to-accent/80 rounded-lg shadow-lg flex flex-col items-center justify-center p-2 group-hover:shadow-xl">
-                        <div className="w-6 h-6 rounded-full bg-white text-secondary text-xs font-bold flex items-center justify-center mb-1">
-                          {booth.booth_id}
-                        </div>
-                        <p className="text-[10px] text-white font-bold text-center leading-tight line-clamp-2">
-                          {cleanName}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* 세번째 줄 (8-12) */}
-            <div className="flex justify-center gap-4 mb-8">
+          <div className="relative min-h-[700px] bg-muted/20 rounded-lg p-8">
+            {/* 세번째 줄 (8-12) - 화면 위쪽 */}
+            <div className="flex justify-center gap-4 mb-12 relative">
               {zones.third.map((booth) => {
                 const cleanName = booth.name?.replace(/^\d+\.\s*/, '') || booth.name;
                 return (
@@ -175,61 +122,114 @@ export default function Map() {
                   </div>
                 );
               })}
+              
+              {/* 오른쪽 사이드 (13-15) - 위에서 아래로 15, 14, 13 */}
+              <div className="absolute right-8 top-0 flex flex-col gap-4">
+                {zones.side.slice().reverse().map((booth) => {
+                  const cleanName = booth.name?.replace(/^\d+\.\s*/, '') || booth.name;
+                  return (
+                    <div
+                      key={booth.booth_id}
+                      className="cursor-pointer hover:scale-110 transition-all group"
+                      onClick={() => setSelectedBooth(booth)}
+                    >
+                      <div className="w-20 h-24 relative">
+                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[40px] border-l-transparent border-r-[40px] border-r-transparent border-t-[20px] border-t-primary"></div>
+                        <div className="absolute top-5 w-full h-16 bg-gradient-to-br from-primary/80 to-secondary/80 rounded-lg shadow-lg flex flex-col items-center justify-center p-2 group-hover:shadow-xl">
+                          <div className="w-5 h-5 rounded-full bg-white text-primary text-xs font-bold flex items-center justify-center mb-1">
+                            {booth.booth_id}
+                          </div>
+                          <p className="text-[9px] text-white font-bold text-center leading-tight line-clamp-2">
+                            {cleanName}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
 
-            {/* 오른쪽 사이드와 기타 부스 */}
-            <div className="flex justify-between items-start">
-              {/* 오른쪽 사이드 (13-15) */}
-              <div className="flex flex-col gap-4">
-                {zones.side.map((booth) => {
-                  const cleanName = booth.name?.replace(/^\d+\.\s*/, '') || booth.name;
-                  return (
-                    <div
-                      key={booth.booth_id}
-                      className="cursor-pointer hover:scale-110 transition-all group"
-                      onClick={() => setSelectedBooth(booth)}
-                    >
-                      <div className="w-24 h-28 relative">
-                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[48px] border-l-transparent border-r-[48px] border-r-transparent border-t-[24px] border-t-primary"></div>
-                        <div className="absolute top-6 w-full h-20 bg-gradient-to-br from-primary/80 to-secondary/80 rounded-lg shadow-lg flex flex-col items-center justify-center p-2 group-hover:shadow-xl">
-                          <div className="w-6 h-6 rounded-full bg-white text-primary text-xs font-bold flex items-center justify-center mb-1">
-                            {booth.booth_id}
-                          </div>
-                          <p className="text-[10px] text-white font-bold text-center leading-tight line-clamp-2">
-                            {cleanName}
-                          </p>
+            {/* 두번째 줄 (7) - 중앙 구령대 */}
+            <div className="flex justify-center mb-12">
+              {zones.second.map((booth) => {
+                const cleanName = booth.name?.replace(/^\d+\.\s*/, '') || booth.name;
+                return (
+                  <div
+                    key={booth.booth_id}
+                    className="cursor-pointer hover:scale-110 transition-all group"
+                    onClick={() => setSelectedBooth(booth)}
+                  >
+                    <div className="relative">
+                      {/* 구령대 모양 */}
+                      <div className="w-32 h-32 bg-gradient-to-br from-secondary/80 to-accent/80 rounded-full shadow-2xl flex flex-col items-center justify-center border-4 border-white/50 group-hover:shadow-3xl">
+                        <div className="text-2xl mb-2">🎤</div>
+                        <div className="w-8 h-8 rounded-full bg-white text-secondary text-sm font-bold flex items-center justify-center mb-1">
+                          {booth.booth_id}
                         </div>
+                        <p className="text-xs text-white font-bold text-center leading-tight px-2">
+                          구령대
+                        </p>
+                        <p className="text-[10px] text-white/80 text-center leading-tight px-2">
+                          {cleanName}
+                        </p>
                       </div>
                     </div>
-                  );
-                })}
-              </div>
+                  </div>
+                );
+              })}
+            </div>
 
-              {/* 기타 부스 (16-22) */}
-              <div className="flex flex-wrap gap-4 justify-end max-w-md">
-                {zones.other.map((booth) => {
-                  const cleanName = booth.name?.replace(/^\d+\.\s*/, '') || booth.name;
-                  return (
-                    <div
-                      key={booth.booth_id}
-                      className="cursor-pointer hover:scale-110 transition-all group"
-                      onClick={() => setSelectedBooth(booth)}
-                    >
-                      <div className="w-24 h-28 relative">
-                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[48px] border-l-transparent border-r-[48px] border-r-transparent border-t-[24px] border-t-secondary"></div>
-                        <div className="absolute top-6 w-full h-20 bg-gradient-to-br from-secondary/80 to-accent/80 rounded-lg shadow-lg flex flex-col items-center justify-center p-2 group-hover:shadow-xl">
-                          <div className="w-6 h-6 rounded-full bg-white text-secondary text-xs font-bold flex items-center justify-center mb-1">
-                            {booth.booth_id}
-                          </div>
-                          <p className="text-[10px] text-white font-bold text-center leading-tight line-clamp-2">
-                            {cleanName}
-                          </p>
+            {/* 앞줄 (1-6) - 화면 아래쪽 */}
+            <div className="flex justify-center gap-4 mb-8">
+              {zones.front.map((booth) => {
+                const cleanName = booth.name?.replace(/^\d+\.\s*/, '') || booth.name;
+                return (
+                  <div
+                    key={booth.booth_id}
+                    className="cursor-pointer hover:scale-110 transition-all group"
+                    onClick={() => setSelectedBooth(booth)}
+                  >
+                    <div className="w-24 h-28 relative">
+                      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[48px] border-l-transparent border-r-[48px] border-r-transparent border-t-[24px] border-t-primary"></div>
+                      <div className="absolute top-6 w-full h-20 bg-gradient-to-br from-primary/80 to-secondary/80 rounded-lg shadow-lg flex flex-col items-center justify-center p-2 group-hover:shadow-xl">
+                        <div className="w-6 h-6 rounded-full bg-white text-primary text-xs font-bold flex items-center justify-center mb-1">
+                          {booth.booth_id}
                         </div>
+                        <p className="text-[10px] text-white font-bold text-center leading-tight line-clamp-2">
+                          {cleanName}
+                        </p>
                       </div>
                     </div>
-                  );
-                })}
-              </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* 기타 부스 (16-22) - 왼쪽 아래 */}
+            <div className="absolute left-8 bottom-8 flex flex-wrap gap-3 max-w-xs">
+              {zones.other.map((booth) => {
+                const cleanName = booth.name?.replace(/^\d+\.\s*/, '') || booth.name;
+                return (
+                  <div
+                    key={booth.booth_id}
+                    className="cursor-pointer hover:scale-110 transition-all group"
+                    onClick={() => setSelectedBooth(booth)}
+                  >
+                    <div className="w-20 h-24 relative">
+                      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[40px] border-l-transparent border-r-[40px] border-r-transparent border-t-[20px] border-t-secondary"></div>
+                      <div className="absolute top-5 w-full h-16 bg-gradient-to-br from-secondary/80 to-accent/80 rounded-lg shadow-lg flex flex-col items-center justify-center p-2 group-hover:shadow-xl">
+                        <div className="w-5 h-5 rounded-full bg-white text-secondary text-xs font-bold flex items-center justify-center mb-1">
+                          {booth.booth_id}
+                        </div>
+                        <p className="text-[9px] text-white font-bold text-center leading-tight line-clamp-2">
+                          {cleanName}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
           

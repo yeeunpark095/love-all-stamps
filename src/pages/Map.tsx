@@ -50,27 +50,39 @@ export default function Map() {
   const floor2 = seogwanBooths.filter(b => b.booth_id >= 19 && b.booth_id <= 21);
   const floor3 = seogwanBooths.filter(b => b.booth_id === 22);
 
-  // 부스 위치 좌표 (이미지 기준 %, 실제 배치도에 맞게 조정 필요)
+  // 부스 위치 좌표 (이미지 기준 %)
   const boothPositions: Record<number, { x: number; y: number }> = {
-    // 앞줄 (1-6)
-    1: { x: 15, y: 65 },
-    2: { x: 25, y: 65 },
-    3: { x: 35, y: 65 },
-    4: { x: 45, y: 65 },
-    5: { x: 55, y: 65 },
-    6: { x: 65, y: 65 },
-    // 구령대 (7)
+    // 앞줄 (1-6) - 가로 일렬, 같은 Y좌표
+    1: { x: 15, y: 70 },
+    2: { x: 27, y: 70 },
+    3: { x: 39, y: 70 },
+    4: { x: 51, y: 70 },
+    5: { x: 63, y: 70 },
+    6: { x: 75, y: 70 },
+    
+    // 구령대 (7) - 중앙
     7: { x: 50, y: 50 },
-    // 윗줄 (8-12)
-    8: { x: 20, y: 35 },
-    9: { x: 30, y: 35 },
-    10: { x: 40, y: 35 },
-    11: { x: 50, y: 35 },
-    12: { x: 60, y: 35 },
-    // 사이드 (13-15)
-    13: { x: 80, y: 60 },
-    14: { x: 80, y: 50 },
-    15: { x: 80, y: 40 },
+    
+    // 윗줄 (8-12) - 가로 일렬, 같은 Y좌표
+    8: { x: 20, y: 30 },
+    9: { x: 32, y: 30 },
+    10: { x: 44, y: 30 },
+    11: { x: 56, y: 30 },
+    12: { x: 68, y: 30 },
+    
+    // 사이드 (13-15) - 세로 일렬, 같은 X좌표
+    13: { x: 88, y: 55 },
+    14: { x: 88, y: 45 },
+    15: { x: 88, y: 35 },
+
+    // 서관 (16-22) - 별도 영역
+    16: { x: 12, y: 15 },
+    17: { x: 22, y: 15 },
+    18: { x: 32, y: 15 },
+    19: { x: 12, y: 8 },
+    20: { x: 22, y: 8 },
+    21: { x: 32, y: 8 },
+    22: { x: 42, y: 8 },
   };
 
   const BoothCard = ({ booth }: { booth: any }) => {
@@ -170,12 +182,13 @@ export default function Map() {
                         className="w-full h-full object-contain"
                       />
 
-                      {/* Clickable Booth Markers (본관 부스만) */}
-                      {mainBooths.map((booth) => {
+                      {/* Clickable Booth Markers (모든 부스) */}
+                      {booths.map((booth) => {
                         const position = boothPositions[booth.booth_id];
                         if (!position) return null;
 
                         const cleanName = booth.name?.replace(/^\d+\.\s*/, '') || booth.name;
+                        const isSeogwan = booth.booth_id >= 16;
 
                         return (
                           <div
@@ -193,8 +206,8 @@ export default function Map() {
                           >
                             {/* Pulsing marker */}
                             <div className="relative">
-                              <div className="absolute inset-0 bg-primary rounded-full animate-ping opacity-75" />
-                              <div className="relative w-10 h-10 bg-primary rounded-full border-3 border-white shadow-lg flex items-center justify-center group-hover:scale-125 transition-transform">
+                              <div className={`absolute inset-0 ${isSeogwan ? 'bg-secondary' : 'bg-primary'} rounded-full animate-ping opacity-75`} />
+                              <div className={`relative w-10 h-10 ${isSeogwan ? 'bg-secondary' : 'bg-primary'} rounded-full border-3 border-white shadow-lg flex items-center justify-center group-hover:scale-125 transition-transform`}>
                                 <span className="text-white font-bold text-sm">
                                   {booth.booth_id}
                                 </span>
@@ -202,9 +215,10 @@ export default function Map() {
                             </div>
 
                             {/* Tooltip on hover */}
-                            <div className="absolute top-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
-                              <div className="bg-foreground text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-lg border-2 border-white">
+                            <div className="absolute top-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
+                              <div className="bg-foreground text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-lg border-2 border-white max-w-[200px]">
                                 {cleanName}
+                                {isSeogwan && <span className="block text-[10px] text-white/80 mt-0.5">📍 서관</span>}
                               </div>
                             </div>
                           </div>

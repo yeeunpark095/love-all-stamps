@@ -11,130 +11,184 @@ const Festival = () => {
 
   const booths = [
     {
-      name: "빛글",
-      subtitle: "Student Press Club",
-      icon: <Target className="w-6 h-6" />,
-      tagline: "탐정처럼 추리하고, 친구들과 함께 도전해보세요 🔍",
-      description: "주제별 미션 카드를 받고, 조건에 맞는 사람을 직접 찾아 데려오는 미션형 게임!"
+      name: "1. 영어토론프레젠테이션",
+      subtitle: "English Debate & Presentation",
+      icon: <Users className="w-6 h-6" />,
+      tagline: "친구와 손잡고 오세요! 영어 스피드 퀴즈 💬",
+      description: "짝꿍과 손잡고 빠르게 답을 맞혀보는 영어 토크 배틀!",
+      location: "부스 1",
+      teacher: "지경주"
     },
     {
-      name: "KIKKER",
+      name: "2. KIKKER",
       subtitle: "International Exchange Club",
       icon: <Plane className="w-6 h-6" />,
-      tagline: "전 세계 사랑을 전하는 KIKKER 항공에 탑승하세요!",
-      description: "세계 곳곳의 문화를 만나는 특별한 여행이 여러분을 기다립니다 🌏"
+      tagline: "전 세계 사랑을 전하는 KIKKER 항공, 지금 탑승하세요!",
+      description: "탑승권을 받고 세계 곳곳의 사랑 문화를 탐험하는 글로벌 여행 🌍",
+      location: "부스 2",
+      teacher: "신희영"
     },
     {
-      name: "BUKU",
-      subtitle: "Book Talk Club",
-      icon: <BookOpen className="w-6 h-6" />,
-      tagline: "책처럼 펼쳐보는 연애 MBTI 테스트 ❤️",
-      description: "달콤한 운세와 함께하는 북카페 ☕ 나만의 북클립 만들기 ✂️ 감성 충만! 독서와 사랑이 만나는 공간으로 초대합니다."
-    },
-    {
-      name: "솔리언",
-      subtitle: "Peer Counseling",
-      icon: <Heart className="w-6 h-6" />,
-      tagline: "작은 선물 속에 따뜻한 마음을 담은 추억의 뽑기판 🎁",
-      description: "친구와 함께 뽑으며 오늘의 행복 메시지를 받아가세요."
-    },
-    {
-      name: "물리를 만들다",
-      subtitle: "Physics Club",
-      icon: <Bot className="w-6 h-6" />,
-      tagline: "직접 보고, 만지고, 조종하며 과학의 재미를 느껴보세요 🤖",
-      description: "골드버그 장치, 로봇 & 드론 조종, 랜덤 상품 뽑기까지!"
-    },
-    {
-      name: "STEAM 사회참여반",
+      name: "3. STEAM 사회참여반",
       subtitle: "Social Participation Club",
       icon: <Flame className="w-6 h-6" />,
-      tagline: "사랑의 단맛 vs 매운맛! '전남친 토스트' 간식 부스 🍞",
-      description: "불타는 사랑 게임 체험 🔥 주제탐구 보고서 전시 📄 사랑을 과학적으로 분석해보는 유쾌한 부스!"
+      tagline: "사랑의 단맛과 매운맛, 어떤 맛이 더 강할까?",
+      description: "'전남친 토스트' 간식 부스 & 사랑의 매운맛 게임 도전!",
+      location: "부스 3",
+      teacher: "정재은, 이은영"
     },
     {
-      name: "융합과학 STEAM 주제연구반",
-      subtitle: "STEAM Research Club",
-      icon: <Target className="w-6 h-6" />,
-      tagline: "과학 오락실 OPEN!",
-      description: "단서를 찾아 제한 시간 내 탈출하는 방탈출 게임 🕵️‍♀️ 과학 원리를 이용한 미니 게임 체험 🎮"
+      name: "4. 학생회",
+      subtitle: "Student Council",
+      icon: <Users className="w-6 h-6" />,
+      tagline: "우리의 축제는 우리가 만든다!",
+      description: "학생회의 열정이 담긴 부스, 놓치지 마세요 ✨",
+      location: "부스 4",
+      teacher: "이은영"
     },
     {
-      name: "애드미찬양반",
+      name: "5. LabQuest",
+      subtitle: "Lab Quest",
+      icon: <Sparkles className="w-6 h-6" />,
+      tagline: "과학+사랑+쿠키의 만남!",
+      description: "직접 만드는 분자모형 쿠키로 달콤한 실험을 즐겨요 🧪",
+      location: "부스 5",
+      teacher: "정유정"
+    },
+    {
+      name: "6. 솔리언",
+      subtitle: "Peer Counseling",
+      icon: <Heart className="w-6 h-6" />,
+      tagline: "작은 선물, 큰 마음",
+      description: "뽑기판 속 메시지로 친구에게 따뜻한 마음을 전해요 🎁",
+      location: "부스 6",
+      teacher: "윤지숙"
+    },
+    {
+      name: "7. 애드미 찬양반",
       subtitle: "Worship Team",
       icon: <Music className="w-6 h-6" />,
       tagline: "2025 애드미 버스킹 – '사랑을 노래하다'",
-      description: "따뜻한 음악이 흘러나오는 무대에서 잠시 쉬어가세요 🎶"
+      description: "음악으로 전하는 축제의 진심, 마음이 따뜻해지는 무대 🎤",
+      location: "부스 7",
+      teacher: "안유린"
     },
     {
-      name: "영어토론프레젠테이션",
-      subtitle: "English Debate & Presentation",
-      icon: <Users className="w-6 h-6" />,
-      tagline: "손잡고 오세요! 친구와 함께하는 영어 스피드 퀴즈 ✋",
-      description: "영어로 소통하며 즐기는 특별한 체험!"
-    },
-    {
-      name: "수달(수학의 달인)",
-      subtitle: "Math Club",
-      icon: <Target className="w-6 h-6" />,
-      tagline: "오늘의 수학 러브라인은?",
-      description: "블라인드 소개팅 콘셉트 체험! 💞"
-    },
-    {
-      name: "빅데이터투인사이트",
+      name: "8. 빅데이터 투 인사이트",
       subtitle: "Big Data Club",
       icon: <School className="w-6 h-6" />,
-      tagline: "데이터 속 숨은 이야기를 찾아라!",
-      description: "빅데이터 분석의 세계로 함께 떠나요 💻"
+      tagline: "데이터 속에 숨어있는 사랑을 찾아라!",
+      description: "빅데이터로 세상을 읽는 특별한 인사이트 💻",
+      location: "부스 8",
+      teacher: "이영석"
     },
     {
-      name: "랩퀘스트",
-      subtitle: "Lab Quest",
-      icon: <Sparkles className="w-6 h-6" />,
-      tagline: "분자 구조를 쿠키로 만든다고?! 🍪",
-      description: "분자모형 쿠키 만들기 체험으로 과학과 달콤함을 동시에!"
+      name: "9. ARTY 미술반",
+      subtitle: "Art Club",
+      icon: <Palette className="w-6 h-6" />,
+      tagline: "사랑을 그리다, 나를 꾸미다",
+      description: "페이스페인팅·쥬얼리 메이크업·타투 등 아트 체험존 💎",
+      location: "부스 9",
+      teacher: "이규화"
     },
     {
-      name: "슬램덩크",
+      name: "10. BUKU",
+      subtitle: "Book Talk Club",
+      icon: <BookOpen className="w-6 h-6" />,
+      tagline: "연애 MBTI ✨ 운세 카페 ☕ 북클립 만들기 ✂️",
+      description: "사랑과 감성이 만나는 북카페, 오늘의 운세는?",
+      location: "부스 10 & 늘품관",
+      teacher: "서수란"
+    },
+    {
+      name: "11. 빛글",
+      subtitle: "Student Press Club",
+      icon: <Target className="w-6 h-6" />,
+      tagline: "사랑을 찾아라!",
+      description: "미션 카드에 맞는 사람을 직접 찾아 데려오는 탐정 게임 🧡",
+      location: "부스 11",
+      teacher: "이문덕"
+    },
+    {
+      name: "12. 한걸음",
+      subtitle: "Volunteer Club",
+      icon: <Users className="w-6 h-6" />,
+      tagline: "오늘은 내가 선생님!",
+      description: "학생이 선생님이 되어 사랑을 나누는 하루 💫",
+      location: "부스 12",
+      teacher: "이동엽"
+    },
+    {
+      name: "13. 슬램덩크",
       subtitle: "Basketball Club",
       icon: <CircleDot className="w-6 h-6" />,
-      tagline: "사랑을 쏴라! 농구 커플 챌린지! 💞",
-      description: "짝을 이뤄 슛 성공 개수만큼 상품은 짝꿍에게 전달!"
+      tagline: "사랑을 쏴라! 농구 커플 챌린지",
+      description: "짝을 이뤄 슛을 성공시키면 상품은 짝꿍에게 💞",
+      location: "부스 13",
+      teacher: "조정현"
     },
     {
-      name: "Ballin",
+      name: "14. Ballin",
       subtitle: "Volleyball Club",
       icon: <CircleDot className="w-6 h-6" />,
-      tagline: "러브 리시브! 💘",
-      description: "사랑의 토스 릴레이로 짝꿍과 함께 배구 한 판!"
+      tagline: "러브 리시브 챌린지!",
+      description: "배구 서브로 농구백보드 맞추기 & 언더핸드 골대 넣기 🏐",
+      location: "부스 14",
+      teacher: "박창민"
     },
     {
-      name: "축구반",
+      name: "15. 축구반",
       subtitle: "Soccer Club",
       icon: <Target className="w-6 h-6" />,
-      tagline: "프리스타일 축구 & 승부차기 대결!",
-      description: "최고의 플레이어에게는 상품 증정 ⚡"
+      tagline: "사랑의 슛! 프리스타일 & 승부차기 챌린지",
+      description: "승부차기 왕에게는 특별한 선물 ⚡",
+      location: "부스 15",
+      teacher: "현종명"
     },
     {
-      name: "디자인공예반",
+      name: "16. 물리를 만들다",
+      subtitle: "Physics Club",
+      icon: <Bot className="w-6 h-6" />,
+      tagline: "과학의 재미를 한가득!",
+      description: "골드버그 장치, 로봇·드론 조종체험, 랜덤 뽑기까지!",
+      location: "과학 3실",
+      teacher: "김기정"
+    },
+    {
+      name: "17. 수달",
+      subtitle: "Math Club",
+      icon: <Target className="w-6 h-6" />,
+      tagline: "수학으로 즐기는 사랑의 보드게임 카페",
+      description: "두뇌와 감성을 함께 자극하는 수학 놀이터 ♟️",
+      location: "미술 2실",
+      teacher: "전승주"
+    },
+    {
+      name: "18. 디자인공예반",
       subtitle: "Design & Craft Club",
       icon: <Gift className="w-6 h-6" />,
-      tagline: "내가 사랑한 것을 주제로 한 굿즈 제작 체험",
-      description: "스스로 만든 디자인 작품 전시도 함께 관람하세요 🎁"
+      tagline: "내가 사랑한 것을 굿즈로 만들자!",
+      description: "직접 디자인한 사랑 굿즈 전시 & 체험 ✨",
+      location: "과학 2실",
+      teacher: "천혜심"
     },
     {
-      name: "AI·SW 코딩반",
+      name: "19. 융합과학 STEAM 주제연구반",
+      subtitle: "STEAM Research Club",
+      icon: <Target className="w-6 h-6" />,
+      tagline: "사랑의 단서를 찾아 탈출하라!",
+      description: "주어진 시간 안에 미션을 해결하는 방탈출 게임 🔍",
+      location: "늘품관",
+      teacher: "김성환, 박효민"
+    },
+    {
+      name: "20. AI·SW 코딩반",
       subtitle: "Coding Club",
       icon: <Bot className="w-6 h-6" />,
-      tagline: "게임과 코딩이 만나는 신기한 세상으로 초대합니다!",
-      description: "아두이노 작품 전시, 햄스터봇 축구 경기 ⚽ 아두이노 상품 뽑기 🎁"
-    },
-    {
-      name: "진로 DREAM",
-      subtitle: "Career Exploration",
-      icon: <Star className="w-6 h-6" />,
-      tagline: "나의 꿈, 나의 진로를 직접 탐색해보세요",
-      description: "진로직업체험센터와 연계한 다양한 직업 체험 부스"
+      tagline: "AI와 사랑에 빠진 코딩 체험존",
+      description: "아두이노 작품 전시, 햄스터봇 축구, 파이썬 미니게임!",
+      location: "융합과학실",
+      teacher: "김예지"
     }
   ];
 
@@ -324,7 +378,11 @@ const Festival = () => {
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm font-semibold text-pink-600 mb-2">{booth.tagline}</p>
-                  <p className="text-sm text-gray-600 leading-relaxed">{booth.description}</p>
+                  <p className="text-sm text-gray-600 leading-relaxed mb-3">{booth.description}</p>
+                  <div className="text-xs text-gray-500 space-y-1">
+                    <p>📍 {booth.location}</p>
+                    <p>👨‍🏫 {booth.teacher} 선생님</p>
+                  </div>
                 </CardContent>
               </Card>
             ))}

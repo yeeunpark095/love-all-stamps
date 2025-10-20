@@ -72,6 +72,12 @@ All colors MUST be HSL.
     --festival-mint: 160 65% 85%;
     --festival-sky: 210 100% 93%;
     --festival-purple: 270 60% 92%;
+    
+    /* Category colors */
+    --category-experience: 350 100% 94%;
+    --category-exhibition: 270 100% 95%;
+    --category-performance: 200 100% 95%;
+    --category-sports: 160 70% 90%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;

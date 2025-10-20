@@ -176,7 +176,7 @@ export default function Stamps() {
                       </span>
                       {booth.teacher && (
                         <span className="px-2 py-1 bg-accent/30 rounded-full">
-                          👨‍🏫 {booth.teacher}
+                          👨‍🏫 {booth.teacher} 선생님
                         </span>
                       )}
                     </div>

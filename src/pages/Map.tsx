@@ -104,15 +104,15 @@ export default function Map() {
     return (
       <div
         onClick={() => setSelectedBooth(booth)}
-        className="flex flex-col items-center gap-2 cursor-pointer hover:scale-105 transition-transform"
+        className="flex flex-col items-center gap-1.5 cursor-pointer hover:scale-105 transition-transform"
       >
         {/* 원형 부스 마커 */}
-        <div className={`${categoryColor} relative w-16 h-16 rounded-full flex items-center justify-center shadow-lg border-2 border-white hover:shadow-xl transition-all`}>
+        <div className={`${categoryColor} relative w-14 h-14 rounded-full flex items-center justify-center shadow-lg border-2 border-white hover:shadow-xl transition-all`}>
           <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent rounded-full" />
           <span className="text-2xl relative z-10">{emoji}</span>
         </div>
-        {/* 부스명 */}
-        <div className="text-[11px] font-semibold text-center leading-tight text-foreground max-w-[80px] bg-white/90 px-2 py-1 rounded-full border border-[#999999] shadow-sm">
+        {/* 부스명 - 도형 밖 */}
+        <div className="text-[10px] font-semibold text-center leading-tight text-foreground w-[70px]">
           {cleanName}
         </div>
       </div>
@@ -179,37 +179,35 @@ export default function Map() {
                 <span className="text-sm">➡️</span>
               </div>
 
-              {/* 오른쪽 사이드 - 체육 부스 (13-15) 세로 배치 */}
-              <div className="absolute right-8 top-1/2 transform -translate-y-1/2 space-y-6">
+              {/* 오른쪽 사이드 - 체육 부스 (13-15) 세로 배치, 간격 넓힘 */}
+              <div className="absolute right-8 top-1/2 transform -translate-y-1/2 space-y-12">
                 {sportsBooths.map(({ booth, emoji }) => (
                   <BoothCard key={booth.booth_id} booth={booth} emoji={emoji} />
                 ))}
               </div>
 
               {/* 1번줄 - 최상단 (8-12): 빅데이터투인사이트 ~ 한걸음 */}
-              <div className="mb-12 mt-12">
-                <div className="flex justify-center gap-8 max-w-[75%] mx-auto">
+              <div className="mb-16 mt-12">
+                <div className="flex justify-center gap-6 max-w-[70%] mx-auto">
                   {topRow.map((booth) => (
                     <BoothCard key={booth.booth_id} booth={booth} emoji="🎨" />
                   ))}
                 </div>
               </div>
 
-              {/* 2번줄 - 중간 (1-6): 영어토론프레젠테이션 ~ 솔리언 */}
-              <div className="mb-12">
-                <div className="flex justify-center gap-8 max-w-[85%] mx-auto">
-                  {middleRow.map((booth) => (
+              {/* 2번줄 - 중간 (1-6 + 애드미찬양반): 영어토론프레젠테이션 ~ 솔리언 + 애드미찬양반(중앙) */}
+              <div className="mb-16">
+                <div className="flex justify-center items-start gap-6 max-w-[80%] mx-auto">
+                  {middleRow.slice(0, 3).map((booth) => (
                     <BoothCard key={booth.booth_id} booth={booth} emoji="🎪" />
                   ))}
-                </div>
-              </div>
-
-              {/* 중앙 (7번): 애드미찬양반 - 다른 부스와 동일한 크기 */}
-              <div className="mb-12">
-                <div className="flex justify-center">
+                  {/* 애드미찬양반 중앙 배치 */}
                   {centerBooth && (
                     <BoothCard booth={centerBooth} emoji="🎤" />
                   )}
+                  {middleRow.slice(3).map((booth) => (
+                    <BoothCard key={booth.booth_id} booth={booth} emoji="🎪" />
+                  ))}
                 </div>
               </div>
 

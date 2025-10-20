@@ -55,6 +55,10 @@ export default {
         "festival-mint": "hsl(var(--festival-mint))",
         "festival-sky": "hsl(var(--festival-sky))",
         "festival-purple": "hsl(var(--festival-purple))",
+        "category-experience": "hsl(var(--category-experience))",
+        "category-exhibition": "hsl(var(--category-exhibition))",
+        "category-performance": "hsl(var(--category-performance))",
+        "category-sports": "hsl(var(--category-sports))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",

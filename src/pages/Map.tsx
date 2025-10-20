@@ -74,7 +74,7 @@ export default function Map() {
       floor: "1F",
       bg: "bg-[#D8ECFF]",
       rooms: [
-        { location: "미술1실", name: "융합과학 STEAM주제연구반" },
+        { location: "미술1실", name: "융합과학STEAM주제연구반", booth_id: 16 },
         { location: "미술2실", name: "수달(수학의달인)", booth_id: 17 },
         { location: "융합과학실", name: "AI, SW 코딩반", booth_id: 18 }
       ]
@@ -83,16 +83,16 @@ export default function Map() {
       floor: "2F",
       bg: "bg-[#E4D4FF]",
       rooms: [
-        { location: "과학1실", name: "물리를 만들다" },
-        { location: "과학2실", name: "디자인공예반" },
-        { location: "과학3실", name: "융합과학 STEAM주제연구반" }
+        { location: "과학1실", name: "물리를 만들다", booth_id: 19 },
+        { location: "과학2실", name: "디자인공예반", booth_id: 20 },
+        { location: "과학3실", name: "융합과학STEAM주제연구반", booth_id: 21 }
       ]
     },
     {
       floor: "3F",
       bg: "bg-[#D8ECFF]",
       rooms: [
-        { location: "늘품관", name: "BUKU(독서토론반)" }
+        { location: "늘품관", name: "BUKU(독서토론반)", booth_id: 22 }
       ]
     }
   ];

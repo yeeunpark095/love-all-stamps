@@ -194,102 +194,88 @@ const Festival = () => {
 
   const exhibitions = [
     {
-      name: "ARTY 미술반",
-      subtitle: "Art Club",
-      icon: <Palette className="w-6 h-6" />,
-      tagline: "그림으로 표현하는 사랑",
-      description: "단체작품 '사랑'과 개인작 전시 💕 페이스페인팅, 쥬얼리 메이크업, 타투 등 특별 체험으로 나만의 아트 완성!"
-    },
-    {
       name: "간호보건동아리",
-      subtitle: "Nursing & Health Club",
       icon: <Heart className="w-6 h-6" />,
-      tagline: "스트레스 받을 때 우리 몸은 어떻게 변할까?",
-      description: "직접 체험하며 스트레스 관리법을 배워보세요."
-    },
-    {
-      name: "뮤지컬반",
-      subtitle: "Musical Club",
-      icon: <Theater className="w-6 h-6" />,
-      tagline: "뮤지컬로 만나는 설레는 학창시절",
-      description: "무대 위의 청춘이 펼쳐집니다!"
-    },
-    {
-      name: "힙합댄스반",
-      subtitle: "Hip-hop Dance Club",
-      icon: <Music className="w-6 h-6" />,
-      tagline: "열정 가득한 힙합댄스 공연",
-      description: "리듬에 몸을 맡겨보세요!"
+      tagline: "사랑할 때, 내 몸은 어떻게 반응할까?",
+      description: "스트레스 상황에서의 변화와 관리법을 과학적으로 알아보는 부스!",
+      teacher: "심보경"
     },
     {
       name: "Be Creator",
-      subtitle: "Festival Planning Team",
       icon: <Sparkles className="w-6 h-6" />,
-      tagline: "성덕제를 만드는 사람들!",
-      description: "축제 기획 과정과 자료 전시, 스탭들의 비하인드 공개 👀"
+      tagline: "축제를 만드는 사람들, 그들의 비밀 노트",
+      description: "성덕제의 기획 여정을 한눈에! 기획서·아이디어·홍보 자료 등 창의력이 폭발하는 전시 💡",
+      teacher: "박예은"
     },
     {
-      name: "플로깅반",
-      subtitle: "Plogging Club",
+      name: "플로깅 동아리",
       icon: <Leaf className="w-6 h-6" />,
-      tagline: "환경을 지키는 새로운 방식, 플로깅!",
-      description: "활동 사진과 자료를 통해 지구를 위한 작은 발걸음을 배워요."
+      tagline: "사랑은 줍는 것부터 시작돼요!",
+      description: "걷고, 주우며, 지구를 사랑하는 플로깅 이야기 🌎 다양한 활동 사진과 자료 전시로 환경사랑을 전해요.",
+      teacher: "이혜미"
     },
     {
       name: "사회정책탐구반",
-      subtitle: "Social Policy Research",
       icon: <BookOpen className="w-6 h-6" />,
-      tagline: "사회 문제를 분석하고 해결책을 제시한 탐구 보고서 전시 💡",
-      description: "학생들의 깊이 있는 사회 탐구 결과를 만나보세요."
+      tagline: "사회를 바꾸는 사랑, 정책으로 말하다",
+      description: "청소년의 시선으로 사회문제를 분석하고 더 나은 세상을 위한 대안을 제시하는 정책 탐구 전시 🧠",
+      teacher: "이은정"
     },
     {
       name: "친환경연구동아리",
-      subtitle: "Eco Club",
       icon: <Leaf className="w-6 h-6" />,
-      tagline: "친환경 컵으로 마시는 갤럭시 에이드 🥤",
-      description: "텀블러 사용 시 친환경 키링·그립톡 증정!"
-    },
-    {
-      name: "한걸음",
-      subtitle: "Volunteer Club",
-      icon: <Users className="w-6 h-6" />,
-      tagline: "'한걸음'이 걸어온 이야기와 활동을 소개하는 전시 🌼",
-      description: "나눔과 봉사의 따뜻한 발자취를 따라가보세요."
+      tagline: "지구를 사랑하는 생활 아이디어!",
+      description: "재활용과 창의성을 더한 친환경 생활용품 전시 ♻️ 작은 실천으로 만드는 지속가능한 사랑 이야기.",
+      teacher: "이윤주"
     },
     {
       name: "핸즈온 과학탐구반",
-      subtitle: "Hands-on Science Club",
       icon: <Sparkles className="w-6 h-6" />,
-      tagline: "학생들의 소모임 연구결과 전시",
-      description: "직접 만든 실험 아이디어를 만나보세요."
-    },
-    {
-      name: "FRAME (방송부)",
-      subtitle: "Broadcasting Club",
-      icon: <Camera className="w-6 h-6" />,
-      tagline: "성덕 방송제 I ~ IV 시리즈 전격 상영!",
-      description: "학생들이 직접 기획하고 촬영한 감동의 순간을 만나보세요 🎥"
+      tagline: "손으로 만든 과학, 마음으로 담은 사랑",
+      description: "학생들이 직접 진행한 소모임 연구 결과 전시 🧪 실험을 통해 발견한 호기심과 열정의 기록!",
+      teacher: "오주현"
     },
     {
       name: "애니메이션 동아리",
-      subtitle: "Animation Club",
       icon: <Star className="w-6 h-6" />,
-      tagline: "애니메이션은 어떻게 만들어질까?",
-      description: "제작 과정 전시 + 직접 체험 코너도 마련!"
+      tagline: "사랑은 프레임 사이에 있다",
+      description: "애니메이션이 만들어지는 과정과 그 속의 스토리텔링 💕 제작 과정 전시 + 애니메이션 체험 코너까지!",
+      teacher: "김예원"
     },
     {
       name: "Guide Makers",
-      subtitle: "Guide Making Club",
       icon: <BookOpen className="w-6 h-6" />,
-      tagline: "학생이 직접 만든 영문 박물관 안내서 전시",
-      description: "여러분도 가이드가 되어보세요!"
+      tagline: "내가 만든 박물관, 영어로 안내해볼까?",
+      description: "직접 제작한 영문 안내서를 통해 학생들의 언어 감각과 창의력을 엿볼 수 있는 전시 ✈️",
+      teacher: "박형진"
     },
     {
       name: "뷰티동아리",
-      subtitle: "Beauty Club",
       icon: <Sparkles className="w-6 h-6" />,
-      tagline: "나를 빛내는 맞춤 뷰티 솔루션 💋",
-      description: "퍼스널 컬러 & 스타일링 팁도 함께 받아가세요."
+      tagline: "나를 사랑하는 가장 예쁜 방법",
+      description: "퍼스널 컬러와 스타일링으로 '나'를 빛내는 뷰티 솔루션 전시 💋",
+      teacher: "민소정"
+    },
+    {
+      name: "STEAM 사회참여반",
+      icon: <Flame className="w-6 h-6" />,
+      tagline: "사랑의 단맛, 연구의 깊이",
+      description: "사회 문제를 과학적 시선으로 풀어낸 탐구 보고서 전시와 연구 결과 공개 🧩",
+      teacher: "정재은, 이은영"
+    },
+    {
+      name: "ARTY 미술반",
+      icon: <Palette className="w-6 h-6" />,
+      tagline: "사랑을 그리다, 예술로 피어나다",
+      description: "단체작 '사랑'과 개인작 전시 💕 페이스페인팅, 쥬얼리 메이크업, 타투 등 스페셜 체험으로 완성하는 예술적 사랑 🌹",
+      teacher: "이규화"
+    },
+    {
+      name: "진로 DREAM",
+      icon: <Star className="w-6 h-6" />,
+      tagline: "사랑하는 일을 찾아서 – 나의 꿈 전시",
+      description: "다양한 직업 체험과 진로 탐색, 그리고 '나의 미래'를 스스로 디자인한 작품 전시 🌟",
+      teacher: "박건희"
     }
   ];
 
@@ -394,8 +380,8 @@ const Festival = () => {
       {activeTab === "exhibitions" && (
         <section className="max-w-6xl mx-auto px-4 pb-16">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-4 text-gray-800">전시 마당</h2>
-            <p className="text-lg text-gray-600">사랑을 표현하고 감상하는 예술의 공간</p>
+            <h2 className="text-4xl font-bold mb-4 text-gray-800">🎨 전시 & 체험 마당</h2>
+            <p className="text-lg text-gray-600">사랑으로 담아낸 성덕인의 생각과 이야기들</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {exhibitions.map((exhibition, index) => (
@@ -411,11 +397,13 @@ const Festival = () => {
                     <Sparkles className="w-4 h-4 text-pink-400 fill-pink-400" />
                   </div>
                   <CardTitle className="text-xl">{exhibition.name}</CardTitle>
-                  <CardDescription className="text-xs text-gray-500">{exhibition.subtitle}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm font-semibold text-purple-600 mb-2">{exhibition.tagline}</p>
-                  <p className="text-sm text-gray-600 leading-relaxed">{exhibition.description}</p>
+                  <p className="text-sm text-gray-600 leading-relaxed mb-3">{exhibition.description}</p>
+                  <div className="text-xs text-gray-500">
+                    <p>👨‍🏫 {exhibition.teacher} 선생님</p>
+                  </div>
                 </CardContent>
               </Card>
             ))}

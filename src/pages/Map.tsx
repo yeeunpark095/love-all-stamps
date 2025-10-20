@@ -61,14 +61,37 @@ export default function Map() {
   // 본관 배치
   const topRow = [8, 9, 10, 11, 12].map(id => mainBooths.find(b => b.booth_id === id)).filter(Boolean) as Booth[];
   const bottomRow = [1, 2, 3, 4, 5, 6].map(id => mainBooths.find(b => b.booth_id === id)).filter(Boolean) as Booth[];
-  const sideRow = [13, 14, 15].map(id => mainBooths.find(b => b.booth_id === id)).filter(Boolean) as Booth[];
-  const centerBooth = mainBooths.find(b => b.booth_id === 7);
+  const sideRow = [13, 14, 15].map(id => mainBooths.find(b => b.booth_id === id)).filter(Boolean) as Booth[]; // 체육 부스들
+  const centerBooth = mainBooths.find(b => b.booth_id === 7); // 애드미찬양반
 
-  // 서관 부스 (16-22)
-  const seogwanBooths = filteredBooths.filter(b => b.booth_id >= 16 && b.booth_id <= 22);
-  const floor1 = seogwanBooths.filter(b => b.booth_id >= 16 && b.booth_id <= 18);
-  const floor2 = seogwanBooths.filter(b => b.booth_id >= 19 && b.booth_id <= 21);
-  const floor3 = seogwanBooths.filter(b => b.booth_id === 22);
+  // 서관 부스 구조
+  const seogwanFloors = [
+    {
+      floor: "1F",
+      bg: "bg-[#D8ECFF]",
+      rooms: [
+        { location: "미술1실", name: "융합과학 STEAM주제연구반" },
+        { location: "미술2실", name: "수달(수학의달인)", booth_id: 17 },
+        { location: "융합과학실", name: "AI, SW 코딩반", booth_id: 18 }
+      ]
+    },
+    {
+      floor: "2F",
+      bg: "bg-[#E4D4FF]",
+      rooms: [
+        { location: "과학1실", name: "물리를 만들다" },
+        { location: "과학2실", name: "디자인공예반" },
+        { location: "과학3실", name: "융합과학 STEAM주제연구반" }
+      ]
+    },
+    {
+      floor: "3F",
+      bg: "bg-[#D8ECFF]",
+      rooms: [
+        { location: "늘품관", name: "BUKU(독서토론반)" }
+      ]
+    }
+  ];
 
   const BoothCard = ({ booth }: { booth: Booth }) => {
     const cleanName = booth.name?.replace(/^\d+\.\s*/, '') || booth.name;
@@ -138,7 +161,7 @@ export default function Map() {
             </div>
 
             {/* Playground Layout */}
-            <div className="relative bg-gradient-to-br from-[#FFF8E1] to-[#E8F5E9] rounded-2xl border-2 border-[#999999] p-6 min-h-[500px]">
+            <div className="relative bg-gradient-to-br from-[#FFF8E1] to-[#E8F5E9] rounded-2xl border-2 border-[#999999] p-6 min-h-[600px] pt-[56px]">
               {/* 입구 표시 */}
               <div className="absolute top-3 left-3 flex items-center gap-1">
                 <span className="text-xl">🚪</span>
@@ -147,8 +170,8 @@ export default function Map() {
               </div>
 
               {/* 윗줄 (8-12) */}
-              <div className="mb-6 mt-12">
-                <div className="grid grid-cols-5 gap-2">
+              <div className="mb-6">
+                <div className="grid grid-cols-5 gap-2 max-w-[70%]">
                   {topRow.map((booth) => (
                     <BoothCard key={booth.booth_id} booth={booth} />
                   ))}
@@ -156,25 +179,44 @@ export default function Map() {
               </div>
 
               {/* 아랫줄 (1-6) */}
-              <div className="mb-6">
-                <div className="grid grid-cols-6 gap-2">
+              <div className="mb-8">
+                <div className="grid grid-cols-6 gap-2 max-w-[70%]">
                   {bottomRow.map((booth) => (
                     <BoothCard key={booth.booth_id} booth={booth} />
                   ))}
                 </div>
               </div>
 
-              {/* 중앙 부스 (7번) */}
-              {centerBooth && (
-                <div className="mb-6 flex justify-center">
-                  <div className="w-48">
-                    <BoothCard booth={centerBooth} />
+              {/* 구령대 섹션 */}
+              <div className="relative flex justify-center items-end gap-4 mb-8 mt-12">
+                {/* 구령대 1 - 작은 원 */}
+                <div className="relative flex flex-col items-center">
+                  <div className="w-24 h-24 rounded-full border-2 border-[#999999] bg-[#F4F6F9]/50 flex items-center justify-center">
+                    <span className="text-xs font-semibold text-muted-foreground">구령대 1</span>
                   </div>
                 </div>
-              )}
 
-              {/* 사이드 부스 (13-15) */}
-              <div className="absolute right-6 top-1/2 transform -translate-y-1/2 space-y-2 w-24">
+                {/* 구령대 2 - 큰 원 with 애드미찬양반 */}
+                <div className="relative flex flex-col items-center">
+                  <div className="w-36 h-36 rounded-full bg-gradient-to-br from-[#CFE9FF] to-[#EED8FF] p-1 flex items-center justify-center shadow-lg">
+                    {centerBooth && (
+                      <div
+                        onClick={() => setSelectedBooth(centerBooth)}
+                        className="w-full h-full rounded-full bg-white/90 flex flex-col items-center justify-center cursor-pointer hover:shadow-md transition-all border-2 border-white"
+                      >
+                        <span className="text-2xl mb-1">🎤</span>
+                        <div className="text-[11px] font-bold text-center leading-tight px-2">
+                          {centerBooth.name?.replace(/^\d+\.\s*/, '')}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  <span className="text-xs font-semibold text-muted-foreground mt-1">구령대 2</span>
+                </div>
+              </div>
+
+              {/* 사이드 부스 (13-15) - 체육 */}
+              <div className="absolute right-6 top-1/2 transform -translate-y-1/2 space-y-2.5 w-28">
                 {sideRow.map((booth) => (
                   <BoothCard key={booth.booth_id} booth={booth} />
                 ))}
@@ -201,74 +243,31 @@ export default function Map() {
             </div>
 
             <div className="space-y-3">
-              {/* 1층 */}
-              <div>
-                <div className="bg-gradient-to-r from-[#E3F2FD] to-[#F3E5F5] border-[1.5px] border-[#999999] rounded-lg px-3 py-1.5 mb-2">
-                  <h3 className="text-[15px] font-bold text-foreground">1F</h3>
-                </div>
-                <div className="space-y-1.5">
-                  {floor1.map((booth) => (
-                    <div
-                      key={booth.booth_id}
-                      onClick={() => setSelectedBooth(booth)}
-                      className={`rounded-lg border-[1.5px] border-[#999999] p-2.5 cursor-pointer hover:shadow-md transition-all ${
-                        booth.category ? categoryColors[booth.category] : "bg-white"
-                      }`}
-                    >
-                      <div className="font-semibold text-[13px] text-foreground">{booth.location}</div>
-                      <div className="text-[12px] text-foreground/70 mt-0.5">
-                        {booth.name?.replace(/^\d+\.\s*/, '')}
+              {seogwanFloors.map((floorData, idx) => (
+                <div key={floorData.floor}>
+                  <div className="bg-gradient-to-r from-[#4A5568] to-[#2D3748] border-[1.5px] border-[#444444] rounded-lg px-3 py-2 mb-2">
+                    <h3 className="text-[15px] font-bold text-white">{floorData.floor}</h3>
+                  </div>
+                  <div className="space-y-2">
+                    {floorData.rooms.map((room, roomIdx) => (
+                      <div
+                        key={`${floorData.floor}-${roomIdx}`}
+                        onClick={() => room.booth_id && setSelectedBooth(booths.find(b => b.booth_id === room.booth_id) || null)}
+                        className={`${floorData.bg} rounded-lg border-[1.5px] border-[#999999] p-3 h-[60px] flex items-center justify-between ${
+                          room.booth_id ? 'cursor-pointer hover:shadow-md transition-all' : ''
+                        }`}
+                      >
+                        <div className="flex-1">
+                          <div className="font-bold text-[15px] text-foreground">{room.location}</div>
+                        </div>
+                        <div className="flex-1 text-right">
+                          <div className="text-[13px] text-muted-foreground">{room.name}</div>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
-
-              {/* 2층 */}
-              <div>
-                <div className="bg-gradient-to-r from-[#F3E5F5] to-[#E3F2FD] border-[1.5px] border-[#999999] rounded-lg px-3 py-1.5 mb-2">
-                  <h3 className="text-[15px] font-bold text-foreground">2F</h3>
-                </div>
-                <div className="space-y-1.5">
-                  {floor2.map((booth) => (
-                    <div
-                      key={booth.booth_id}
-                      onClick={() => setSelectedBooth(booth)}
-                      className={`rounded-lg border-[1.5px] border-[#999999] p-2.5 cursor-pointer hover:shadow-md transition-all ${
-                        booth.category ? categoryColors[booth.category] : "bg-white"
-                      }`}
-                    >
-                      <div className="font-semibold text-[13px] text-foreground">{booth.location}</div>
-                      <div className="text-[12px] text-foreground/70 mt-0.5">
-                        {booth.name?.replace(/^\d+\.\s*/, '')}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* 3층 */}
-              <div>
-                <div className="bg-gradient-to-r from-[#E3F2FD] to-[#F3E5F5] border-[1.5px] border-[#999999] rounded-lg px-3 py-1.5 mb-2">
-                  <h3 className="text-[15px] font-bold text-foreground">3F</h3>
-                </div>
-                <div className="space-y-1.5">
-                  {floor3.map((booth) => (
-                    <div
-                      key={booth.booth_id}
-                      onClick={() => setSelectedBooth(booth)}
-                      className={`rounded-lg border-[1.5px] border-[#999999] p-2.5 cursor-pointer hover:shadow-md transition-all ${
-                        booth.category ? categoryColors[booth.category] : "bg-white"
-                      }`}
-                    >
-                      <div className="font-semibold text-[13px] text-foreground">{booth.location}</div>
-                      <div className="text-[12px] text-foreground/70 mt-0.5">
-                        {booth.name?.replace(/^\d+\.\s*/, '')}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              ))}
             </div>
           </Card>
         </div>

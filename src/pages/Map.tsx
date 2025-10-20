@@ -157,9 +157,9 @@ export default function Map() {
           </div>
         </Card>
 
-        {/* Main Layout: 본관 (70%) + 서관 (30%) */}
-        <div className="grid lg:grid-cols-[70fr_30fr] gap-6">
-          {/* ① 본관 구역 */}
+        {/* Main Layout: 본관 위, 서관 아래 */}
+        <div className="space-y-6">
+          {/* ① 본관 구역 - 넓게 */}
           <Card className="p-6 border-2 border-[#444444] rounded-2xl bg-white">
             <div className="mb-4">
               <div className="inline-block bg-gradient-to-r from-[#FFC9DE] to-[#CFE9FF] rounded-full px-5 py-2 mb-1">
@@ -170,8 +170,8 @@ export default function Map() {
               <p className="text-sm text-muted-foreground font-medium">성덕고등학교 본관 앞 운동장</p>
             </div>
 
-            {/* Playground Layout */}
-            <div className="relative bg-gradient-to-br from-[#FFF8E1] to-[#E8F5E9] rounded-2xl border-2 border-[#999999] p-8 min-h-[600px]">
+            {/* Playground Layout - 더 크게 */}
+            <div className="relative bg-gradient-to-br from-[#FFF8E1] to-[#E8F5E9] rounded-2xl border-2 border-[#999999] p-12 min-h-[700px]">
               {/* 입구 표시 */}
               <div className="absolute top-4 left-4 flex items-center gap-1">
                 <span className="text-xl">🚪</span>
@@ -179,25 +179,25 @@ export default function Map() {
                 <span className="text-sm">➡️</span>
               </div>
 
-              {/* 오른쪽 사이드 - 체육 부스 (13-15) 세로 배치, 간격 넓힘 */}
-              <div className="absolute right-8 top-1/2 transform -translate-y-1/2 space-y-12">
+              {/* 오른쪽 사이드 - 체육 부스 (13-15) 세로 배치, 더 오른쪽으로 */}
+              <div className="absolute right-12 top-1/2 transform -translate-y-1/2 space-y-16">
                 {sportsBooths.map(({ booth, emoji }) => (
                   <BoothCard key={booth.booth_id} booth={booth} emoji={emoji} />
                 ))}
               </div>
 
               {/* 1번줄 - 최상단 (8-12): 빅데이터투인사이트 ~ 한걸음 */}
-              <div className="mb-16 mt-12">
-                <div className="flex justify-center gap-6 max-w-[70%] mx-auto">
+              <div className="mb-20 mt-16">
+                <div className="flex justify-center gap-10 max-w-[65%] mx-auto">
                   {topRow.map((booth) => (
-                    <BoothCard key={booth.booth_id} booth={booth} emoji="🎨" />
+                    <BoothCard key={booth.booth_id} booth={booth} emoji="🎪" />
                   ))}
                 </div>
               </div>
 
               {/* 2번줄 - 중간 (1-6 + 애드미찬양반): 영어토론프레젠테이션 ~ 솔리언 + 애드미찬양반(중앙) */}
-              <div className="mb-16">
-                <div className="flex justify-center items-start gap-6 max-w-[80%] mx-auto">
+              <div className="mb-20">
+                <div className="flex justify-center items-start gap-8 max-w-[75%] mx-auto">
                   {middleRow.slice(0, 3).map((booth) => (
                     <BoothCard key={booth.booth_id} booth={booth} emoji="🎪" />
                   ))}
@@ -212,7 +212,7 @@ export default function Map() {
               </div>
 
               {/* Building label - 맨 아래 */}
-              <div className="text-center mt-8">
+              <div className="text-center mt-12">
                 <div className="inline-block bg-foreground text-white px-6 py-2 rounded-lg font-semibold text-sm">
                   성덕고등학교 본관
                 </div>
@@ -220,8 +220,8 @@ export default function Map() {
             </div>
           </Card>
 
-          {/* ② 서관 ZONE */}
-          <Card className="p-6 border-2 border-[#444444] rounded-2xl bg-white">
+          {/* ② 서관 ZONE - 본관 아래 */}
+          <Card className="p-6 border-2 border-[#444444] rounded-2xl bg-white max-w-4xl mx-auto">
             <div className="mb-4">
               <div className="inline-block bg-gradient-to-r from-[#FFC9DE] to-[#CFE9FF] rounded-full px-5 py-2 mb-1">
                 <h2 className="text-lg font-bold text-foreground flex items-center gap-2" style={{ fontFamily: 'Pretendard, sans-serif' }}>

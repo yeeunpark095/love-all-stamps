@@ -247,8 +247,7 @@ export default function Stamps() {
                     )}
                   </div>
                   <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-xs font-bold text-primary">#{booth.booth_id}</span>
+                    <div className="mb-1">
                       <h3 className="font-bold text-lg">{booth.name}</h3>
                     </div>
                     <p className="text-sm text-muted-foreground mb-2">{booth.description}</p>

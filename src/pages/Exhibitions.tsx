@@ -134,7 +134,7 @@ export default function Exhibitions() {
                 {/* Album Info */}
                 <div className="p-5 space-y-3">
                   <h3 className="font-bold text-xl text-primary line-clamp-1">{exhibition.club}</h3>
-                  <p className="text-sm font-medium text-foreground italic font-myeongjo line-clamp-2 min-h-[2.5rem]">
+                  <p className="text-sm font-medium text-foreground line-clamp-2 min-h-[2.5rem]">
                     {data.title}
                   </p>
                   
@@ -169,7 +169,7 @@ export default function Exhibitions() {
           {selectedExhibition && (
             <div className="space-y-4">
               <div className="p-4 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg">
-                <p className="text-xl font-bold text-foreground italic font-myeongjo">
+                <p className="text-xl font-bold text-foreground">
                   {selectedExhibition.title}
                 </p>
               </div>

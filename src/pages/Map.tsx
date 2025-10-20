@@ -83,10 +83,7 @@ export default function Map() {
                 >
                   <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-3">
-                      <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary text-white text-base font-bold shadow-md">
-                        {booth.booth_id}
-                      </span>
+                    <div className="mb-3">
                       <h3 className="font-bold text-xl text-foreground">{booth.name}</h3>
                     </div>
                     {booth.description && (

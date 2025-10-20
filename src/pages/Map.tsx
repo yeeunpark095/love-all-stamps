@@ -76,6 +76,7 @@ export default function Map() {
           </h2>
           <div className="grid gap-4">
             {filteredBooths.map((booth) => {
+              const cleanName = booth.name?.replace(/^\d+\.\s*/, '') || booth.name;
               return (
                 <Card
                   key={booth.booth_id}
@@ -84,10 +85,10 @@ export default function Map() {
                   <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-3">
-                      <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-pink-600 to-pink-700 text-white text-base font-bold shadow-md">
+                      <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary text-white text-base font-bold shadow-md">
                         {booth.booth_id}
                       </span>
-                      <h3 className="font-bold text-xl text-foreground">{booth.name}</h3>
+                      <h3 className="font-bold text-xl text-foreground">{cleanName}</h3>
                     </div>
                     {booth.description && (
                       <p className="text-sm text-muted-foreground mb-3 leading-relaxed pl-1">

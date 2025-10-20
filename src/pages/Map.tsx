@@ -58,11 +58,11 @@ export default function Map() {
   // 본관 부스 (1-15)
   const mainBooths = filteredBooths.filter(b => b.booth_id >= 1 && b.booth_id <= 15);
   
-  // 본관 배치
-  const topRow = [8, 9, 10, 11, 12].map(id => mainBooths.find(b => b.booth_id === id)).filter(Boolean) as Booth[];
-  const bottomRow = [1, 2, 3, 4, 5, 6].map(id => mainBooths.find(b => b.booth_id === id)).filter(Boolean) as Booth[];
-  const sideRow = [13, 14, 15].map(id => mainBooths.find(b => b.booth_id === id)).filter(Boolean) as Booth[]; // 체육 부스들
-  const centerBooth = mainBooths.find(b => b.booth_id === 7); // 애드미찬양반
+  // 본관 배치 - 새로운 레이아웃
+  const frontRow = [1, 2, 3, 4, 5, 6].map(id => mainBooths.find(b => b.booth_id === id)).filter(Boolean) as Booth[]; // 앞줄
+  const centerBooth = mainBooths.find(b => b.booth_id === 7); // 애드미찬양반 (구령대)
+  const backRow = [8, 9, 10, 11, 12].map(id => mainBooths.find(b => b.booth_id === id)).filter(Boolean) as Booth[]; // 뒷줄
+  const sportsBooths = [13, 14, 15].map(id => mainBooths.find(b => b.booth_id === id)).filter(Boolean) as Booth[]; // 체육
 
   // 서관 부스 구조
   const seogwanFloors = [
@@ -93,16 +93,22 @@ export default function Map() {
     }
   ];
 
-  const BoothCard = ({ booth }: { booth: Booth }) => {
+  const BoothCard = ({ booth, emoji = "🎪" }: { booth: Booth; emoji?: string }) => {
     const cleanName = booth.name?.replace(/^\d+\.\s*/, '') || booth.name;
     const categoryColor = booth.category ? categoryColors[booth.category] : "bg-white";
     
     return (
       <div
         onClick={() => setSelectedBooth(booth)}
-        className={`${categoryColor} rounded-lg border-[1.5px] border-[#999999] shadow-sm px-2.5 py-2 cursor-pointer hover:shadow-md transition-all`}
+        className="flex flex-col items-center gap-2 cursor-pointer hover:scale-105 transition-transform"
       >
-        <div className="text-[13px] font-semibold text-center leading-tight text-foreground">
+        {/* Heart-shaped booth marker */}
+        <div className={`${categoryColor} relative w-16 h-16 rounded-full flex items-center justify-center shadow-lg border-2 border-white hover:shadow-xl transition-all`}>
+          <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent rounded-full" />
+          <span className="text-2xl relative z-10">{emoji}</span>
+        </div>
+        {/* Booth name */}
+        <div className="text-[11px] font-semibold text-center leading-tight text-foreground max-w-[80px] bg-white/90 px-2 py-1 rounded-full border border-[#999999] shadow-sm">
           {cleanName}
         </div>
       </div>
@@ -161,69 +167,61 @@ export default function Map() {
             </div>
 
             {/* Playground Layout */}
-            <div className="relative bg-gradient-to-br from-[#FFF8E1] to-[#E8F5E9] rounded-2xl border-2 border-[#999999] p-6 min-h-[600px] pt-[56px]">
+            <div className="relative bg-gradient-to-br from-[#FFF8E1] to-[#E8F5E9] rounded-2xl border-2 border-[#999999] p-8 min-h-[600px]">
               {/* 입구 표시 */}
-              <div className="absolute top-3 left-3 flex items-center gap-1">
+              <div className="absolute top-4 left-4 flex items-center gap-1">
                 <span className="text-xl">🚪</span>
                 <span className="text-xs font-bold bg-white px-2 py-1 rounded border border-[#999999]">입구</span>
                 <span className="text-sm">➡️</span>
               </div>
 
-              {/* 윗줄 (8-12) */}
-              <div className="mb-6">
-                <div className="grid grid-cols-5 gap-2 max-w-[70%]">
-                  {topRow.map((booth) => (
-                    <BoothCard key={booth.booth_id} booth={booth} />
+              {/* 1번줄 - 앞줄 (1-6): 영어토론프레젠테이션 ~ 솔리언 */}
+              <div className="mb-12 mt-12">
+                <div className="flex justify-center gap-8">
+                  {frontRow.map((booth) => (
+                    <BoothCard key={booth.booth_id} booth={booth} emoji="🎪" />
                   ))}
                 </div>
               </div>
 
-              {/* 아랫줄 (1-6) */}
-              <div className="mb-8">
-                <div className="grid grid-cols-6 gap-2 max-w-[70%]">
-                  {bottomRow.map((booth) => (
-                    <BoothCard key={booth.booth_id} booth={booth} />
-                  ))}
-                </div>
-              </div>
-
-              {/* 구령대 섹션 */}
-              <div className="relative flex justify-center items-end gap-4 mb-8 mt-12">
-                {/* 구령대 1 - 작은 원 */}
-                <div className="relative flex flex-col items-center">
-                  <div className="w-24 h-24 rounded-full border-2 border-[#999999] bg-[#F4F6F9]/50 flex items-center justify-center">
-                    <span className="text-xs font-semibold text-muted-foreground">구령대 1</span>
-                  </div>
-                </div>
-
-                {/* 구령대 2 - 큰 원 with 애드미찬양반 */}
-                <div className="relative flex flex-col items-center">
-                  <div className="w-36 h-36 rounded-full bg-gradient-to-br from-[#CFE9FF] to-[#EED8FF] p-1 flex items-center justify-center shadow-lg">
-                    {centerBooth && (
-                      <div
-                        onClick={() => setSelectedBooth(centerBooth)}
-                        className="w-full h-full rounded-full bg-white/90 flex flex-col items-center justify-center cursor-pointer hover:shadow-md transition-all border-2 border-white"
-                      >
-                        <span className="text-2xl mb-1">🎤</span>
-                        <div className="text-[11px] font-bold text-center leading-tight px-2">
-                          {centerBooth.name?.replace(/^\d+\.\s*/, '')}
-                        </div>
+              {/* 2번줄 - 중앙 구령대 (7번): 애드미찬양반 */}
+              <div className="mb-12">
+                <div className="flex justify-center">
+                  {centerBooth && (
+                    <div
+                      onClick={() => setSelectedBooth(centerBooth)}
+                      className="flex flex-col items-center gap-2 cursor-pointer hover:scale-105 transition-transform"
+                    >
+                      <div className="relative w-24 h-24 rounded-full bg-gradient-to-br from-[#FFE4E8] to-[#FFC9DE] flex items-center justify-center shadow-xl border-3 border-white">
+                        <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent rounded-full" />
+                        <span className="text-4xl relative z-10">🎤</span>
                       </div>
-                    )}
-                  </div>
-                  <span className="text-xs font-semibold text-muted-foreground mt-1">구령대 2</span>
+                      <div className="text-[12px] font-bold text-center leading-tight text-foreground bg-white/90 px-3 py-1.5 rounded-full border border-[#999999] shadow-sm">
+                        {centerBooth.name?.replace(/^\d+\.\s*/, '')}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
-              {/* 사이드 부스 (13-15) - 체육 */}
-              <div className="absolute right-6 top-1/2 transform -translate-y-1/2 space-y-2.5 w-28">
-                {sideRow.map((booth) => (
-                  <BoothCard key={booth.booth_id} booth={booth} />
+              {/* 3번줄 - 뒷줄 (8-12): 빅데이터투인사이트 ~ 한걸음 */}
+              <div className="mb-8">
+                <div className="flex justify-center gap-8">
+                  {backRow.map((booth) => (
+                    <BoothCard key={booth.booth_id} booth={booth} emoji="🎨" />
+                  ))}
+                </div>
+              </div>
+
+              {/* 체육 부스 (13-15) - 3번줄 가운데 정렬 */}
+              <div className="flex justify-center gap-8 mt-8">
+                {sportsBooths.map((booth) => (
+                  <BoothCard key={booth.booth_id} booth={booth} emoji="⚽" />
                 ))}
               </div>
 
               {/* Building label */}
-              <div className="text-center mt-8">
+              <div className="text-center mt-12">
                 <div className="inline-block bg-foreground text-white px-6 py-2 rounded-lg font-semibold text-sm">
                   성덕고등학교 본관
                 </div>

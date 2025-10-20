@@ -3,28 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import Navigation from "@/components/Navigation";
 import { Card } from "@/components/ui/card";
-import { 
-  Filter, 
-  Heart, 
-  Lightbulb, 
-  Leaf, 
-  Scale, 
-  Recycle, 
-  FlaskConical, 
-  Film, 
-  Map, 
-  Sparkles, 
-  FileText, 
-  Palette, 
-  Compass,
-  Frame
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { MapPin } from "lucide-react";
 
 export default function Exhibitions() {
   const navigate = useNavigate();
   const [exhibitions, setExhibitions] = useState<any[]>([]);
-  const [filter, setFilter] = useState<string>("all");
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -44,25 +27,79 @@ export default function Exhibitions() {
     checkAuth();
   }, [navigate]);
 
-  const types = ["all", ...new Set(exhibitions.map(e => e.type))];
-  const filtered = filter === "all" ? exhibitions : exhibitions.filter(e => e.type === filter);
-
-  const getIconForClub = (club: string) => {
-    const iconMap: { [key: string]: any } = {
-      '간호보건동아리': Heart,
-      'Be creator': Lightbulb,
-      '플로깅': Leaf,
-      '사회정책탐구반': Scale,
-      '친환경연구동아리': Recycle,
-      '핸즈온 과학탐구반': FlaskConical,
-      '애니메이션 동아리': Film,
-      'Guide Makers': Map,
-      '뷰티동아리': Sparkles,
-      'STEAM사회참여반': FileText,
-      'ARTY 미술반': Palette,
-      '진로DREAM(드림)': Compass,
-    };
-    return iconMap[club] || Frame;
+  const exhibitionData: { [key: string]: { emoji: string; title: string; description: string; teacher: string } } = {
+    '간호보건동아리': {
+      emoji: '💉',
+      title: '"사랑할 때, 내 몸은 어떻게 반응할까?"',
+      description: '스트레스 상황에서의 변화와 관리법을 과학적으로 알아보는 부스!',
+      teacher: '심보경'
+    },
+    'Be creator': {
+      emoji: '🎪',
+      title: '"축제를 만드는 사람들, 그들의 비밀 노트"',
+      description: '성덕제의 기획 여정을 한눈에!\n기획서·아이디어·홍보 자료 등 창의력이 폭발하는 전시 💡',
+      teacher: '박예은'
+    },
+    '플로깅': {
+      emoji: '🌿',
+      title: '"사랑은 줍는 것부터 시작돼요!"',
+      description: '걷고, 주우며, 지구를 사랑하는 플로깅 이야기 🌎\n다양한 활동 사진과 자료 전시로 환경사랑을 전해요.',
+      teacher: '이혜미'
+    },
+    '사회정책탐구반': {
+      emoji: '⚖️',
+      title: '"사회를 바꾸는 사랑, 정책으로 말하다"',
+      description: '청소년의 시선으로 사회문제를 분석하고\n더 나은 세상을 위한 대안을 제시하는 정책 탐구 전시 🧠',
+      teacher: '이은정'
+    },
+    '친환경연구동아리': {
+      emoji: '🌱',
+      title: '"지구를 사랑하는 생활 아이디어!"',
+      description: '재활용과 창의성을 더한 친환경 생활용품 전시 ♻️\n작은 실천으로 만드는 지속가능한 사랑 이야기.',
+      teacher: '이윤주'
+    },
+    '핸즈온 과학탐구반': {
+      emoji: '🔬',
+      title: '"손으로 만든 과학, 마음으로 담은 사랑"',
+      description: '학생들이 직접 진행한 소모임 연구 결과 전시 🧪\n실험을 통해 발견한 호기심과 열정의 기록!',
+      teacher: '오주현'
+    },
+    '애니메이션 동아리': {
+      emoji: '🎞️',
+      title: '"사랑은 프레임 사이에 있다"',
+      description: '애니메이션이 만들어지는 과정과 그 속의 스토리텔링 💕\n제작 과정 전시 + 애니메이션 체험 코너까지!',
+      teacher: '김예원'
+    },
+    'Guide Makers': {
+      emoji: '🗺️',
+      title: '"내가 만든 박물관, 영어로 안내해볼까?"',
+      description: '직접 제작한 영문 안내서를 통해\n학생들의 언어 감각과 창의력을 엿볼 수 있는 전시 ✈️',
+      teacher: '박형진'
+    },
+    '뷰티동아리': {
+      emoji: '💄',
+      title: '"나를 사랑하는 가장 예쁜 방법"',
+      description: '퍼스널 컬러와 스타일링으로\n\'나\'를 빛내는 뷰티 솔루션 전시 💋',
+      teacher: '민소정'
+    },
+    'STEAM사회참여반': {
+      emoji: '🔥',
+      title: '"사랑의 단맛, 연구의 깊이"',
+      description: '사회 문제를 과학적 시선으로 풀어낸\n탐구 보고서 전시와 연구 결과 공개 🧩',
+      teacher: '정재은, 이은영'
+    },
+    'ARTY 미술반': {
+      emoji: '🎨',
+      title: '"사랑을 그리다, 예술로 피어나다"',
+      description: '단체작 \'사랑\'과 개인작 전시 💕\n페이스페인팅, 쥬얼리 메이크업, 타투 등\n스페셜 체험으로 완성하는 예술적 사랑 🌹',
+      teacher: '이규화'
+    },
+    '진로DREAM(드림)': {
+      emoji: '💼',
+      title: '"사랑하는 일을 찾아서 – 나의 꿈 전시"',
+      description: '다양한 직업 체험과 진로 탐색,\n그리고 \'나의 미래\'를 스스로 디자인한 작품 전시 🌟',
+      teacher: '박건희'
+    }
   };
 
   return (
@@ -72,64 +109,48 @@ export default function Exhibitions() {
         <p className="text-white/90 text-sm">다양한 동아리의 전시를 만나보세요</p>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
-        {/* Filter */}
-        <Card className="p-4 shadow-lg">
-          <div className="flex items-center gap-2 mb-3">
-            <Filter className="w-5 h-5 text-primary" />
-            <h2 className="font-bold">전시 유형</h2>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {types.map((type) => (
-              <Button
-                key={type}
-                variant={filter === type ? "default" : "outline"}
-                size="sm"
-                onClick={() => setFilter(type)}
-                className={filter === type ? "bg-gradient-to-r from-primary to-secondary" : ""}
-              >
-                {type === "all" ? "전체" : type}
-              </Button>
-            ))}
-          </div>
-        </Card>
-
+      <div className="max-w-4xl mx-auto px-4 py-6 space-y-4">
         {/* Exhibition List */}
         <div className="grid gap-4">
-          {filtered.map((exhibition, index) => (
-            <Card
-              key={exhibition.exhibition_id}
-              className="p-5 hover:shadow-lg transition-all hover:border-primary/30 animate-fade-in"
-              style={{ animationDelay: `${index * 0.05}s` }}
-            >
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 w-14 h-14 rounded-full bg-gradient-to-br from-accent to-primary flex items-center justify-center shadow-lg">
-                  {(() => {
-                    const IconComponent = getIconForClub(exhibition.club);
-                    return <IconComponent className="w-7 h-7 text-white" />;
-                  })()}
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-start justify-between mb-2">
-                    <div>
-                      <h3 className="font-bold text-lg mb-1">{exhibition.title}</h3>
-                      <p className="text-sm text-primary font-semibold">{exhibition.club}</p>
-                    </div>
-                    <span className="px-3 py-1 bg-secondary/20 rounded-full text-xs font-medium">
-                      {exhibition.type}
-                    </span>
+          {exhibitions.map((exhibition, index) => {
+            const data = exhibitionData[exhibition.club];
+            if (!data) return null;
+            
+            return (
+              <Card
+                key={exhibition.exhibition_id}
+                className="p-6 hover:shadow-xl transition-all hover:border-primary/30 animate-fade-in"
+                style={{ animationDelay: `${index * 0.05}s` }}
+              >
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <span className="text-4xl">{data.emoji}</span>
+                    <h3 className="font-bold text-xl text-primary">{exhibition.club}</h3>
                   </div>
-                  <p className="text-sm text-muted-foreground">{exhibition.description}</p>
+                  
+                  <p className="text-lg font-semibold text-foreground italic">
+                    {data.title}
+                  </p>
+                  
+                  <p className="text-sm text-muted-foreground whitespace-pre-line leading-relaxed">
+                    {data.description}
+                  </p>
+                  
+                  <div className="flex items-center gap-2 pt-2 border-t border-border/50">
+                    <MapPin className="w-4 h-4 text-primary" />
+                    <p className="text-sm text-muted-foreground">
+                      지도교사: <span className="font-medium text-foreground">{data.teacher} 선생님</span>
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </Card>
-          ))}
+              </Card>
+            );
+          })}
         </div>
 
-        {filtered.length === 0 && (
+        {exhibitions.length === 0 && (
           <Card className="p-8 text-center">
-            <Frame className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
-            <p className="text-muted-foreground">해당하는 전시가 없습니다</p>
+            <p className="text-muted-foreground">전시 정보를 불러오는 중...</p>
           </Card>
         )}
       </div>

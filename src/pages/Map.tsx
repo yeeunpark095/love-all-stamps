@@ -37,18 +37,6 @@ export default function Map() {
     booth.location?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // 부스 이름으로 아이콘 매핑
-  const getBoothIcon = (name: string) => {
-    const lowerName = name?.toLowerCase() || '';
-    if (lowerName.includes('물리')) return '⚛️';
-    if (lowerName.includes('디자인공예')) return '🎨';
-    if (lowerName.includes('steam') || lowerName.includes('융합과학steam')) return '🔬';
-    if (lowerName.includes('수달') || lowerName.includes('수학')) return '📐';
-    if (lowerName.includes('ai') || lowerName.includes('코딩')) return '💻';
-    if (lowerName.includes('buku') || lowerName.includes('독서')) return '📚';
-    return '🏕️';
-  };
-
   // 구역별로 부스 분류
   const getBoothsByZone = () => {
     return {
@@ -61,13 +49,6 @@ export default function Map() {
   };
 
   const zones = getBoothsByZone();
-  const zoneLabels = {
-    front: "앞줄 (1-6)",
-    second: "두번째 줄 (7)",
-    third: "세번째 줄 (8-12)",
-    side: "오른쪽 사이드 (13-15)",
-    seogwan: "서관 코너 (16-22)"
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary/5 to-accent/5 pb-24">
@@ -110,16 +91,10 @@ export default function Map() {
           </h2>
           
           <div className="relative min-h-[700px] bg-muted/20 rounded-lg p-8">
-            {/* 세번째 줄 배너 */}
-            <div className="absolute top-2 left-1/2 -translate-x-1/2 bg-accent/30 backdrop-blur-sm px-6 py-2 rounded-full">
-              <p className="text-sm font-bold text-accent-foreground">세번째 줄 (8-12)</p>
-            </div>
-
             {/* 세번째 줄 (8-12) - 화면 위쪽 */}
-            <div className="flex justify-center gap-3 mb-16 mt-12 relative">
+            <div className="flex justify-center gap-3 mb-16 mt-8 relative">
               {zones.third.map((booth) => {
                 const cleanName = booth.name?.replace(/^\d+\.\s*/, '') || booth.name;
-                const icon = getBoothIcon(booth.name);
                 return (
                   <div
                     key={booth.booth_id}
@@ -127,12 +102,11 @@ export default function Map() {
                     onClick={() => setSelectedBooth(booth)}
                   >
                     <div className="relative w-28 h-28">
-                      <div className="w-full h-full rounded-full bg-gradient-to-br from-accent/90 to-primary/90 shadow-xl flex flex-col items-center justify-center p-3 group-hover:shadow-2xl group-hover:from-accent group-hover:to-primary">
-                        <div className="text-3xl mb-1">{icon}</div>
-                        <div className="w-7 h-7 rounded-full bg-white text-accent text-xs font-bold flex items-center justify-center mb-1 shadow-md">
+                      <div className="w-full h-full bg-gradient-to-br from-accent/90 to-primary/90 shadow-xl flex flex-col items-center justify-center p-3 group-hover:shadow-2xl group-hover:from-accent group-hover:to-primary" style={{borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%'}}>
+                        <div className="w-7 h-7 rounded-full bg-white text-accent text-xs font-bold flex items-center justify-center mb-2 shadow-md">
                           {booth.booth_id}
                         </div>
-                        <p className="text-[11px] text-[#333] font-bold text-center leading-tight line-clamp-2 bg-white/90 px-2 py-1 rounded-full">
+                        <p className="text-sm text-[#333] font-bold text-center leading-tight bg-white/95 px-3 py-1.5 rounded-lg shadow-sm">
                           {cleanName}
                         </p>
                       </div>
@@ -141,16 +115,10 @@ export default function Map() {
                 );
               })}
               
-              {/* 오른쪽 사이드 배너 */}
-              <div className="absolute right-4 top-0 bg-primary/30 backdrop-blur-sm px-4 py-2 rounded-full -rotate-90 origin-right">
-                <p className="text-xs font-bold text-primary-foreground whitespace-nowrap">사이드 (13-15)</p>
-              </div>
-
               {/* 오른쪽 사이드 (13-15) - 위에서 아래로 15, 14, 13 */}
-              <div className="absolute right-8 top-0 flex flex-col gap-3 mt-12">
+              <div className="absolute right-8 top-0 flex flex-col gap-3">
                 {zones.side.slice().reverse().map((booth) => {
                   const cleanName = booth.name?.replace(/^\d+\.\s*/, '') || booth.name;
-                  const icon = getBoothIcon(booth.name);
                   return (
                     <div
                       key={booth.booth_id}
@@ -158,12 +126,11 @@ export default function Map() {
                       onClick={() => setSelectedBooth(booth)}
                     >
                       <div className="relative w-24 h-24">
-                        <div className="w-full h-full rounded-full bg-gradient-to-br from-primary/90 to-secondary/90 shadow-xl flex flex-col items-center justify-center p-2 group-hover:shadow-2xl group-hover:from-primary group-hover:to-secondary">
-                          <div className="text-2xl mb-0.5">{icon}</div>
-                          <div className="w-6 h-6 rounded-full bg-white text-primary text-xs font-bold flex items-center justify-center mb-0.5 shadow-md">
+                        <div className="w-full h-full bg-gradient-to-br from-primary/90 to-secondary/90 shadow-xl flex flex-col items-center justify-center p-2 group-hover:shadow-2xl group-hover:from-primary group-hover:to-secondary" style={{borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%'}}>
+                          <div className="w-6 h-6 rounded-full bg-white text-primary text-xs font-bold flex items-center justify-center mb-1.5 shadow-md">
                             {booth.booth_id}
                           </div>
-                          <p className="text-[9px] text-[#333] font-bold text-center leading-tight line-clamp-2 bg-white/90 px-1.5 py-0.5 rounded-full">
+                          <p className="text-xs text-[#333] font-bold text-center leading-tight bg-white/95 px-2 py-1 rounded-lg shadow-sm">
                             {cleanName}
                           </p>
                         </div>
@@ -172,11 +139,6 @@ export default function Map() {
                   );
                 })}
               </div>
-            </div>
-
-            {/* 중앙 무대 배너 */}
-            <div className="absolute left-1/2 -translate-x-1/2 top-[280px] bg-secondary/30 backdrop-blur-sm px-6 py-2 rounded-full z-10">
-              <p className="text-sm font-bold text-secondary-foreground">중앙 무대</p>
             </div>
 
             {/* 두번째 줄 (7) - 중앙 구령대 */}
@@ -189,18 +151,12 @@ export default function Map() {
                     className="cursor-pointer hover:scale-110 transition-all duration-300 group"
                     onClick={() => setSelectedBooth(booth)}
                   >
-                    <div className="relative">
-                      {/* 구령대 모양 - 강화된 그라데이션 */}
-                      <div className="w-40 h-40 bg-gradient-to-br from-secondary via-accent to-primary rounded-full shadow-2xl flex flex-col items-center justify-center border-4 border-white/70 group-hover:shadow-3xl group-hover:scale-105 transition-all duration-300 relative overflow-hidden">
-                        <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent"></div>
-                        <div className="text-4xl mb-2 relative z-10">🎤</div>
-                        <div className="w-10 h-10 rounded-full bg-white text-secondary text-base font-bold flex items-center justify-center mb-1 shadow-lg relative z-10">
+                    <div className="relative w-28 h-28">
+                      <div className="w-full h-full bg-gradient-to-br from-secondary/90 via-accent/90 to-primary/90 shadow-xl flex flex-col items-center justify-center p-3 group-hover:shadow-2xl group-hover:from-secondary group-hover:to-primary" style={{borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%'}}>
+                        <div className="w-7 h-7 rounded-full bg-white text-secondary text-xs font-bold flex items-center justify-center mb-2 shadow-md">
                           {booth.booth_id}
                         </div>
-                        <p className="text-base text-white font-bold text-center leading-tight px-2 relative z-10">
-                          구령대
-                        </p>
-                        <p className="text-xs text-[#333] font-semibold text-center leading-tight px-3 py-1 bg-white/90 rounded-full mt-1 relative z-10">
+                        <p className="text-sm text-[#333] font-bold text-center leading-tight bg-white/95 px-3 py-1.5 rounded-lg shadow-sm">
                           {cleanName}
                         </p>
                       </div>
@@ -210,16 +166,10 @@ export default function Map() {
               })}
             </div>
 
-            {/* 앞줄 배너 */}
-            <div className="absolute left-1/2 -translate-x-1/2 bottom-[140px] bg-primary/30 backdrop-blur-sm px-6 py-2 rounded-full">
-              <p className="text-sm font-bold text-primary-foreground">앞줄 (1-6)</p>
-            </div>
-
             {/* 앞줄 (1-6) - 화면 아래쪽 */}
             <div className="flex justify-center gap-3 mb-8">
               {zones.front.map((booth) => {
                 const cleanName = booth.name?.replace(/^\d+\.\s*/, '') || booth.name;
-                const icon = getBoothIcon(booth.name);
                 return (
                   <div
                     key={booth.booth_id}
@@ -227,12 +177,11 @@ export default function Map() {
                     onClick={() => setSelectedBooth(booth)}
                   >
                     <div className="relative w-28 h-28">
-                      <div className="w-full h-full rounded-full bg-gradient-to-br from-primary/90 to-secondary/90 shadow-xl flex flex-col items-center justify-center p-3 group-hover:shadow-2xl group-hover:from-primary group-hover:to-secondary">
-                        <div className="text-3xl mb-1">{icon}</div>
-                        <div className="w-7 h-7 rounded-full bg-white text-primary text-xs font-bold flex items-center justify-center mb-1 shadow-md">
+                      <div className="w-full h-full bg-gradient-to-br from-primary/90 to-secondary/90 shadow-xl flex flex-col items-center justify-center p-3 group-hover:shadow-2xl group-hover:from-primary group-hover:to-secondary" style={{borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%'}}>
+                        <div className="w-7 h-7 rounded-full bg-white text-primary text-xs font-bold flex items-center justify-center mb-2 shadow-md">
                           {booth.booth_id}
                         </div>
-                        <p className="text-[11px] text-[#333] font-bold text-center leading-tight line-clamp-2 bg-white/90 px-2 py-1 rounded-full">
+                        <p className="text-sm text-[#333] font-bold text-center leading-tight bg-white/95 px-3 py-1.5 rounded-lg shadow-sm">
                           {cleanName}
                         </p>
                       </div>
@@ -265,7 +214,6 @@ export default function Map() {
           <div className="flex flex-wrap justify-center gap-4 p-6 bg-muted/20 rounded-lg">
             {zones.seogwan.map((booth) => {
               const cleanName = booth.name?.replace(/^\d+\.\s*/, '') || booth.name;
-              const icon = getBoothIcon(booth.name);
               return (
                 <div
                   key={booth.booth_id}
@@ -273,12 +221,11 @@ export default function Map() {
                   onClick={() => setSelectedBooth(booth)}
                 >
                   <div className="relative w-28 h-28">
-                    <div className="w-full h-full rounded-full bg-gradient-to-br from-secondary/90 to-accent/90 shadow-xl flex flex-col items-center justify-center p-3 group-hover:shadow-2xl group-hover:from-secondary group-hover:to-accent">
-                      <div className="text-3xl mb-1">{icon}</div>
-                      <div className="w-7 h-7 rounded-full bg-white text-secondary text-xs font-bold flex items-center justify-center mb-1 shadow-md">
+                    <div className="w-full h-full bg-gradient-to-br from-secondary/90 to-accent/90 shadow-xl flex flex-col items-center justify-center p-3 group-hover:shadow-2xl group-hover:from-secondary group-hover:to-accent" style={{borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%'}}>
+                      <div className="w-7 h-7 rounded-full bg-white text-secondary text-xs font-bold flex items-center justify-center mb-2 shadow-md">
                         {booth.booth_id}
                       </div>
-                      <p className="text-[11px] text-[#333] font-bold text-center leading-tight line-clamp-2 bg-white/90 px-2 py-1 rounded-full">
+                      <p className="text-sm text-[#333] font-bold text-center leading-tight bg-white/95 px-3 py-1.5 rounded-lg shadow-sm">
                         {cleanName}
                       </p>
                     </div>

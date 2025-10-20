@@ -31,96 +31,95 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* 러블리 페스티벌 컬러 스킴 */
-    --background: 350 20% 98%;
-    --foreground: 0 0% 20%;
+    --background: 40 20% 97%;
+    --foreground: 0 0% 10%;
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 20%;
+    --card-foreground: 0 0% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 20%;
+    --popover-foreground: 0 0% 10%;
 
-    /* 핑크 메인 컬러 */
-    --primary: 340 100% 85%;
-    --primary-foreground: 340 60% 30%;
+    --primary: 330 100% 71%;
+    --primary-foreground: 0 0% 100%;
 
-    /* 민트 세컨더리 */
-    --secondary: 160 60% 85%;
-    --secondary-foreground: 160 50% 30%;
+    --secondary: 270 50% 75%;
+    --secondary-foreground: 0 0% 10%;
 
-    /* 아이보리 뮤트 */
-    --muted: 20 20% 96%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 270 30% 92%;
+    --muted-foreground: 0 0% 40%;
 
-    /* 라벤더 액센트 */
-    --accent: 280 50% 88%;
-    --accent-foreground: 280 50% 30%;
+    --accent: 160 50% 75%;
+    --accent-foreground: 0 0% 10%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 340 30% 92%;
-    --input: 340 30% 92%;
-    --ring: 340 100% 85%;
+    --border: 270 20% 90%;
+    --input: 270 20% 90%;
+    --ring: 330 100% 71%;
 
-    --radius: 1.2rem;
+    --radius: 1rem;
     
-    /* 러블리 그라데이션 */
-    --gradient-primary: linear-gradient(135deg, hsl(340 100% 85%), hsl(280 50% 88%));
-    --gradient-festival: linear-gradient(135deg, hsl(340 100% 85%), hsl(160 60% 85%));
-    --gradient-soft: linear-gradient(180deg, hsl(350 20% 98%), hsl(340 30% 95%));
-    --shadow-glow: 0 0 40px hsl(340 100% 85% / 0.4);
-    --shadow-soft: 0 10px 30px -10px hsl(340 100% 70% / 0.3);
+    --gradient-primary: linear-gradient(135deg, hsl(330 100% 71%), hsl(270 50% 75%));
+    --gradient-accent: linear-gradient(180deg, hsl(160 50% 75%), hsl(330 100% 71%));
+    --shadow-glow: 0 0 30px hsl(330 100% 71% / 0.3);
+    --shadow-soft: 0 10px 30px -10px hsl(330 100% 71% / 0.2);
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     --sidebar-background: 0 0% 98%;
+
     --sidebar-foreground: 240 5.3% 26.1%;
+
     --sidebar-primary: 240 5.9% 10%;
+
     --sidebar-primary-foreground: 0 0% 98%;
+
     --sidebar-accent: 240 4.8% 95.9%;
+
     --sidebar-accent-foreground: 240 5.9% 10%;
+
     --sidebar-border: 220 13% 91%;
+
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
-    --background: 340 20% 12%;
-    --foreground: 0 0% 95%;
+    --background: 270 20% 15%;
+    --foreground: 0 0% 98%;
 
-    --card: 340 20% 15%;
-    --card-foreground: 0 0% 95%;
+    --card: 270 20% 18%;
+    --card-foreground: 0 0% 98%;
 
-    --popover: 340 20% 15%;
-    --popover-foreground: 0 0% 95%;
+    --popover: 270 20% 18%;
+    --popover-foreground: 0 0% 98%;
 
-    --primary: 340 100% 75%;
+    --primary: 330 100% 71%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 160 50% 70%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 270 30% 25%;
+    --secondary-foreground: 0 0% 98%;
 
-    --muted: 340 20% 22%;
-    --muted-foreground: 0 0% 65%;
+    --muted: 270 20% 25%;
+    --muted-foreground: 0 0% 70%;
 
-    --accent: 280 40% 70%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 160 50% 65%;
+    --accent-foreground: 0 0% 10%;
 
     --destructive: 0 62.8% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 340 20% 25%;
-    --input: 340 20% 25%;
-    --ring: 340 100% 75%;
-    
-    --sidebar-background: 340 20% 15%;
-    --sidebar-foreground: 0 0% 90%;
-    --sidebar-primary: 340 100% 75%;
+    --border: 270 20% 25%;
+    --input: 270 20% 25%;
+    --ring: 330 100% 71%;
+    --sidebar-background: 270 20% 18%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 330 100% 71%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 340 20% 22%;
-    --sidebar-accent-foreground: 0 0% 90%;
-    --sidebar-border: 340 20% 25%;
-    --sidebar-ring: 340 100% 75%;
+    --sidebar-accent: 270 20% 25%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 270 20% 25%;
+    --sidebar-ring: 330 100% 71%;
   }
 }
 

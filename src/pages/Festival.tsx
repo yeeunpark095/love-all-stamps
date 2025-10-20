@@ -14,92 +14,127 @@ const Festival = () => {
       name: "빛글",
       subtitle: "Student Press Club",
       icon: <Target className="w-6 h-6" />,
-      tagline: "사람을 찾아 사랑을 전하라!",
-      description: "주제별 미션카드로 친구를 찾아오는 미션형 게임. 성덕제를 누비며 숨겨진 친구들을 발견하고 사랑의 메시지를 전달하세요."
+      tagline: "탐정처럼 추리하고, 친구들과 함께 도전해보세요 🔍",
+      description: "주제별 미션 카드를 받고, 조건에 맞는 사람을 직접 찾아 데려오는 미션형 게임!"
     },
     {
       name: "KIKKER",
       subtitle: "International Exchange Club",
       icon: <Plane className="w-6 h-6" />,
-      tagline: "전 세계로 사랑을 전하는 KIKKER 항공, 지금 탑승하세요!",
-      description: "세계 각국의 문화를 체험하고 국경을 넘어 사랑을 나누는 특별한 여행. 글로벌 친구들과 소통하며 넓은 세상을 만나보세요."
+      tagline: "전 세계 사랑을 전하는 KIKKER 항공에 탑승하세요!",
+      description: "세계 곳곳의 문화를 만나는 특별한 여행이 여러분을 기다립니다 🌏"
     },
     {
       name: "BUKU",
       subtitle: "Book Talk Club",
       icon: <BookOpen className="w-6 h-6" />,
-      tagline: "연애 MBTI 테스트, 운세 카페, 북클립 만들기!",
-      description: "감성과 사랑이 만나는 독서 체험존. 연애 성향을 알아보고, 오늘의 운세를 확인하며, 나만의 북클립을 제작해보세요."
-    },
-    {
-      name: "STEAM 사회참여반",
-      subtitle: "Social Participation Club",
-      icon: <Flame className="w-6 h-6" />,
-      tagline: "전남친 토스트로 사랑의 단맛과 매운맛을!",
-      description: "달콤하고 매콤한 '전남친 토스트' 간식 부스. 사랑의 다양한 맛을 느끼며 웃음과 추억을 만들어가세요."
-    },
-    {
-      name: "디자인공예반",
-      subtitle: "Design & Craft Club",
-      icon: <Gift className="w-6 h-6" />,
-      tagline: "내가 사랑한 것을 담은 나만의 굿즈 제작",
-      description: "'내가 사랑한 것'을 주제로 세상에 단 하나뿐인 굿즈를 만들어보세요. 당신의 사랑을 형태로 담아가세요."
-    },
-    {
-      name: "슬램덩크",
-      subtitle: "Basketball Club",
-      icon: <CircleDot className="w-6 h-6" />,
-      tagline: "커플 슛 챌린지! 성공 개수만큼 상품은 짝꿍에게",
-      description: "함께하는 순간이 더 빛나는 커플 슛 게임. 농구로 사랑을 증명하고 파트너에게 특별한 선물을 선사하세요."
-    },
-    {
-      name: "AI·SW 코딩반",
-      subtitle: "Coding Club",
-      icon: <Bot className="w-6 h-6" />,
-      tagline: "햄스터봇 축구, 아두이노 뽑기",
-      description: "과학과 사랑의 융합 체험! 귀여운 햄스터봇과 함께하는 축구 게임과 아두이노 뽑기로 재미와 배움을 동시에."
+      tagline: "책처럼 펼쳐보는 연애 MBTI 테스트 ❤️",
+      description: "달콤한 운세와 함께하는 북카페 ☕ 나만의 북클립 만들기 ✂️ 감성 충만! 독서와 사랑이 만나는 공간으로 초대합니다."
     },
     {
       name: "솔리언",
       subtitle: "Peer Counseling",
       icon: <Heart className="w-6 h-6" />,
-      tagline: "마음을 나누는 또래상담",
-      description: "서로의 마음을 이해하고 공감하는 시간. 친구와 함께 사랑과 우정에 대해 이야기 나눠보세요."
+      tagline: "작은 선물 속에 따뜻한 마음을 담은 추억의 뽑기판 🎁",
+      description: "친구와 함께 뽑으며 오늘의 행복 메시지를 받아가세요."
+    },
+    {
+      name: "물리를 만들다",
+      subtitle: "Physics Club",
+      icon: <Bot className="w-6 h-6" />,
+      tagline: "직접 보고, 만지고, 조종하며 과학의 재미를 느껴보세요 🤖",
+      description: "골드버그 장치, 로봇 & 드론 조종, 랜덤 상품 뽑기까지!"
+    },
+    {
+      name: "STEAM 사회참여반",
+      subtitle: "Social Participation Club",
+      icon: <Flame className="w-6 h-6" />,
+      tagline: "사랑의 단맛 vs 매운맛! '전남친 토스트' 간식 부스 🍞",
+      description: "불타는 사랑 게임 체험 🔥 주제탐구 보고서 전시 📄 사랑을 과학적으로 분석해보는 유쾌한 부스!"
+    },
+    {
+      name: "융합과학 STEAM 주제연구반",
+      subtitle: "STEAM Research Club",
+      icon: <Target className="w-6 h-6" />,
+      tagline: "과학 오락실 OPEN!",
+      description: "단서를 찾아 제한 시간 내 탈출하는 방탈출 게임 🕵️‍♀️ 과학 원리를 이용한 미니 게임 체험 🎮"
     },
     {
       name: "애드미찬양반",
       subtitle: "Worship Team",
       icon: <Music className="w-6 h-6" />,
-      tagline: "찬양으로 전하는 사랑의 메시지",
-      description: "아름다운 찬양과 음악으로 사랑을 표현하는 특별한 공연. 감동적인 하모니를 경험하세요."
+      tagline: "2025 애드미 버스킹 – '사랑을 노래하다'",
+      description: "따뜻한 음악이 흘러나오는 무대에서 잠시 쉬어가세요 🎶"
+    },
+    {
+      name: "영어토론프레젠테이션",
+      subtitle: "English Debate & Presentation",
+      icon: <Users className="w-6 h-6" />,
+      tagline: "손잡고 오세요! 친구와 함께하는 영어 스피드 퀴즈 ✋",
+      description: "영어로 소통하며 즐기는 특별한 체험!"
+    },
+    {
+      name: "수달(수학의 달인)",
+      subtitle: "Math Club",
+      icon: <Target className="w-6 h-6" />,
+      tagline: "오늘의 수학 러브라인은?",
+      description: "블라인드 소개팅 콘셉트 체험! 💞"
     },
     {
       name: "빅데이터투인사이트",
       subtitle: "Big Data Club",
       icon: <School className="w-6 h-6" />,
-      tagline: "데이터로 읽는 사랑의 패턴",
-      description: "빅데이터를 통해 발견하는 사랑의 흥미로운 인사이트. 숫자 속에 숨겨진 감성을 만나보세요."
+      tagline: "데이터 속 숨은 이야기를 찾아라!",
+      description: "빅데이터 분석의 세계로 함께 떠나요 💻"
     },
     {
-      name: "한걸음",
-      subtitle: "Volunteer Club",
-      icon: <Users className="w-6 h-6" />,
-      tagline: "나눔으로 실천하는 사랑",
-      description: "작은 발걸음이 모여 큰 사랑이 되는 곳. 함께 만드는 따뜻한 세상을 경험하세요."
+      name: "랩퀘스트",
+      subtitle: "Lab Quest",
+      icon: <Sparkles className="w-6 h-6" />,
+      tagline: "분자 구조를 쿠키로 만든다고?! 🍪",
+      description: "분자모형 쿠키 만들기 체험으로 과학과 달콤함을 동시에!"
+    },
+    {
+      name: "슬램덩크",
+      subtitle: "Basketball Club",
+      icon: <CircleDot className="w-6 h-6" />,
+      tagline: "사랑을 쏴라! 농구 커플 챌린지! 💞",
+      description: "짝을 이뤄 슛 성공 개수만큼 상품은 짝꿍에게 전달!"
+    },
+    {
+      name: "Ballin",
+      subtitle: "Volleyball Club",
+      icon: <CircleDot className="w-6 h-6" />,
+      tagline: "러브 리시브! 💘",
+      description: "사랑의 토스 릴레이로 짝꿍과 함께 배구 한 판!"
     },
     {
       name: "축구반",
       subtitle: "Soccer Club",
       icon: <Target className="w-6 h-6" />,
-      tagline: "팀워크로 완성하는 사랑의 골",
-      description: "함께 뛰고 함께 웃는 축구의 즐거움. 운동으로 하나되는 팀워크의 사랑을 느껴보세요."
+      tagline: "프리스타일 축구 & 승부차기 대결!",
+      description: "최고의 플레이어에게는 상품 증정 ⚡"
     },
     {
-      name: "Ballin",
-      subtitle: "Basketball Club",
-      icon: <CircleDot className="w-6 h-6" />,
-      tagline: "농구로 연결되는 우정과 사랑",
-      description: "코트 위에서 펼쳐지는 열정과 우정. 공을 주고받으며 마음도 나눠보세요."
+      name: "디자인공예반",
+      subtitle: "Design & Craft Club",
+      icon: <Gift className="w-6 h-6" />,
+      tagline: "내가 사랑한 것을 주제로 한 굿즈 제작 체험",
+      description: "스스로 만든 디자인 작품 전시도 함께 관람하세요 🎁"
+    },
+    {
+      name: "AI·SW 코딩반",
+      subtitle: "Coding Club",
+      icon: <Bot className="w-6 h-6" />,
+      tagline: "게임과 코딩이 만나는 신기한 세상으로 초대합니다!",
+      description: "아두이노 작품 전시, 햄스터봇 축구 경기 ⚽ 아두이노 상품 뽑기 🎁"
+    },
+    {
+      name: "진로 DREAM",
+      subtitle: "Career Exploration",
+      icon: <Star className="w-6 h-6" />,
+      tagline: "나의 꿈, 나의 진로를 직접 탐색해보세요",
+      description: "진로직업체험센터와 연계한 다양한 직업 체험 부스"
     }
   ];
 
@@ -109,35 +144,98 @@ const Festival = () => {
       subtitle: "Art Club",
       icon: <Palette className="w-6 h-6" />,
       tagline: "그림으로 표현하는 사랑",
-      description: "단체작 '사랑' 전시와 함께 페이스페인팅, 쥬얼리 메이크업 체험. 예술로 아름다움을 완성하세요."
+      description: "단체작품 '사랑'과 개인작 전시 💕 페이스페인팅, 쥬얼리 메이크업, 타투 등 특별 체험으로 나만의 아트 완성!"
+    },
+    {
+      name: "간호보건동아리",
+      subtitle: "Nursing & Health Club",
+      icon: <Heart className="w-6 h-6" />,
+      tagline: "스트레스 받을 때 우리 몸은 어떻게 변할까?",
+      description: "직접 체험하며 스트레스 관리법을 배워보세요."
     },
     {
       name: "뮤지컬반",
       subtitle: "Musical Club",
       icon: <Theater className="w-6 h-6" />,
       tagline: "뮤지컬로 만나는 설레는 학창시절",
-      description: "무대 위에서 펼쳐지는 청춘과 사랑의 이야기. 감동적인 공연으로 여러분을 초대합니다."
+      description: "무대 위의 청춘이 펼쳐집니다!"
     },
     {
-      name: "친환경연구반",
-      subtitle: "Eco Club",
-      icon: <Leaf className="w-6 h-6" />,
-      tagline: "지구를 사랑하는 방법",
-      description: "갤럭시 에이드와 친환경 키링 만들기. 환경을 생각하는 작은 실천이 지구를 향한 큰 사랑입니다."
+      name: "힙합댄스반",
+      subtitle: "Hip-hop Dance Club",
+      icon: <Music className="w-6 h-6" />,
+      tagline: "열정 가득한 힙합댄스 공연",
+      description: "리듬에 몸을 맡겨보세요!"
     },
     {
       name: "Be Creator",
       subtitle: "Festival Planning Team",
       icon: <Sparkles className="w-6 h-6" />,
-      tagline: "축제를 사랑으로 만드는 사람들",
-      description: "성덕제 기획과정을 소개하는 전시. 축제를 준비한 사람들의 열정과 사랑의 이야기를 만나보세요."
+      tagline: "성덕제를 만드는 사람들!",
+      description: "축제 기획 과정과 자료 전시, 스탭들의 비하인드 공개 👀"
     },
     {
-      name: "사진반",
-      subtitle: "Photography Club",
+      name: "플로깅반",
+      subtitle: "Plogging Club",
+      icon: <Leaf className="w-6 h-6" />,
+      tagline: "환경을 지키는 새로운 방식, 플로깅!",
+      description: "활동 사진과 자료를 통해 지구를 위한 작은 발걸음을 배워요."
+    },
+    {
+      name: "사회정책탐구반",
+      subtitle: "Social Policy Research",
+      icon: <BookOpen className="w-6 h-6" />,
+      tagline: "사회 문제를 분석하고 해결책을 제시한 탐구 보고서 전시 💡",
+      description: "학생들의 깊이 있는 사회 탐구 결과를 만나보세요."
+    },
+    {
+      name: "친환경연구동아리",
+      subtitle: "Eco Club",
+      icon: <Leaf className="w-6 h-6" />,
+      tagline: "친환경 컵으로 마시는 갤럭시 에이드 🥤",
+      description: "텀블러 사용 시 친환경 키링·그립톡 증정!"
+    },
+    {
+      name: "한걸음",
+      subtitle: "Volunteer Club",
+      icon: <Users className="w-6 h-6" />,
+      tagline: "'한걸음'이 걸어온 이야기와 활동을 소개하는 전시 🌼",
+      description: "나눔과 봉사의 따뜻한 발자취를 따라가보세요."
+    },
+    {
+      name: "핸즈온 과학탐구반",
+      subtitle: "Hands-on Science Club",
+      icon: <Sparkles className="w-6 h-6" />,
+      tagline: "학생들의 소모임 연구결과 전시",
+      description: "직접 만든 실험 아이디어를 만나보세요."
+    },
+    {
+      name: "FRAME (방송부)",
+      subtitle: "Broadcasting Club",
       icon: <Camera className="w-6 h-6" />,
-      tagline: "렌즈에 담긴 사랑의 순간들",
-      description: "카메라로 포착한 아름다운 순간들. 사진 속에 영원히 남을 추억을 만들어보세요."
+      tagline: "성덕 방송제 I ~ IV 시리즈 전격 상영!",
+      description: "학생들이 직접 기획하고 촬영한 감동의 순간을 만나보세요 🎥"
+    },
+    {
+      name: "애니메이션 동아리",
+      subtitle: "Animation Club",
+      icon: <Star className="w-6 h-6" />,
+      tagline: "애니메이션은 어떻게 만들어질까?",
+      description: "제작 과정 전시 + 직접 체험 코너도 마련!"
+    },
+    {
+      name: "Guide Makers",
+      subtitle: "Guide Making Club",
+      icon: <BookOpen className="w-6 h-6" />,
+      tagline: "학생이 직접 만든 영문 박물관 안내서 전시",
+      description: "여러분도 가이드가 되어보세요!"
+    },
+    {
+      name: "뷰티동아리",
+      subtitle: "Beauty Club",
+      icon: <Sparkles className="w-6 h-6" />,
+      tagline: "나를 빛내는 맞춤 뷰티 솔루션 💋",
+      description: "퍼스널 컬러 & 스타일링 팁도 함께 받아가세요."
     }
   ];
 

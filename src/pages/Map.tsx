@@ -28,19 +28,6 @@ export default function Map() {
     checkAuth();
   }, [navigate]);
 
-
-  // 배치도 순서대로 부스 정리
-  const boothOrder = [
-    "빅데이터투인사이트", "ARTY 미술반", "BUKU (독서토론반)", "빛글 (학생기자반)", 
-    "한걸음", "애드미찬양반", "영어토론 프레젠테이션", "KIKKER (국제교류반)",
-    "STEAM 사회참여반", "학생회", "랩퀘스트 (LabQuest)", "솔리언 (또래상담반)",
-    "축구반", "Ballin (배구동아리)", "슬램덩크 (농구동아리)"
-  ];
-
-  const orderedBooths = boothOrder.map(name => 
-    booths.find(b => b.name === name)
-  ).filter(Boolean);
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary/5 to-accent/5 pb-24">
       <div className="bg-gradient-to-r from-primary via-secondary to-accent p-6 text-center shadow-lg">
@@ -67,7 +54,7 @@ export default function Map() {
             전체 부스 목록
           </h2>
           <div className="grid gap-3">
-            {orderedBooths.map((booth) => (
+            {booths.map((booth) => (
               <Card
                 key={booth.booth_id}
                 className="p-4 hover:shadow-md transition-all hover:border-primary/30 cursor-pointer"

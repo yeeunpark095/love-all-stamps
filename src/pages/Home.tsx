@@ -63,7 +63,7 @@ export default function Home() {
 
   const toggleMusic = () => {
     if (!audioRef.current) {
-      audioRef.current = new Audio("https://cdn.pixabay.com/audio/2022/03/10/audio_4dedf26f94.mp3");
+      audioRef.current = new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3");
       audioRef.current.loop = true;
       audioRef.current.volume = 0.3;
     }

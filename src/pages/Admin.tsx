@@ -5,7 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2 } from "lucide-react";
+import { Loader2, Users, Trophy, Stamp, TrendingUp, Search, Download, BarChart3 } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface Booth {
   booth_id: number;
@@ -24,6 +25,19 @@ interface Entry {
   completed_at: string;
 }
 
+interface Participant {
+  id: string;
+  name: string;
+  student_id: string;
+  stamp_count: number;
+}
+
+interface BoothStats {
+  booth_id: number;
+  booth_name: string;
+  visit_count: number;
+}
+
 export default function Admin() {
   const [booths, setBooths] = useState<Booth[]>([]);
   const [eligible, setEligible] = useState<Entry[]>([]);
@@ -32,6 +46,10 @@ export default function Admin() {
   const [count, setCount] = useState(5);
   const [loading, setLoading] = useState(false);
   const [rotatingPin, setRotatingPin] = useState<number | null>(null);
+  const [participants, setParticipants] = useState<Participant[]>([]);
+  const [boothStats, setBoothStats] = useState<BoothStats[]>([]);
+  const [totalParticipants, setTotalParticipants] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
   const { toast } = useToast();
 
   const loadBooths = async () => {
@@ -65,12 +83,81 @@ export default function Admin() {
     setLoading(false);
   };
 
+  const loadParticipants = async () => {
+    // 모든 프로필과 스탬프 수 가져오기
+    const { data: profiles } = await supabase
+      .from("profiles")
+      .select("id, name, student_id");
+
+    if (!profiles) return;
+
+    const participantData: Participant[] = [];
+    
+    for (const profile of profiles) {
+      const { count } = await supabase
+        .from("stamp_logs")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", profile.id);
+
+      participantData.push({
+        id: profile.id,
+        name: profile.name,
+        student_id: profile.student_id,
+        stamp_count: count || 0,
+      });
+    }
+
+    setParticipants(participantData);
+    setTotalParticipants(profiles.length);
+  };
+
+  const loadBoothStats = async () => {
+    const { data: stamps } = await supabase
+      .from("stamp_logs")
+      .select("booth_id");
+
+    if (!stamps) return;
+
+    const boothCounts: { [key: number]: number } = {};
+    stamps.forEach((stamp) => {
+      boothCounts[stamp.booth_id] = (boothCounts[stamp.booth_id] || 0) + 1;
+    });
+
+    const { data: boothsData } = await supabase
+      .from("booths")
+      .select("booth_id, name");
+
+    if (!boothsData) return;
+
+    const stats: BoothStats[] = boothsData.map((booth) => ({
+      booth_id: booth.booth_id,
+      booth_name: booth.name,
+      visit_count: boothCounts[booth.booth_id] || 0,
+    }));
+
+    stats.sort((a, b) => b.visit_count - a.visit_count);
+    setBoothStats(stats);
+  };
+
   useEffect(() => {
     const loadData = async () => {
-      await Promise.all([loadBooths(), loadLuckyDraw()]);
+      await Promise.all([
+        loadBooths(), 
+        loadLuckyDraw(), 
+        loadParticipants(), 
+        loadBoothStats()
+      ]);
     };
 
     loadData();
+
+    // 30초마다 자동 새로고침
+    const interval = setInterval(() => {
+      loadParticipants();
+      loadBoothStats();
+    }, 30000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const pickRandom = async () => {
@@ -190,18 +277,375 @@ export default function Admin() {
     }
   };
 
+  const exportParticipantsCSV = () => {
+    const header = ["이름", "학번", "스탬프 개수"];
+    const csv =
+      header.join(",") +
+      "\n" +
+      participants
+        .map((p) => [p.name, p.student_id, p.stamp_count].join(","))
+        .join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "participants.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+    toast({
+      title: "CSV 내보내기 완료",
+      description: "참가자 명단이 다운로드되었습니다.",
+    });
+  };
+
+  const exportBoothStatsCSV = () => {
+    const header = ["부스명", "방문 횟수"];
+    const csv =
+      header.join(",") +
+      "\n" +
+      boothStats
+        .map((s) => [s.booth_name, s.visit_count].join(","))
+        .join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "booth_stats.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+    toast({
+      title: "CSV 내보내기 완료",
+      description: "부스 통계가 다운로드되었습니다.",
+    });
+  };
+
   const eligibleCount = eligible.length;
   const winnerCount = winners.length;
+  const completedCount = participants.filter((p) => p.stamp_count >= 20).length;
+  const topBooths = boothStats.slice(0, 3);
+
+  const filteredParticipants = participants.filter(
+    (p) =>
+      p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.student_id.includes(searchQuery)
+  );
 
   return (
     <AdminGuard>
-      <div className="min-h-screen bg-background p-6">
-        <div className="max-w-7xl mx-auto">
-          <h1 className="text-3xl font-bold mb-6">🎉 성덕제 관리자 대시보드</h1>
-          
-          <div className="space-y-6">
-            {/* Lucky Draw Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background pb-24">
+        {/* 헤더 */}
+        <div className="bg-gradient-to-r from-primary via-secondary to-accent p-6 shadow-lg sticky top-0 z-10">
+          <div className="max-w-7xl mx-auto">
+            <h1 className="text-3xl font-bold text-white mb-2">🎉 성덕제 관리자 대시보드</h1>
+            <p className="text-white/90 text-sm">실시간으로 축제를 관리하세요</p>
+          </div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-6 py-8">
+          <Tabs defaultValue="dashboard" className="space-y-6">
+            <TabsList className="grid w-full grid-cols-4 max-w-2xl">
+              <TabsTrigger value="dashboard">
+                <BarChart3 className="w-4 h-4 mr-2" />
+                대시보드
+              </TabsTrigger>
+              <TabsTrigger value="participants">
+                <Users className="w-4 h-4 mr-2" />
+                참가자
+              </TabsTrigger>
+              <TabsTrigger value="booths">
+                <Stamp className="w-4 h-4 mr-2" />
+                부스 관리
+              </TabsTrigger>
+              <TabsTrigger value="luckydraw">
+                <Trophy className="w-4 h-4 mr-2" />
+                추첨
+              </TabsTrigger>
+            </TabsList>
+
+            {/* 대시보드 탭 */}
+            <TabsContent value="dashboard" className="space-y-6">
+              {/* 주요 통계 */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center justify-between">
+                      <CardDescription className="text-foreground/70">전체 참여자</CardDescription>
+                      <Users className="w-5 h-5 text-primary" />
+                    </div>
+                    <CardTitle className="text-4xl">{totalParticipants}명</CardTitle>
+                  </CardHeader>
+                </Card>
+
+                <Card className="bg-gradient-to-br from-secondary/10 to-secondary/5 border-secondary/20">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center justify-between">
+                      <CardDescription className="text-foreground/70">완주자</CardDescription>
+                      <Trophy className="w-5 h-5 text-secondary" />
+                    </div>
+                    <CardTitle className="text-4xl">{completedCount}명</CardTitle>
+                  </CardHeader>
+                </Card>
+
+                <Card className="bg-gradient-to-br from-accent/10 to-accent/5 border-accent/20">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center justify-between">
+                      <CardDescription className="text-foreground/70">완주율</CardDescription>
+                      <TrendingUp className="w-5 h-5 text-accent" />
+                    </div>
+                    <CardTitle className="text-4xl">
+                      {totalParticipants > 0
+                        ? Math.round((completedCount / totalParticipants) * 100)
+                        : 0}
+                      %
+                    </CardTitle>
+                  </CardHeader>
+                </Card>
+
+                <Card className="bg-gradient-to-br from-primary/10 to-accent/10 border-primary/20">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center justify-between">
+                      <CardDescription className="text-foreground/70">총 부스 수</CardDescription>
+                      <Stamp className="w-5 h-5 text-primary" />
+                    </div>
+                    <CardTitle className="text-4xl">{booths.length}개</CardTitle>
+                  </CardHeader>
+                </Card>
+              </div>
+
+              {/* 인기 부스 TOP 3 */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    🔥 인기 부스 TOP 3
+                  </CardTitle>
+                  <CardDescription>가장 많이 방문한 부스입니다</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {topBooths.map((booth, index) => (
+                      <div
+                        key={booth.booth_id}
+                        className="flex items-center justify-between p-4 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
+                      >
+                        <div className="flex items-center gap-4">
+                          <div
+                            className={`text-3xl font-bold ${
+                              index === 0
+                                ? "text-yellow-500"
+                                : index === 1
+                                ? "text-gray-400"
+                                : "text-orange-600"
+                            }`}
+                          >
+                            {index + 1}
+                          </div>
+                          <div>
+                            <p className="font-semibold text-lg">{booth.booth_name}</p>
+                            <p className="text-sm text-muted-foreground">
+                              부스 #{booth.booth_id}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-2xl font-bold text-primary">
+                            {booth.visit_count}
+                          </p>
+                          <p className="text-xs text-muted-foreground">방문 횟수</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mt-4 pt-4 border-t">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={exportBoothStatsCSV}
+                      className="w-full"
+                    >
+                      <Download className="w-4 h-4 mr-2" />
+                      전체 부스 통계 CSV 다운로드
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* 부스별 방문 현황 */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>부스별 방문 현황</CardTitle>
+                  <CardDescription>모든 부스의 실시간 방문 횟수</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {boothStats.map((booth) => (
+                      <div
+                        key={booth.booth_id}
+                        className="p-3 rounded-lg border bg-card hover:shadow-md transition-shadow"
+                      >
+                        <p className="font-semibold text-sm truncate">{booth.booth_name}</p>
+                        <p className="text-2xl font-bold text-primary mt-1">
+                          {booth.visit_count}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* 참가자 관리 탭 */}
+            <TabsContent value="participants" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>참가자 명단</CardTitle>
+                  <CardDescription>
+                    전체 {participants.length}명 | 완주 {completedCount}명
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {/* 검색 */}
+                  <div className="flex gap-2">
+                    <div className="relative flex-1">
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <Input
+                        placeholder="이름 또는 학번으로 검색..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="pl-10"
+                      />
+                    </div>
+                    <Button
+                      variant="outline"
+                      onClick={exportParticipantsCSV}
+                    >
+                      <Download className="w-4 h-4 mr-2" />
+                      CSV
+                    </Button>
+                  </div>
+
+                  {/* 참가자 리스트 */}
+                  <div className="border rounded-lg overflow-hidden max-h-[600px] overflow-y-auto">
+                    <table className="w-full">
+                      <thead className="bg-muted sticky top-0">
+                        <tr>
+                          <th className="px-4 py-3 text-left">이름</th>
+                          <th className="px-4 py-3 text-left">학번</th>
+                          <th className="px-4 py-3 text-center">스탬프</th>
+                          <th className="px-4 py-3 text-center">진행률</th>
+                          <th className="px-4 py-3 text-center">상태</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {filteredParticipants.map((p) => {
+                          const progress = Math.round((p.stamp_count / 20) * 100);
+                          return (
+                            <tr key={p.id} className="border-t hover:bg-muted/50">
+                              <td className="px-4 py-3 font-medium">{p.name}</td>
+                              <td className="px-4 py-3 font-mono text-sm">
+                                {p.student_id}
+                              </td>
+                              <td className="px-4 py-3 text-center">
+                                <span className="font-bold text-primary">
+                                  {p.stamp_count}
+                                </span>
+                                <span className="text-muted-foreground"> / 20</span>
+                              </td>
+                              <td className="px-4 py-3">
+                                <div className="flex items-center gap-2">
+                                  <div className="flex-1 bg-muted rounded-full h-2 overflow-hidden">
+                                    <div
+                                      className="h-full bg-gradient-to-r from-primary to-secondary transition-all"
+                                      style={{ width: `${progress}%` }}
+                                    />
+                                  </div>
+                                  <span className="text-xs text-muted-foreground w-12 text-right">
+                                    {progress}%
+                                  </span>
+                                </div>
+                              </td>
+                              <td className="px-4 py-3 text-center">
+                                {p.stamp_count >= 20 ? (
+                                  <span className="inline-block px-2 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">
+                                    완주
+                                  </span>
+                                ) : (
+                                  <span className="inline-block px-2 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">
+                                    진행중
+                                  </span>
+                                )}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* 부스 관리 탭 */}
+            <TabsContent value="booths" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>부스 PIN 관리</CardTitle>
+                  <CardDescription>
+                    각 부스의 인증 PIN을 관리합니다
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="border rounded-lg overflow-hidden">
+                    <table className="w-full">
+                      <thead className="bg-muted">
+                        <tr>
+                          <th className="px-4 py-2 text-left">부스 ID</th>
+                          <th className="px-4 py-2 text-left">부스명</th>
+                          <th className="px-4 py-2 text-left">위치</th>
+                          <th className="px-4 py-2 text-left">담당 교사</th>
+                          <th className="px-4 py-2 text-left">PIN</th>
+                          <th className="px-4 py-2 text-left">액션</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {booths.map((booth) => (
+                          <tr key={booth.booth_id} className="border-t">
+                            <td className="px-4 py-2">{booth.booth_id}</td>
+                            <td className="px-4 py-2">{booth.name}</td>
+                            <td className="px-4 py-2">{booth.location || "-"}</td>
+                            <td className="px-4 py-2">{booth.teacher || "-"}</td>
+                            <td className="px-4 py-2 font-mono font-bold text-lg">
+                              {booth.staff_pin}
+                            </td>
+                            <td className="px-4 py-2">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => rotatePin(booth.booth_id)}
+                                disabled={rotatingPin === booth.booth_id}
+                              >
+                                {rotatingPin === booth.booth_id ? (
+                                  <>
+                                    <Loader2 className="mr-2 h-3 w-3 animate-spin" />
+                                    재발급 중...
+                                  </>
+                                ) : (
+                                  "PIN 재발급"
+                                )}
+                              </Button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* 추첨 탭 */}
+            <TabsContent value="luckydraw" className="space-y-6">
+              {/* Lucky Draw Stats */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Card>
                 <CardHeader className="pb-3">
                   <CardDescription>완주자 (eligible)</CardDescription>
@@ -428,7 +872,8 @@ export default function Admin() {
                 </div>
               </CardContent>
             </Card>
-          </div>
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </AdminGuard>

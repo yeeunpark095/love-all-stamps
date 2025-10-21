@@ -343,10 +343,14 @@ export default function Admin() {
 
         <div className="max-w-7xl mx-auto px-6 py-8">
           <Tabs defaultValue="dashboard" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-4 max-w-2xl">
+            <TabsList className="grid w-full grid-cols-5 max-w-3xl">
               <TabsTrigger value="dashboard">
                 <BarChart3 className="w-4 h-4 mr-2" />
                 대시보드
+              </TabsTrigger>
+              <TabsTrigger value="users">
+                <Users className="w-4 h-4 mr-2" />
+                로그인 사용자
               </TabsTrigger>
               <TabsTrigger value="participants">
                 <Users className="w-4 h-4 mr-2" />
@@ -488,6 +492,121 @@ export default function Admin() {
                         </p>
                       </div>
                     ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* 로그인 사용자 탭 */}
+            <TabsContent value="users" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>로그인한 사용자 목록</CardTitle>
+                  <CardDescription>
+                    현재 시스템에 로그인한 모든 사용자를 확인할 수 있습니다
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-4">
+                      <div className="relative flex-1">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <Input
+                          placeholder="이름 또는 학번으로 검색..."
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          className="pl-10"
+                        />
+                      </div>
+                      <Button variant="outline" onClick={exportParticipantsCSV}>
+                        <Download className="w-4 h-4 mr-2" />
+                        CSV 다운로드
+                      </Button>
+                    </div>
+
+                    <div className="rounded-lg border">
+                      <table className="w-full">
+                        <thead className="bg-muted/50">
+                          <tr>
+                            <th className="text-left p-3 font-semibold">이름</th>
+                            <th className="text-left p-3 font-semibold">학번</th>
+                            <th className="text-center p-3 font-semibold">스탬프 수</th>
+                            <th className="text-center p-3 font-semibold">추첨권</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {filteredParticipants.map((p, idx) => {
+                            const ticketCount = 
+                              p.stamp_count >= 20 ? 5 :
+                              p.stamp_count >= 15 ? 3 :
+                              p.stamp_count >= 10 ? 2 :
+                              p.stamp_count >= 5 ? 1 : 0;
+                            
+                            return (
+                              <tr
+                                key={p.id}
+                                className={`border-t ${
+                                  idx % 2 === 0 ? "bg-background" : "bg-muted/20"
+                                }`}
+                              >
+                                <td className="p-3 font-medium">{p.name}</td>
+                                <td className="p-3">{p.student_id}</td>
+                                <td className="p-3 text-center">
+                                  <span
+                                    className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                                      p.stamp_count >= 20
+                                        ? "bg-primary/20 text-primary"
+                                        : p.stamp_count >= 10
+                                        ? "bg-secondary/20 text-secondary"
+                                        : "bg-muted text-muted-foreground"
+                                    }`}
+                                  >
+                                    {p.stamp_count}/20
+                                  </span>
+                                </td>
+                                <td className="p-3 text-center">
+                                  <span className="text-lg font-bold text-primary">
+                                    {ticketCount > 0 ? `🎟️ ${ticketCount}` : "-"}
+                                  </span>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                      {filteredParticipants.length === 0 && (
+                        <div className="text-center py-8 text-muted-foreground">
+                          {searchQuery ? "검색 결과가 없습니다" : "로그인한 사용자가 없습니다"}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="bg-muted/30 rounded-lg p-4">
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                        <div>
+                          <p className="text-sm text-muted-foreground">전체 사용자</p>
+                          <p className="text-2xl font-bold text-primary">{participants.length}명</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-muted-foreground">추첨권 1개 이상</p>
+                          <p className="text-2xl font-bold text-secondary">
+                            {participants.filter(p => p.stamp_count >= 5).length}명
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-muted-foreground">추첨권 3개 이상</p>
+                          <p className="text-2xl font-bold text-accent">
+                            {participants.filter(p => p.stamp_count >= 15).length}명
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-muted-foreground">완주자 (5개)</p>
+                          <p className="text-2xl font-bold text-primary">
+                            {participants.filter(p => p.stamp_count >= 20).length}명
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>

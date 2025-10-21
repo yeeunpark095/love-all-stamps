@@ -66,55 +66,43 @@ export default function Map() {
               className="pl-10 h-12 text-base"
             />
           </div>
-        </Card>
-
-        {/* Booth List */}
-        <Card className="p-6 shadow-lg bg-gradient-to-br from-card to-card/80">
-          <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-            <MapPin className="w-7 h-7 text-primary" />
-            전체 부스 목록
-          </h2>
-          <div className="grid gap-4">
-            {filteredBooths.map((booth) => {
-              const cleanName = booth.name?.replace(/^\d+\.\s*/, '') || booth.name;
-              return (
-                <Card
-                  key={booth.booth_id}
-                  className="p-5 hover:shadow-xl transition-all hover:border-primary/30 cursor-pointer hover:scale-[1.02]"
-                >
-                  <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-3">
-                      <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary text-white text-base font-bold shadow-md">
+          {searchQuery && (
+            <div className="mt-4 space-y-2">
+              {filteredBooths.length > 0 ? (
+                filteredBooths.map((booth) => (
+                  <div
+                    key={booth.booth_id}
+                    className="p-3 bg-secondary/10 rounded-lg border border-primary/20"
+                  >
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-gradient-to-br from-primary to-secondary text-white text-sm font-bold">
                         {booth.booth_id}
                       </span>
-                      <h3 className="font-bold text-xl text-foreground">{cleanName}</h3>
+                      <h3 className="font-bold text-foreground">{booth.name}</h3>
                     </div>
                     {booth.description && (
-                      <p className="text-sm text-muted-foreground mb-3 leading-relaxed pl-1">
+                      <p className="text-sm text-muted-foreground mb-2 pl-9">
                         {booth.description}
                       </p>
                     )}
-                      <div className="flex flex-wrap gap-2 text-xs">
-                        <span className="px-3 py-1 bg-secondary/20 rounded-full">
-                          📍 {booth.location}
+                    <div className="flex flex-wrap gap-2 text-xs pl-9">
+                      <span className="px-2 py-1 bg-secondary/20 rounded-full">
+                        📍 {booth.location}
+                      </span>
+                      {booth.teacher && (
+                        <span className="px-2 py-1 bg-accent/20 rounded-full">
+                          👨‍🏫 {booth.teacher} 선생님
                         </span>
-                        {booth.teacher && (
-                          <span className="px-3 py-1 bg-accent/20 rounded-full">
-                            👨‍🏫 {booth.teacher} 선생님
-                          </span>
-                        )}
-                      </div>
+                      )}
                     </div>
                   </div>
-                </Card>
-              );
-            })}
-          </div>
-          {filteredBooths.length === 0 && (
-            <p className="text-center text-muted-foreground py-8">
-              검색 결과가 없습니다
-            </p>
+                ))
+              ) : (
+                <p className="text-center text-muted-foreground py-4">
+                  검색 결과가 없습니다
+                </p>
+              )}
+            </div>
           )}
         </Card>
       </div>

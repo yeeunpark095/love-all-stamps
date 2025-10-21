@@ -98,6 +98,30 @@ export type Database = {
         }
         Relationships: []
       }
+      lucky_draw_tickets: {
+        Row: {
+          created_at: string
+          id: string
+          ticket_count: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ticket_count?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ticket_count?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       performances: {
         Row: {
           content: string
@@ -293,6 +317,10 @@ export type Database = {
       register_lucky_draw: {
         Args: { p_user_id: string }
         Returns: undefined
+      }
+      update_lucky_draw_tickets: {
+        Args: { p_user_id: string }
+        Returns: number
       }
       verify_stamp: {
         Args: { p_booth_id: number; p_entered: string; p_user_id: string }

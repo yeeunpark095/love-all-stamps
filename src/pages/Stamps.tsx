@@ -77,11 +77,16 @@ export default function Stamps() {
           setFloatingHearts(prev => prev.slice(1));
         }, 2000);
         
-        toast.success(`✅ ${selectedBooth.name} 스탬프 획득! (${newStampCount}/20) 🎉`);
-        await loadData(user.id);
+        // Update lucky draw tickets
+        const { data: ticketCount } = await supabase.rpc('update_lucky_draw_tickets', {
+          p_user_id: user.id
+        });
         
-        // Check if user completed all 20 stamps
+        let ticketMessage = "";
+        let celebrationMessage = `✅ ${selectedBooth.name} 스탬프 획득! (${newStampCount}/20) 🎉`;
+        
         if (newStampCount === 20) {
+          ticketMessage = "추첨권 5개 발급!";
           // Confetti animation
           confetti({
             particleCount: 100,
@@ -102,14 +107,21 @@ export default function Stamps() {
               origin: { x: 1 }
             });
           }, 250);
-          
-          try {
-            await supabase.rpc("register_lucky_draw", { p_user_id: user.id });
-            toast.success("🎉 완주 성공! 경품 수령처: 본관 1층 안내데스크 (16:30까지)");
-          } catch (error) {
-            console.error("Lucky draw registration failed:", error);
-          }
+          celebrationMessage = "🎉 완주 성공! 추첨권 5개 발급! 경품 수령: 본관 1층 안내데스크 (16:30까지)";
+        } else if (newStampCount === 15) {
+          ticketMessage = "추첨권 3개 발급!";
+        } else if (newStampCount === 10) {
+          ticketMessage = "추첨권 2개 발급!";
+        } else if (newStampCount === 5) {
+          ticketMessage = "추첨권 1개 발급!";
         }
+        
+        if (ticketMessage) {
+          celebrationMessage += ` ${ticketMessage}`;
+        }
+        
+        toast.success(celebrationMessage);
+        await loadData(user.id);
         
         setSelectedBooth(null);
         setInputCode("");
@@ -210,10 +222,20 @@ export default function Stamps() {
                 <div>
                   <p className="font-bold text-lg text-primary">🎉 완주 축하합니다!</p>
                   <p className="text-sm text-muted-foreground">
-                    경품 수령: 본관 1층 안내데스크 (16:30까지)
+                    추첨권 5개 발급! 경품 수령: 본관 1층 안내데스크 (16:30까지)
                   </p>
                 </div>
               </div>
+            </div>
+          )}
+          
+          {!isComplete && stamps.size >= 5 && (
+            <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-lg p-3 border border-blue-500/20">
+              <p className="text-sm text-center font-semibold">
+                {stamps.size >= 15 ? "🎟️ 추첨권 3개 획득!" : 
+                 stamps.size >= 10 ? "🎟️ 추첨권 2개 획득!" : 
+                 "🎟️ 추첨권 1개 획득!"}
+              </p>
             </div>
           )}
         </Card>

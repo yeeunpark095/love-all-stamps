@@ -14,6 +14,7 @@ import Admin from "./pages/Admin";
 import LuckyDrawPresent from "./pages/LuckyDrawPresent";
 import Festival from "./pages/Festival";
 import BoothMap from "./pages/BoothMap";
+import StampBoard from "./pages/StampBoard";
 import MapCalibrator from "./pages/admin/MapCalibrator";
 import NotFound from "./pages/NotFound";
 
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/festival" element={<Festival />} />
           <Route path="/map" element={<Map />} />
           <Route path="/booth-map" element={<BoothMap />} />
+          <Route path="/stamp-board" element={<StampBoard />} />
           <Route path="/stamps" element={<Stamps />} />
           <Route path="/exhibitions" element={<Exhibitions />} />
           <Route path="/performances" element={<Performances />} />

@@ -13,6 +13,8 @@ import MyStamps from "./pages/MyStamps";
 import Admin from "./pages/Admin";
 import LuckyDrawPresent from "./pages/LuckyDrawPresent";
 import Festival from "./pages/Festival";
+import BoothMap from "./pages/BoothMap";
+import MapCalibrator from "./pages/admin/MapCalibrator";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,11 +30,13 @@ const App = () => (
           <Route path="/auth" element={<Auth />} />
           <Route path="/festival" element={<Festival />} />
           <Route path="/map" element={<Map />} />
+          <Route path="/booth-map" element={<BoothMap />} />
           <Route path="/stamps" element={<Stamps />} />
           <Route path="/exhibitions" element={<Exhibitions />} />
           <Route path="/performances" element={<Performances />} />
           <Route path="/my-stamps" element={<MyStamps />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/admin/map-calibrator" element={<MapCalibrator />} />
           <Route path="/admin/lucky-draw/present" element={<LuckyDrawPresent />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

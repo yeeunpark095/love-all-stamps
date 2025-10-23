@@ -18,6 +18,8 @@ import StampBoard from "./pages/StampBoard";
 import MapCalibrator from "./pages/admin/MapCalibrator";
 import Progress from "./pages/admin/Progress";
 import NotFound from "./pages/NotFound";
+import Navigation from "./components/Navigation";
+import { Sidebar, SidebarContent, SidebarProvider } from "./components/ui/sidebar"; // Import Sidebar components
 
 const queryClient = new QueryClient();
 
@@ -26,25 +28,32 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/festival" element={<Festival />} />
-          <Route path="/map" element={<Map />} />
-          <Route path="/booth-map" element={<BoothMap />} />
-          <Route path="/stamp-board" element={<StampBoard />} />
-          <Route path="/stamps" element={<Stamps />} />
-          <Route path="/exhibitions" element={<Exhibitions />} />
-          <Route path="/performances" element={<Performances />} />
-          <Route path="/my-stamps" element={<MyStamps />} />
-          <Route path="/admin" element={<Admin />} />
-          <Route path="/admin/progress" element={<Progress />} />
-          <Route path="/admin/map-calibrator" element={<MapCalibrator />} />
-          <Route path="/admin/lucky-draw/present" element={<LuckyDrawPresent />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+      <BrowserRouter basename={import.meta.env.PROD ? "/love-all-stamps/" : "/"}>
+        <SidebarProvider>
+          <Sidebar>
+            <SidebarContent>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/auth" element={<Auth />} />
+                <Route path="/festival" element={<Festival />} />
+                <Route path="/map" element={<Map />} />
+                <Route path="/booth-map" element={<BoothMap />} />
+                <Route path="/stamp-board" element={<StampBoard />} />
+                <Route path="/stamps" element={<Stamps />} />
+                <Route path="/exhibitions" element={<Exhibitions />} />
+                <Route path="/performances" element={<Performances />} />
+                <Route path="/my-stamps" element={<MyStamps />} />
+                <Route path="/admin" element={<Admin />} />
+                <Route path="/admin/progress" element={<Progress />} />
+                <Route path="/admin/map-calibrator" element={<MapCalibrator />} />
+                <Route path="/admin/lucky-draw/present" element={<LuckyDrawPresent />} />
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </SidebarContent>
+          </Sidebar>
+          <Navigation />
+        </SidebarProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

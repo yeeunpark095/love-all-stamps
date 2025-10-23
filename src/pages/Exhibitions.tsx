@@ -101,6 +101,12 @@ export default function Exhibitions() {
       title: '"사랑하는 일을 찾아서 – 나의 꿈 전시"',
       description: '다양한 직업 체험과 진로 탐색,\n그리고 \'나의 미래\'를 스스로 디자인한 작품 전시 🌟',
       teacher: '박건희'
+    },
+    '수달(수학의달인)': {
+      emoji: '📐',
+      title: '수학 보드게임 카페',
+      description: '수학 보드게임을 즐기며 수리적 사고를 체험하는 카페형 전시 🎲\n재미있는 게임으로 수학의 즐거움을 발견해보세요!',
+      teacher: '전승주'
     }
   };
 

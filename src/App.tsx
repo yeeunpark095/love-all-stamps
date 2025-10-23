@@ -16,6 +16,7 @@ import Festival from "./pages/Festival";
 import BoothMap from "./pages/BoothMap";
 import StampBoard from "./pages/StampBoard";
 import MapCalibrator from "./pages/admin/MapCalibrator";
+import Progress from "./pages/admin/Progress";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,6 +39,7 @@ const App = () => (
           <Route path="/performances" element={<Performances />} />
           <Route path="/my-stamps" element={<MyStamps />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/admin/progress" element={<Progress />} />
           <Route path="/admin/map-calibrator" element={<MapCalibrator />} />
           <Route path="/admin/lucky-draw/present" element={<LuckyDrawPresent />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

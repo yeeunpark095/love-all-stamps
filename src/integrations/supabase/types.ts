@@ -19,6 +19,7 @@ export type Database = {
           booth_id: number
           created_at: string
           description: string | null
+          is_active: boolean | null
           location: string | null
           name: string
           staff_pin: string
@@ -28,6 +29,7 @@ export type Database = {
           booth_id?: number
           created_at?: string
           description?: string | null
+          is_active?: boolean | null
           location?: string | null
           name: string
           staff_pin: string
@@ -37,6 +39,7 @@ export type Database = {
           booth_id?: number
           created_at?: string
           description?: string | null
+          is_active?: boolean | null
           location?: string | null
           name?: string
           staff_pin?: string
@@ -259,8 +262,37 @@ export type Database = {
         }
         Relationships: []
       }
+      v_participant_progress: {
+        Row: {
+          completed: boolean | null
+          last_stamp_at: string | null
+          name: string | null
+          required_total: number | null
+          stamps: number | null
+          student_id: string | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
+      admin_list_progress: {
+        Args: {
+          p_order?: string
+          p_page?: number
+          p_page_size?: number
+          p_search?: string
+        }
+        Returns: {
+          completed: boolean
+          last_stamp_at: string
+          name: string
+          required_total: number
+          stamps: number
+          student_id: string
+          user_id: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -268,12 +300,9 @@ export type Database = {
         }
         Returns: boolean
       }
-      ld_confirm_winners: {
-        Args: { p_ids: string[] }
-        Returns: undefined
-      }
+      ld_confirm_winners: { Args: { p_ids: string[] }; Returns: undefined }
       ld_list_eligible: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           completed_at: string
           id: string
@@ -283,7 +312,7 @@ export type Database = {
         }[]
       }
       ld_list_winners: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           completed_at: string
           id: string
@@ -302,10 +331,7 @@ export type Database = {
           user_id: string
         }[]
       }
-      ld_unset_winner: {
-        Args: { p_id: string }
-        Returns: undefined
-      }
+      ld_unset_winner: { Args: { p_id: string }; Returns: undefined }
       pick_random_winners: {
         Args: { n: number }
         Returns: {
@@ -314,10 +340,7 @@ export type Database = {
           student_id: string
         }[]
       }
-      register_lucky_draw: {
-        Args: { p_user_id: string }
-        Returns: undefined
-      }
+      register_lucky_draw: { Args: { p_user_id: string }; Returns: undefined }
       update_lucky_draw_tickets: {
         Args: { p_user_id: string }
         Returns: number

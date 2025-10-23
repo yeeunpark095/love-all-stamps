@@ -38,7 +38,6 @@ const BOOTHS: Booth[] = [
   { id: 14,  name: "Ballin(배구)",         emoji: "🏐" },
   { id: 15,  name: "애드미 찬양반",        emoji: "🎤" },
   { id: 16,  name: "물리를 만들다",        emoji: "⚛️" },
-  { id: 17,  name: "수달(수학의달인)",     emoji: "📐" },
   { id: 18,  name: "디자인공예반",        emoji: "🎁" },
   { id: 19,  name: "융합과학STEAM(연구)",  emoji: "🔭" },
   { id: 20,  name: "AI·SW 코딩반",        emoji: "🤖" },

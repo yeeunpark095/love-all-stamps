@@ -19,7 +19,7 @@ async function verifyPinServer(boothId: number, pin: string): Promise<boolean> {
   return pin === "0000";
 }
 
-/** 부스 목록 (원하는 순서대로 정렬) */
+/** 부스 목록 (원하는 순서대로 정렬) - 수달 제외 */
 type Booth = { id: number; name: string; emoji: string };
 const BOOTHS: Booth[] = [
   { id: 1,  name: "영어토론 프레젠테이션", emoji: "🗣️" },

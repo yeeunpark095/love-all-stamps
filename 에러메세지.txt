@@ -1,0 +1,5 @@
+@supabase_supabase-js.js?v=0a6331ba:4516 Uncaught Error: supabaseUrl is required.
+    at validateSupabaseUrl (@supabase_supabase-js.js?v=0a6331ba:4516:11)
+    at new SupabaseClient (@supabase_supabase-js.js?v=0a6331ba:8865:21)
+    at createClient (@supabase_supabase-js.js?v=0a6331ba:9052:10)
+    at client.ts:11:25

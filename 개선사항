@@ -1,8 +1,0 @@
-# 개선사항
-개선하면 좋을것같은 사항들
-
-- 음악 재생이 실패함. (Home.tsx:76 Audio play failed: NotSupportedError: Failed to load because no supported source was found.)
-
-- 학번이 6자가 아니라 5자여야한다. ex.20433
-- 비밀번호가 불필요하게 복잡한것같다. 굳이 대문자, 소문자에 숫자까지 요구하지 말고 영문 + 숫자 이 두개만 해도 충분할것같다. 
-- 스탬프 투어에서 선생님 이름 앞에 과목 명이나 담당 지위를 적었으면 좋겠다. 

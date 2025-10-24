@@ -15,15 +15,16 @@
     "jsx": "react-jsx",
 
     /* Linting */
-    "strict": true,
+    "strict": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noImplicitAny": false,
     "noFallthroughCasesInSwitch": false,
 
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./public/*"]
+      "@/*": ["./src/*"]
     }
   },
-  "include": ["public"]
+  "include": ["src"]
 }

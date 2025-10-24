@@ -1,10 +1,10 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Navigation from "@/components/Navigation";
-import { Heart, Map, Stamp, Calendar, Frame, LogOut, Volume2, VolumeX } from "lucide-react";
+import { Heart, Map, Stamp, Calendar, Frame, LogOut } from "lucide-react";
 import { toast } from "sonner";
 
 export default function Home() {
@@ -12,8 +12,6 @@ export default function Home() {
   const [user, setUser] = useState<any>(null);
   const [profile, setProfile] = useState<any>(null);
   const [stampCount, setStampCount] = useState(0);
-  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -50,34 +48,12 @@ export default function Home() {
 
     return () => {
       subscription.unsubscribe();
-      if (audioRef.current) {
-        audioRef.current.pause();
-      }
     };
   }, [navigate]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
     toast.success("로그아웃 되었습니다");
-  };
-
-  const toggleMusic = () => {
-    if (!audioRef.current) {
-      audioRef.current = new Audio("https://assets.mixkit.co/music/preview/mixkit-happy-acoustic-ukulele-11.mp3");
-      audioRef.current.loop = true;
-      audioRef.current.volume = 0.3;
-    }
-    
-    if (isMusicPlaying) {
-      audioRef.current.pause();
-      setIsMusicPlaying(false);
-    } else {
-      audioRef.current.play().catch(err => {
-        console.error("Audio play failed:", err);
-        toast.error("음악 재생에 실패했습니다. 다시 시도해주세요.");
-      });
-      setIsMusicPlaying(true);
-    }
   };
 
   if (!user) return null;
@@ -96,16 +72,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1vcGFjaXR5PSIwLjEiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-20" />
         
         <div className="relative">
-          <div className="flex justify-between mb-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={toggleMusic}
-              className="text-white hover:bg-white/20"
-            >
-              {isMusicPlaying ? <Volume2 className="w-4 h-4 mr-2" /> : <VolumeX className="w-4 h-4 mr-2" />}
-              {isMusicPlaying ? "음악 끄기" : "음악 켜기"}
-            </Button>
+          <div className="flex justify-end mb-4">
             <Button
               variant="ghost"
               size="sm"
@@ -200,17 +167,6 @@ export default function Home() {
             );
           })}
         </div>
-
-        {/* Notice */}
-        <Card className="p-6 bg-muted/30 backdrop-blur-sm border-l-4 border-primary shadow-lg">
-          <h3 className="font-bold text-lg mb-2 text-primary">공지사항</h3>
-          <ul className="space-y-2 text-sm text-muted-foreground leading-relaxed">
-            <li>• 축제 기간: 오늘 하루 (13:00 ~ 16:30)</li>
-            <li>• 경품 수령: 본관 1층 안내데스크 (16:30까지)</li>
-            <li>• 20개 부스 완주 시 경품 증정!</li>
-            <li>• 사랑으로 연결되는 오늘, 즐거운 축제 되세요 ♥</li>
-          </ul>
-        </Card>
       </div>
 
       <Navigation />

@@ -32,8 +32,8 @@ export default function Exhibitions() {
   const exhibitionData: { [key: string]: { emoji: string; title: string; description: string; teacher: string } } = {
     '수달(수학의달인)': {
       emoji: '📐',
-      title: '수학 보드게임 카페',
-      description: '수학 보드게임을 즐기며 수리적 사고를 체험하는 카페형 전시 🎲\n게임을 통해 수학의 즐거움을 발견하세요!',
+      title: '수학의달인',
+      description: '일상 속에서 발견한 수학의 원리를 한눈에 볼 수 있는 전시 🔢\n수학이 우리 주변에 얼마나 가까이 있는지 체험해보세요!',
       teacher: '전승주'
     },
     '간호보건동아리': {

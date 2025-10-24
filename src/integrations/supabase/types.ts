@@ -53,6 +53,8 @@ export type Database = {
           created_at: string
           description: string | null
           exhibition_id: number
+          location: string | null
+          teacher: string | null
           title: string
           type: string
         }
@@ -61,6 +63,8 @@ export type Database = {
           created_at?: string
           description?: string | null
           exhibition_id?: number
+          location?: string | null
+          teacher?: string | null
           title: string
           type: string
         }
@@ -69,6 +73,8 @@ export type Database = {
           created_at?: string
           description?: string | null
           exhibition_id?: number
+          location?: string | null
+          teacher?: string | null
           title?: string
           type?: string
         }
